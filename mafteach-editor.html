@@ -9,8 +9,8 @@
 <meta name="apple-mobile-web-app-title" content="עורך מפתחות">
 <title>עורך מפתחות — ספר השיחות</title>
 
-<!-- Manifest for standalone PWA installation (prevents domain confusion) -->
-<link rel="manifest" href='data:application/manifest+json;utf8,{"name":"עורך מפתחות","short_name":"מפתחות","start_url":"./mafteach-editor.html","display":"standalone","background_color":"#f7f3e9","theme_color":"#1a2942","icons":[{"src":"data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'><rect width=\'100\' height=\'100\' fill=\'%231a2942\'/><text x=\'50\' y=\'65\' font-size=\'50\' text-anchor=\'middle\' fill=\'white\'>מ</text></svg>","sizes":"192x192","type":"image/svg+xml"}]}'>
+<!-- Manifest for standalone PWA installation -->
+<link rel="manifest" href="data:application/manifest+json;charset=utf-8,%7B%22name%22%3A%22%D7%A2%D7%95%D7%A8%D7%9A%20%D7%9E%D7%A4%D7%AA%D7%97%D7%95%D7%AA%22%2C%22short_name%22%3A%22%D7%9E%D7%A4%D7%AA%D7%97%D7%95%D7%AA%22%2C%22start_url%22%3A%22.%2Fmafteach-editor.html%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23f7f3e9%22%2C%22theme_color%22%3A%22%231a2942%22%7D">
 
 <style>
   :root {
@@ -627,6 +627,27 @@
     <div class="stats" id="stats"></div>
 
     <div class="tools-section">
+      <h3>חיבור ל-GitHub (ענן)</h3>
+      <p>הגדר פעם אחת, והמערכת תעדכן אוטומטית את קובץ <code>mafteach.js</code> בגיטהאב בכל פעם שתשמור או תערוך ערך.</p>
+      <div class="form-group">
+        <label>GitHub Personal Token</label>
+        <input type="password" id="gh-token" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx">
+        <div class="help-text">שמור רק בדפדפן שלך. נדרשת הרשאת 'repo'.</div>
+      </div>
+      <div style="display:flex; gap:10px;">
+         <div class="form-group" style="flex:1">
+           <label>שם משתמש (Owner)</label>
+           <input type="text" id="gh-owner" value="sichotmeturgamot">
+         </div>
+         <div class="form-group" style="flex:1">
+           <label>שם ריפו (Repo)</label>
+           <input type="text" id="gh-repo" value="mafteach">
+         </div>
+      </div>
+      <button class="btn btn-primary btn-sm" id="btn-save-gh" style="width:100%">שמור הגדרות סנכרון</button>
+    </div>
+
+    <div class="tools-section">
       <h3>ייצוא נתונים</h3>
       <p>הורד את כל הערכים כקובץ JSON (לגיבוי או להעברה למחשב).</p>
       <button class="btn btn-primary btn-sm" id="btn-export-json" style="width:100%">הורד JSON</button>
@@ -674,6 +695,10 @@
   let currentTypeFilter = 'all';
   let activeCustomFilters = new Set();
   let showAllQuotes = false;
+  
+  // -- GITHUB SYNC CONFIG --
+  const GH_KEY = 'mafteach-gh-config';
+  let ghConfig = { token: '', owner: 'sichotmeturgamot', repo: 'mafteach' };
 
   function load() {
     try {
@@ -684,6 +709,69 @@
   function save() {
     try { localStorage.setItem(STORAGE_KEY, JSON.stringify(DATA)); }
     catch (e) { toast('שגיאה בשמירה (אולי מקום אחסון מלא)', 'err'); }
+  }
+
+  function saveAndSync() {
+      save();
+      if (ghConfig.token) syncToGitHub();
+  }
+
+  function loadGhConfig() {
+      try {
+          const c = localStorage.getItem(GH_KEY);
+          if (c) ghConfig = JSON.parse(c);
+          if (document.getElementById('gh-token')) {
+              document.getElementById('gh-token').value = ghConfig.token || '';
+              document.getElementById('gh-owner').value = ghConfig.owner || 'sichotmeturgamot';
+              document.getElementById('gh-repo').value = ghConfig.repo || 'mafteach';
+          }
+      } catch(e) {}
+  }
+
+  async function syncToGitHub() {
+      if (!ghConfig.token) return;
+      
+      try {
+          toast('מסנכרן לענן (GitHub)...');
+          const path = 'mafteach.js';
+          const branch = 'main';
+          const apiUrl = `https://api.github.com/repos/${ghConfig.owner}/${ghConfig.repo}/contents/${path}`;
+          
+          let sha = null;
+          const getRes = await fetch(apiUrl + `?ref=${branch}`, {
+              headers: { 'Authorization': `token ${ghConfig.token}` }
+          });
+          
+          if (getRes.ok) {
+              const data = await getRes.json();
+              sha = data.sha;
+          } else if (getRes.status !== 404) {
+              throw new Error('שגיאת גישה לגיטהאב. בדוק הרשאות.');
+          }
+          
+          const bodyStr = JSON.stringify(stripIds(DATA));
+          const jsContent = `// נתוני המפתחות — נערך בעורך המפתחות\nconst MAFTEACH = ${bodyStr};\n`;
+          const base64Content = btoa(unescape(encodeURIComponent(jsContent)));
+          
+          const putRes = await fetch(apiUrl, {
+              method: 'PUT',
+              headers: {
+                  'Authorization': `token ${ghConfig.token}`,
+                  'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({
+                  message: 'עדכון מפתחות מהעורך',
+                  content: base64Content,
+                  sha: sha,
+                  branch: branch
+              })
+          });
+          
+          if (!putRes.ok) throw new Error('השמירה לגיטהאב נכשלה.');
+          toast('סונכרן בהצלחה ל-GitHub!', 'ok');
+      } catch (err) {
+          toast('שגיאת סנכרון: ' + err.message, 'err');
+      }
   }
 
   // ---------- Utils ----------
@@ -1170,7 +1258,7 @@
     if (!ok) return;
     
     DATA = DATA.filter(x => x._id !== id);
-    save();
+    saveAndSync();
     toast('נמחק', 'ok');
     
     if (editIdEl.value === id) clearForm();
@@ -1263,7 +1351,7 @@
         }
       }
     }
-    save();
+    saveAndSync();
     clearForm();
     renderEditorList();
   });
@@ -1363,11 +1451,11 @@
           }
         }
         toast(`נוספו ${added}, מוזגו ${merged}`, 'ok');
-        save();
+        saveAndSync();
         renderStats();
         return;
       }
-      save();
+      saveAndSync();
       toast(`נטענו ${DATA.length} ערכים`, 'ok');
       renderStats();
     } catch (err) {
@@ -1382,14 +1470,26 @@
     const ok = await confirmDlg('מחיקת הכל', 'למחוק את כל הערכים מהמכשיר? פעולה זו אינה ניתנת לשחזור.');
     if (!ok) return;
     DATA = [];
-    save();
+    saveAndSync();
     clearForm();
     renderStats();
     toast('הכל נמחק', 'ok');
   });
 
+  document.getElementById('btn-save-gh').addEventListener('click', () => {
+      ghConfig = {
+          token: document.getElementById('gh-token').value.trim(),
+          owner: document.getElementById('gh-owner').value.trim(),
+          repo: document.getElementById('gh-repo').value.trim()
+      };
+      localStorage.setItem(GH_KEY, JSON.stringify(ghConfig));
+      toast('הגדרות סנכרון נשמרו', 'ok');
+      if (ghConfig.token) syncToGitHub();
+  });
+
   // ---------- Init ----------
   load();
+  loadGhConfig();
   ensureIds();
   updateFormVisibility();
   updateFiltersUI();
