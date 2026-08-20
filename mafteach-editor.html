@@ -122,30 +122,6 @@
     cursor: pointer; display: none; padding: 4px 8px;
   }
 
-  .filters-row {
-    display: flex;
-    gap: 8px;
-    margin-bottom: 10px;
-    overflow-x: auto;
-    padding-bottom: 4px;
-  }
-  .filter-btn {
-    padding: 6px 12px;
-    border: 1px solid var(--line);
-    border-radius: 20px;
-    background: var(--paper);
-    color: var(--muted);
-    font-size: .85rem;
-    cursor: pointer;
-    white-space: nowrap;
-    transition: all 0.2s;
-  }
-  .filter-btn.active {
-    background: var(--navy);
-    color: var(--cream);
-    border-color: var(--navy);
-  }
-  
   .tags-row {
     display: flex;
     gap: 6px;
@@ -522,11 +498,11 @@
   <!-- BROWSE -->
   <div class="panel on" id="panel-browse">
     <!-- Type filters -->
-    <div class="filters-row" id="type-filters">
-        <button class="filter-btn active" data-type="all">הכל</button>
-        <button class="filter-btn" data-type="i">עניינים</button>
-        <button class="filter-btn" data-type="n">שמות</button>
-        <button class="filter-btn" data-type="m">מקומות</button>
+    <div class="filters-row" id="type-filters" style="display:flex;gap:8px;margin-bottom:10px;overflow-x:auto;">
+        <button class="filter-btn active" data-type="all" style="padding:6px 12px;border:1px solid var(--line);border-radius:20px;background:var(--navy);color:var(--cream);font-size:.85rem;cursor:pointer;white-space:nowrap;">הכל</button>
+        <button class="filter-btn" data-type="i" style="padding:6px 12px;border:1px solid var(--line);border-radius:20px;background:var(--paper);color:var(--muted);font-size:.85rem;cursor:pointer;white-space:nowrap;">עניינים</button>
+        <button class="filter-btn" data-type="n" style="padding:6px 12px;border:1px solid var(--line);border-radius:20px;background:var(--paper);color:var(--muted);font-size:.85rem;cursor:pointer;white-space:nowrap;">שמות</button>
+        <button class="filter-btn" data-type="m" style="padding:6px 12px;border:1px solid var(--line);border-radius:20px;background:var(--paper);color:var(--muted);font-size:.85rem;cursor:pointer;white-space:nowrap;">מקומות</button>
     </div>
     
     <!-- Custom custom tags filters row -->
@@ -642,7 +618,7 @@
     <div class="tools-section">
       <h3>חיבור ענן (GitHub)</h3>
       <p id="connection-status-text" style="font-weight:600;margin-bottom:8px">סטטוס: מנותק</p>
-      <p>הכנס את פרטי הריפו והטוקן שלך פעם אחת. הם יישמרו בדפדפן, ומעوالה כל שמירה או עריכה תעדכן אוטומטית את קובץ ה־<code>mafteach.js</code> בריפו.</p>
+      <p>הכנס את פרטי הריפו והטוקן שלך. הם יישמרו בדפדפן, ומעכשיו כל שמירה או עריכה תעדכן אוטומטית את קובץ ה־<code>mafteach.js</code> בריפו שלך.</p>
       <div class="form-group">
         <label>שם משתמש בגיטהאב (Owner)</label>
         <input type="text" id="gh-owner" placeholder="sichotmeturgamot">
@@ -714,7 +690,6 @@
     syncToGitHub();
   }
 
-  // Update connection status UI
   function updateAuthStatusUI() {
     const badge = document.getElementById('auth-badge');
     const statusText = document.getElementById('connection-status-text');
@@ -736,7 +711,7 @@
     if (statusText) statusText.textContent = 'סטטוס: מנותק (הזן פרטים למטה כדי להתחבר)';
   }
 
-  // GitHub Auto-Sync Engine
+  // GitHub Auto-Sync Engine with auto-creation of mafteach.js if missing
   async function syncToGitHub() {
     const rawCfg = localStorage.getItem(GH_CONFIG_KEY);
     if (!rawCfg) return;
@@ -755,6 +730,7 @@
       const getRes = await fetch(apiUrl, {
         headers: { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json' }
       });
+      
       if (getRes.ok) {
         const fileData = await getRes.json();
         sha = fileData.sha;
@@ -779,10 +755,11 @@
       } else {
         const errJson = await putRes.json();
         console.error('GitHub Sync Error:', errJson);
-        toast('שגיאה בסנכרון לענן (בדוק טוקן)', 'err');
+        toast('שגיאת ענן: ' + (errJson.message || 'בדוק טוקן והרשאות'), 'err');
       }
     } catch (e) {
       console.error('GitHub Sync Exception:', e);
+      toast('שגיאת תקשורת בסנכרון לענן', 'err');
     }
   }
 
@@ -808,7 +785,7 @@
     el.textContent = msg;
     el.className = 'toast show' + (type ? ' ' + type : '');
     clearTimeout(toast._t);
-    toast._t = setTimeout(() => { el.className = 'toast'; }, 2400);
+    toast._t = setTimeout(() => { el.className = 'toast'; }, 3000);
   }
   function confirmDlg(title, msg) {
     return new Promise(resolve => {
@@ -888,8 +865,14 @@
 
   document.querySelectorAll('.filter-btn').forEach(btn => {
     btn.addEventListener('click', (e) => {
-      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.filter-btn').forEach(b => {
+        b.classList.remove('active');
+        b.style.background = 'var(--paper)';
+        b.style.color = 'var(--muted)';
+      });
       e.target.classList.add('active');
+      e.target.style.background = 'var(--navy)';
+      e.target.style.color = 'var(--cream)';
       currentTypeFilter = e.target.dataset.type;
       renderBrowse();
     });
@@ -1349,7 +1332,6 @@
     `;
   }
 
-  // GitHub Config UI Actions
   function loadGhConfigUI() {
     try {
       const cfg = JSON.parse(localStorage.getItem(GH_CONFIG_KEY) || '{}');
