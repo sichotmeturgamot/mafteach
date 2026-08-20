@@ -46,8 +46,20 @@
     position: sticky; top: 0; z-index: 50;
     box-shadow: 0 2px 12px rgba(0,0,0,.2);
   }
-  header h1 { font-size: 1.15rem; font-weight: 600; text-align: center; }
+  .header-top { display: flex; justify-content: space-between; align-items: center; }
+  header h1 { font-size: 1.15rem; font-weight: 600; text-align: center; flex: 1; }
   header .sub { font-size: .75rem; opacity: .75; text-align: center; margin-top: 2px; }
+
+  /* Connection badge */
+  .auth-badge {
+    font-size: 0.72rem;
+    padding: 3px 8px;
+    border-radius: 999px;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+  .auth-badge.connected { background: rgba(45,106,79,.25); color: #74c69d; border: 1px solid #74c69d; }
+  .auth-badge.disconnected { background: rgba(179,58,58,.25); color: #ffb7b7; border: 1px solid #ffb7b7; }
 
   /* Tabs */
   .tabs {
@@ -491,7 +503,11 @@
 <body>
 
 <header>
-  <h1>עורך מפתחות</h1>
+  <div class="header-top">
+    <div></div>
+    <h1>עורך מפתחות</h1>
+    <div id="auth-badge" class="auth-badge disconnected">מנותק מענן</div>
+  </div>
   <div class="sub">ענינים · שמות · מקומות</div>
 </header>
 
@@ -624,8 +640,9 @@
     <div class="stats" id="stats"></div>
 
     <div class="tools-section">
-      <h3>סנכרון אוטומטי ל־GitHub</h3>
-      <p>הכנס את פרטי הריפו והטוקן שלך פעם אחת, והם יישמרו בדפדפן. כל שינוי או הוספה יעדכנו אוטומטית את קובץ ה־<code>mafteach.js</code> בענן.</p>
+      <h3>חיבור ענן (GitHub)</h3>
+      <p id="connection-status-text" style="font-weight:600;margin-bottom:8px">סטטוס: מנותק</p>
+      <p>הכנס את פרטי הריפו והטוקן שלך פעם אחת. הם יישמרו בדפדפן, ומעوالה כל שמירה או עריכה תעדכן אוטומטית את קובץ ה־<code>mafteach.js</code> בריפו.</p>
       <div class="form-group">
         <label>שם משתמש בגיטהאב (Owner)</label>
         <input type="text" id="gh-owner" placeholder="sichotmeturgamot">
@@ -638,7 +655,7 @@
         <label>טוקן גישה (Personal Access Token)</label>
         <input type="password" id="gh-token" placeholder="ghp_...">
       </div>
-      <button class="btn btn-primary btn-sm" id="btn-save-gh" style="width:100%">שמור הגדרות סנכרון</button>
+      <button class="btn btn-primary btn-sm" id="btn-save-gh" style="width:100%">שמור חיבור ענן</button>
     </div>
 
     <div class="tools-section">
@@ -656,14 +673,6 @@
       <h3>ניקוי</h3>
       <p>מחיקת כל הערכים מהמכשיר.</p>
       <button class="btn btn-danger btn-sm" id="btn-clear-all" style="width:100%">מחק הכל</button>
-    </div>
-
-    <div class="tools-section">
-      <h3>טיפ להתקנה כאפליקציה</h3>
-      <p style="margin-bottom:0">
-        ב-Safari: לחץ על «שתף» ← «הוסף למסך הבית».<br>
-        ב-Chrome: תפריט ⋮ ← «הוסף למסך הבית».
-      </p>
     </div>
   </div>
 </main>
@@ -705,6 +714,28 @@
     syncToGitHub();
   }
 
+  // Update connection status UI
+  function updateAuthStatusUI() {
+    const badge = document.getElementById('auth-badge');
+    const statusText = document.getElementById('connection-status-text');
+    const rawCfg = localStorage.getItem(GH_CONFIG_KEY);
+    
+    if (rawCfg) {
+      try {
+        const { owner, repo, token } = JSON.parse(rawCfg);
+        if (owner && repo && token) {
+          badge.className = 'auth-badge connected';
+          badge.textContent = 'מחובר לענן';
+          if (statusText) statusText.textContent = `סטטוס: מחובר ל־${owner}/${repo} ✓`;
+          return;
+        }
+      } catch (_) {}
+    }
+    badge.className = 'auth-badge disconnected';
+    badge.textContent = 'מנותק מענן';
+    if (statusText) statusText.textContent = 'סטטוס: מנותק (הזן פרטים למטה כדי להתחבר)';
+  }
+
   // GitHub Auto-Sync Engine
   async function syncToGitHub() {
     const rawCfg = localStorage.getItem(GH_CONFIG_KEY);
@@ -720,7 +751,6 @@
 
       const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${path}`;
       
-      // 1. Get current file sha if exists
       let sha = '';
       const getRes = await fetch(apiUrl, {
         headers: { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json' }
@@ -730,7 +760,6 @@
         sha = fileData.sha;
       }
 
-      // 2. Put updated content
       const putRes = await fetch(apiUrl, {
         method: 'PUT',
         headers: {
@@ -841,6 +870,7 @@
       if (btn.dataset.tab === 'tools') {
         renderStats();
         loadGhConfigUI();
+        updateAuthStatusUI();
       }
       if (btn.dataset.tab === 'add') {
         renderEditorList();
@@ -1338,7 +1368,8 @@
       return;
     }
     localStorage.setItem(GH_CONFIG_KEY, JSON.stringify({ owner, repo, token }));
-    toast('הגדרות הסנכרון נשמרו בהצלחה!', 'ok');
+    toast('הגדרות החיבור נשמרו בהצלחה!', 'ok');
+    updateAuthStatusUI();
     syncToGitHub();
   });
 
@@ -1446,6 +1477,7 @@
 
   load();
   ensureIds();
+  updateAuthStatusUI();
   updateFormVisibility();
   updateFiltersUI();
   renderBrowse();
