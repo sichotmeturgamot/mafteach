@@ -9,8 +9,8 @@
 <meta name="apple-mobile-web-app-title" content="עורך מפתחות">
 <title>עורך מפתחות — ספר השיחות</title>
 
-<!-- Unique PWA manifest to prevent conflicts with other apps on the same domain -->
-<link rel="manifest" href='data:application/manifest+json;charset=utf-8,{"name":"עורך מפתחות ספר השיחות","short_name":"מפתחות","start_url":"./mafteach-editor.html","display":"standalone","background_color":"#f7f3e9","theme_color":"#1a2942","icons":[{"src":"https://placehold.co/192x192/1a2942/c9a227?text=מ","sizes":"192x192","type":"image/png"}]}'>
+<!-- Unique PWA manifest with dynamic unique ID to prevent conflicts -->
+<link rel="manifest" href='data:application/manifest+json;charset=utf-8,{"name":"עורך מפתחות ספר השיחות - mafteach","short_name":"מפתחות-mafteach","start_url":"./mafteach-editor.html","display":"standalone","background_color":"#f7f3e9","theme_color":"#1a2942","icons":[{"src":"https://placehold.co/192x192/1a2942/c9a227?text=%D7%9E","sizes":"192x192","type":"image/png"}]}'>
 
 <style>
   :root {
@@ -122,23 +122,27 @@
     cursor: pointer; display: none; padding: 4px 8px;
   }
 
-  .tags-row {
+  .filters-row {
     display: flex;
-    gap: 6px;
-    margin-bottom: 12px;
-    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 10px;
+    overflow-x: auto;
+    padding-bottom: 4px;
   }
-  .tag-filter {
-    padding: 4px 10px;
-    border-radius: 6px;
-    background: #e8e3d5;
-    color: var(--text);
-    font-size: 0.8rem;
+  .filter-btn {
+    padding: 6px 12px;
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    background: var(--paper);
+    color: var(--muted);
+    font-size: .85rem;
     cursor: pointer;
+    white-space: nowrap;
   }
-  .tag-filter.active {
-    background: var(--gold);
-    color: var(--navy);
+  .filter-btn.active {
+    background: var(--navy);
+    color: var(--cream);
+    border-color: var(--navy);
     font-weight: 600;
   }
 
@@ -169,7 +173,6 @@
     margin-bottom: 10px;
     cursor: pointer;
     transition: border-color .15s, box-shadow .15s;
-    position: relative;
   }
   .card:active { border-color: var(--gold); box-shadow: 0 0 0 2px rgba(201,162,39,.2); }
   .card .topic {
@@ -182,11 +185,6 @@
     flex-wrap: wrap;
   }
   .card .clar { color: var(--muted); font-size: .88rem; font-weight: 400; }
-  .card .card-tags {
-    display: flex;
-    gap: 4px;
-    margin-top: 4px;
-  }
   .card .tag {
     font-size: .68rem;
     background: #efe9db;
@@ -194,10 +192,6 @@
     border-radius: 999px;
     padding: 1px 8px;
     font-weight: 500;
-  }
-  .card .custom-tag {
-    background: #dbe4ef;
-    color: #3b5a82;
   }
   .card .desc { color: var(--muted); font-size: .9rem; margin-top: 4px; }
   
@@ -229,17 +223,18 @@
     gap: 8px;
     margin-top: 10px;
   }
-  .card .actions button {
+  .card .actions .link-btn {
     flex: 1;
     padding: 8px;
     border-radius: 8px;
-    border: 1.5px solid var(--line);
+    border: 1.5px solid var(--navy);
     background: var(--cream);
+    color: var(--navy);
     font-size: .85rem;
     cursor: pointer;
     font-family: inherit;
+    text-align: center;
   }
-  .card .actions .link-btn { border-color: var(--navy); color: var(--navy); }
   
   /* Editor List in Add Panel */
   .editor-list-container {
@@ -304,30 +299,36 @@
   }
   .form-group textarea { min-height: 80px; line-height: 1.6; }
   .form-group textarea.quote { min-height: 140px; }
-  .help-text { font-size: 0.75rem; color: var(--muted); margin-top: 2px; }
 
-  .type-row {
-    display: flex;
+  .checkbox-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
     gap: 8px;
   }
-  .type-row label {
-    flex: 1;
-    text-align: center;
-    padding: 10px;
+  .checkbox-grid label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 9px 10px;
     border: 1.5px solid var(--line);
     border-radius: 9px;
     background: var(--paper);
     cursor: pointer;
-    font-size: .92rem;
-    color: var(--muted);
+    font-size: .9rem;
+    color: var(--text);
+    font-weight: normal;
+    margin-bottom: 0;
   }
-  .type-row input { display: none; }
-  .type-row input:checked + span,
-  .type-row label:has(input:checked) {
+  .checkbox-grid label:has(input:checked) {
     background: var(--navy);
     color: var(--cream);
     border-color: var(--navy);
     font-weight: 500;
+  }
+  .checkbox-grid input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    accent-color: var(--gold);
   }
 
   /* Autocomplete suggestions */
@@ -484,7 +485,7 @@
     <h1>עורך מפתחות</h1>
     <div id="auth-badge" class="auth-badge disconnected">מנותק מענן</div>
   </div>
-  <div class="sub">ענינים · שמות · מקומות</div>
+  <div class="sub">ענינים · שמות · מקומות ועוד</div>
 </header>
 
 <div class="tabs">
@@ -497,16 +498,8 @@
 <main>
   <!-- BROWSE -->
   <div class="panel on" id="panel-browse">
-    <!-- Type filters -->
-    <div class="filters-row" id="type-filters" style="display:flex;gap:8px;margin-bottom:10px;overflow-x:auto;">
-        <button class="filter-btn active" data-type="all" style="padding:6px 12px;border:1px solid var(--line);border-radius:20px;background:var(--navy);color:var(--cream);font-size:.85rem;cursor:pointer;white-space:nowrap;">הכל</button>
-        <button class="filter-btn" data-type="i" style="padding:6px 12px;border:1px solid var(--line);border-radius:20px;background:var(--paper);color:var(--muted);font-size:.85rem;cursor:pointer;white-space:nowrap;">עניינים</button>
-        <button class="filter-btn" data-type="n" style="padding:6px 12px;border:1px solid var(--line);border-radius:20px;background:var(--paper);color:var(--muted);font-size:.85rem;cursor:pointer;white-space:nowrap;">שמות</button>
-        <button class="filter-btn" data-type="m" style="padding:6px 12px;border:1px solid var(--line);border-radius:20px;background:var(--paper);color:var(--muted);font-size:.85rem;cursor:pointer;white-space:nowrap;">מקומות</button>
-    </div>
-    
-    <!-- Custom custom tags filters row -->
-    <div class="tags-row" id="custom-tags-container"></div>
+    <!-- Dynamic type filters row -->
+    <div class="filters-row" id="type-filters"></div>
 
     <div class="search-box">
       <input type="search" id="q" placeholder="חיפוש נושא, שם או מקום…" autocomplete="off" enterkeyhint="search">
@@ -536,12 +529,11 @@
       <input type="hidden" id="edit-id" value="">
 
       <div class="form-group">
-        <label>סוג ערך</label>
-        <div class="type-row">
-          <label><input type="radio" name="t" value="i" checked> <span>עניין</span></label>
-          <label><input type="radio" name="t" value="n"> <span>שם</span></label>
-          <label><input type="radio" name="t" value="m"> <span>מקום</span></label>
-        </div>
+        <label style="display:flex;justify-content:space-between;align-items:center;">
+          <span>שייך לקטגוריות (ניתן לבחור אחת או יותר)</span>
+          <button type="button" class="btn btn-secondary btn-sm" id="btn-manage-cats" style="padding:2px 8px;font-size:0.75rem;">ניהול קטגוריות</button>
+        </label>
+        <div class="checkbox-grid" id="type-checkboxes-container"></div>
       </div>
 
       <div class="form-group topic-wrap">
@@ -549,15 +541,9 @@
         <input type="text" id="f-topic" required placeholder="לדוגמה: אהבת ישראל">
         <div class="suggestions" id="topic-sug"></div>
       </div>
-      
-      <div class="form-group">
-        <label>מסננים / תגים אישיים (מופרדים בפסיק)</label>
-        <input type="text" id="f-tags" placeholder='לדוגמה: אדמו"ר, חסידות'>
-        <div class="help-text">יופיעו בעמוד העיון לסינון מהיר.</div>
-      </div>
 
       <div class="form-group" id="wrap-clar">
-        <label>הבהרה (לשמות — אופציונלי)</label>
+        <label>הבהרה (אופציונלי)</label>
         <input type="text" id="f-clar" placeholder='לדוגמה: אדמו"ר הזקן'>
       </div>
 
@@ -589,13 +575,6 @@
       <div class="form-group" id="wrap-url">
         <label>קישור לשיחה</label>
         <input type="url" id="f-url" placeholder="https://...">
-      </div>
-
-      <div class="form-group hidden" id="wrap-sources-note">
-        <label>מקורות (לשמות/מקומות)</label>
-        <p style="font-size:.82rem;color:var(--muted);margin-bottom:6px">
-          הוסף מקור אחד. אחרי שמירה תוכל לערוך שוב ולהוסיף מקורות נוספים לאותו ערך.
-        </p>
       </div>
 
       <div class="btn-row">
@@ -659,7 +638,8 @@
   <div class="dialog">
     <h3 id="dlg-title">אישור</h3>
     <p id="dlg-msg"></p>
-    <div class="btn-row">
+    <div id="dlg-body" style="margin-bottom:14px"></div>
+    <div class="btn-row" id="dlg-btn-row">
       <button class="btn btn-danger" id="dlg-yes">כן</button>
       <button class="btn btn-secondary" id="dlg-no">ביטול</button>
     </div>
@@ -668,26 +648,57 @@
 
 <script>
 (function () {
-  const STORAGE_KEY = 'mafteach-editor-v3';
+  const STORAGE_KEY = 'mafteach-editor-v5';
+  const CATS_KEY = 'mafteach-categories-v2';
   const GH_CONFIG_KEY = 'mafteach-gh-config';
-  const TAG = { i: 'עניין', n: 'שם', m: 'מקום' };
+
+  let CATEGORIES = [
+    { id: 'i', name: 'עניינים', isSystem: true },
+    { id: 'n', name: 'שמות', isSystem: true },
+    { id: 'm', name: 'מקומות', isSystem: true }
+  ];
 
   let DATA = [];
   let editIndex = null; 
   let currentTypeFilter = 'all';
-  let activeCustomFilters = new Set();
   let showAllQuotes = false;
 
+  function loadCategories() {
+    try {
+      const raw = localStorage.getItem(CATS_KEY);
+      if (raw) {
+        CATEGORIES = JSON.parse(raw);
+      }
+    } catch (_) {}
+  }
+  function saveCategories() {
+    try { localStorage.setItem(CATS_KEY, JSON.stringify(CATEGORIES)); } catch (_) {}
+  }
+
   function load() {
+    loadCategories();
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
       DATA = raw ? JSON.parse(raw) : [];
+      // Backward compatibility: normalize single .t string to .types array
+      DATA.forEach(e => {
+        if (!e.types && e.t) e.types = [e.t];
+        if (!e.types) e.types = ['i'];
+      });
     } catch (_) { DATA = []; }
   }
   function save() {
     try { localStorage.setItem(STORAGE_KEY, JSON.stringify(DATA)); }
     catch (e) { toast('שגיאה בשמירה (אולי מקום אחסון מלא)', 'err'); }
     syncToGitHub();
+  }
+
+  function getCatNames(entry) {
+    const types = entry.types || [entry.t || 'i'];
+    return types.map(id => {
+      const c = CATEGORIES.find(x => x.id === id);
+      return c ? c.name : id;
+    });
   }
 
   function updateAuthStatusUI() {
@@ -711,7 +722,6 @@
     if (statusText) statusText.textContent = 'סטטוס: מנותק (הזן פרטים למטה כדי להתחבר)';
   }
 
-  // GitHub Auto-Sync Engine with auto-creation of mafteach.js if missing
   async function syncToGitHub() {
     const rawCfg = localStorage.getItem(GH_CONFIG_KEY);
     if (!rawCfg) return;
@@ -787,16 +797,22 @@
     clearTimeout(toast._t);
     toast._t = setTimeout(() => { el.className = 'toast'; }, 3000);
   }
-  function confirmDlg(title, msg) {
+  function confirmDlg(title, msg, customHtml) {
     return new Promise(resolve => {
       const ov = document.getElementById('overlay');
       document.getElementById('dlg-title').textContent = title;
-      document.getElementById('dlg-msg').textContent = msg;
+      document.getElementById('dlg-msg').textContent = msg || '';
+      const bodyEl = document.getElementById('dlg-body');
+      bodyEl.innerHTML = customHtml || '';
       ov.classList.add('show');
       const yes = document.getElementById('dlg-yes');
       const no = document.getElementById('dlg-no');
+      const btnRow = document.getElementById('dlg-btn-row');
+      btnRow.style.display = 'flex';
+
       function done(v) {
         ov.classList.remove('show');
+        bodyEl.innerHTML = '';
         yes.removeEventListener('click', onY);
         no.removeEventListener('click', onN);
         resolve(v);
@@ -812,23 +828,9 @@
     let changed = false;
     DATA.forEach(e => {
       if (!e._id) { e._id = uid(); changed = true; }
+      if (!e.types && e.t) { e.types = [e.t]; changed = true; }
     });
     if (changed) save();
-  }
-  
-  function parseTags(tagString) {
-    if (!tagString) return [];
-    return tagString.split(',').map(t => t.trim()).filter(t => t.length > 0);
-  }
-
-  function getAllUniqueTags() {
-    const tags = new Set();
-    DATA.forEach(e => {
-      if (e.customTags && Array.isArray(e.customTags)) {
-        e.customTags.forEach(t => tags.add(t));
-      }
-    });
-    return Array.from(tags).sort();
   }
 
   // Tabs navigation
@@ -840,7 +842,7 @@
       document.getElementById('panel-' + btn.dataset.tab).classList.add('on');
       
       if (btn.dataset.tab === 'browse') {
-        updateFiltersUI();
+        renderBrowseFilters();
         renderBrowse();
       }
       if (btn.dataset.tab === 'az') renderAZ();
@@ -850,6 +852,7 @@
         updateAuthStatusUI();
       }
       if (btn.dataset.tab === 'add') {
+        renderCategoryCheckboxes();
         renderEditorList();
         updateFormVisibility();
       }
@@ -863,42 +866,19 @@
   const browseControls = document.getElementById('browse-controls');
   const globalQuoteToggle = document.getElementById('global-quote-toggle');
 
-  document.querySelectorAll('.filter-btn').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      document.querySelectorAll('.filter-btn').forEach(b => {
-        b.classList.remove('active');
-        b.style.background = 'var(--paper)';
-        b.style.color = 'var(--muted)';
-      });
-      e.target.classList.add('active');
-      e.target.style.background = 'var(--navy)';
-      e.target.style.color = 'var(--cream)';
-      currentTypeFilter = e.target.dataset.type;
-      renderBrowse();
+  function renderBrowseFilters() {
+    const tfContainer = document.getElementById('type-filters');
+    let tfHtml = `<button class="filter-btn ${currentTypeFilter === 'all' ? 'active' : ''}" data-type="all">הכל</button>`;
+    CATEGORIES.forEach(cat => {
+      tfHtml += `<button class="filter-btn ${currentTypeFilter === cat.id ? 'active' : ''}" data-type="${cat.id}">${esc(cat.name)}</button>`;
     });
-  });
+    tfContainer.innerHTML = tfHtml;
 
-  function updateFiltersUI() {
-    const container = document.getElementById('custom-tags-container');
-    const tags = getAllUniqueTags();
-    if (tags.length === 0) {
-      container.innerHTML = '';
-      return;
-    }
-    container.innerHTML = tags.map(tag => 
-      `<button class="tag-filter ${activeCustomFilters.has(tag) ? 'active' : ''}" data-tag="${esc(tag)}">${esc(tag)}</button>`
-    ).join('');
-    
-    container.querySelectorAll('.tag-filter').forEach(btn => {
+    tfContainer.querySelectorAll('.filter-btn').forEach(btn => {
       btn.addEventListener('click', (e) => {
-        const tag = e.target.dataset.tag;
-        if (activeCustomFilters.has(tag)) {
-          activeCustomFilters.delete(tag);
-          e.target.classList.remove('active');
-        } else {
-          activeCustomFilters.add(tag);
-          e.target.classList.add('active');
-        }
+        tfContainer.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        e.target.classList.add('active');
+        currentTypeFilter = e.target.dataset.type;
         renderBrowse();
       });
     });
@@ -932,21 +912,18 @@
   }
 
   function cardHTML(e, isBrowse = true) {
-    const tag = TAG[e.t] || '';
+    const names = getCatNames(e);
     const clar = e.clar ? ` <span class="clar">(${esc(e.clar)})</span>` : '';
     
-    let tagsHtml = `<span class="tag">${tag}</span>`;
-    if (e.customTags && e.customTags.length > 0) {
-      e.customTags.forEach(ct => {
-        tagsHtml += `<span class="tag custom-tag">${esc(ct)}</span>`;
-      });
-    }
+    let tagsHtml = names.map(name => `<span class="tag">${esc(name)}</span>`).join('');
 
     let body = '';
     let hasUrl = e.url || (e.sources && e.sources[0] && e.sources[0].u);
     let targetUrl = e.url || (e.sources && e.sources[0] ? e.sources[0].u : '');
     
-    if (e.t === 'i') {
+    const isGeneralTopic = (!e.sources || e.t === 'i' || (e.types && e.types.includes('i')));
+    
+    if (isGeneralTopic && (e.desc || e.excerpt || e.page || e.sichah)) {
       if (e.desc) body += `<div class="desc">${esc(e.desc)}</div>`;
       if (e.excerpt) {
         body += `<div class="excerpt-container"><div class="excerpt">${esc(e.excerpt).replace(/\n/g, '<br>')}</div></div>`;
@@ -975,7 +952,7 @@
 
     return `<div class="card ${quoteClass}" data-id="${esc(e._id)}" ${hasUrl && isBrowse ? `onclick="window.open('${esc(targetUrl)}', '_blank')"` : ''}>
       <div class="topic">${esc(e.topic)}${clar}</div>
-      <div class="card-tags">${tagsHtml}</div>
+      <div class="card-tags" style="margin-top:4px;display:flex;gap:4px;flex-wrap:wrap;">${tagsHtml}</div>
       ${body}
       ${actions}
     </div>`;
@@ -985,7 +962,7 @@
     const raw = qEl.value.trim();
     qClear.style.display = raw ? 'block' : 'none';
     
-    if (!raw && currentTypeFilter === 'all' && activeCustomFilters.size === 0) {
+    if (!raw && currentTypeFilter === 'all') {
       browseControls.classList.add('hidden');
       resultsEl.innerHTML = '<div class="empty">התחל להקליד בשורת החיפוש או בחר מסנן למעלה.</div>';
       return;
@@ -995,20 +972,8 @@
     let filtered = [];
 
     for (const e of DATA) {
-      if (currentTypeFilter !== 'all' && e.t !== currentTypeFilter) continue;
-      
-      if (activeCustomFilters.size > 0) {
-        let hasMatchingTag = false;
-        if (e.customTags && e.customTags.length > 0) {
-          for (const tag of e.customTags) {
-            if (activeCustomFilters.has(tag)) {
-              hasMatchingTag = true;
-              break;
-            }
-          }
-        }
-        if (!hasMatchingTag) continue;
-      }
+      const types = e.types || [e.t || 'i'];
+      if (currentTypeFilter !== 'all' && !types.includes(currentTypeFilter)) continue;
 
       if (nq) {
         const sc = scoreEntry(e, nq);
@@ -1053,7 +1018,7 @@
     container.innerHTML = sorted.map(e => 
       `<div class="editor-list-item" data-id="${esc(e._id)}">
         <span class="item-title">${esc(e.topic)}${e.clar ? ' ('+esc(e.clar)+')' : ''}</span>
-        <span class="item-type">${TAG[e.t]}</span>
+        <span class="item-type">${getCatNames(e).join(', ')}</span>
       </div>`
     ).join('');
 
@@ -1094,7 +1059,6 @@
 
   const form = document.getElementById('entry-form');
   const fTopic = document.getElementById('f-topic');
-  const fTags = document.getElementById('f-tags');
   const fClar = document.getElementById('f-clar');
   const fDesc = document.getElementById('f-desc');
   const fExcerpt = document.getElementById('f-excerpt');
@@ -1107,25 +1071,75 @@
   const deleteBtn = document.getElementById('delete-btn');
   const topicSug = document.getElementById('topic-sug');
 
-  function getType() {
-    return form.querySelector('input[name="t"]:checked').value;
+  function getSelectedTypes() {
+    const checked = form.querySelectorAll('input[name="types"]:checked');
+    const arr = Array.from(checked).map(cb => cb.value);
+    return arr.length ? arr : [CATEGORIES[0] ? CATEGORIES[0].id : 'i'];
+  }
+
+  function renderCategoryCheckboxes() {
+    const container = document.getElementById('type-checkboxes-container');
+    const selected = getSelectedTypes();
+    
+    container.innerHTML = CATEGORIES.map((cat, idx) => `
+      <label>
+        <input type="checkbox" name="types" value="${cat.id}" ${selected.includes(cat.id) || (idx === 0 && selected.length === 0) ? 'checked' : ''}>
+        <span>${esc(cat.name)}</span>
+      </label>
+    `).join('');
+
+    container.querySelectorAll('input[name="types"]').forEach(cb => {
+      cb.addEventListener('change', updateFormVisibility);
+    });
   }
 
   function updateFormVisibility() {
-    const t = getType();
-    const isI = t === 'i';
-    document.getElementById('wrap-clar').classList.toggle('hidden', isI);
+    const types = getSelectedTypes();
+    // Show detailed excerpt/desc if 'i' (عניינים) is among selected types or no standard categories
+    const isI = types.includes('i') || types.length === 0;
+    document.getElementById('wrap-clar').classList.toggle('hidden', false);
     document.getElementById('wrap-desc').classList.toggle('hidden', !isI);
     document.getElementById('wrap-excerpt').classList.toggle('hidden', !isI);
     document.getElementById('wrap-sichah').classList.toggle('hidden', false);
     document.getElementById('wrap-page').classList.toggle('hidden', false);
     document.getElementById('wrap-pdfpage').classList.toggle('hidden', false);
     document.getElementById('wrap-url').classList.toggle('hidden', false);
-    document.getElementById('wrap-sources-note').classList.toggle('hidden', isI);
   }
 
-  form.querySelectorAll('input[name="t"]').forEach(r => {
-    r.addEventListener('change', updateFormVisibility);
+  document.getElementById('btn-manage-cats').addEventListener('click', async () => {
+    let html = `<div style="max-height:220px;overflow-y:auto;margin-bottom:12px;text-align:right;">`;
+    CATEGORIES.forEach(c => {
+      html += `<div style="display:flex;justify-content:space-between;align-items:center;padding:6px;border-bottom:1px solid var(--line);">
+        <span><b>${esc(c.name)}</b> (${c.id})</span>
+        ${!c.isSystem ? `<button type="button" class="btn btn-danger btn-sm" onclick="window.__delCat('${c.id}')">מחק</button>` : '<span style="font-size:0.75rem;color:var(--muted)">מערכת</span>'}
+      </div>`;
+    });
+    html += `</div>
+    <div style="text-align:right;border-top:1px solid var(--line);padding-top:10px;">
+      <label style="font-size:0.8rem;color:var(--muted)">הוסף קטגוריה חדשה:</label>
+      <input type="text" id="new-cat-name" placeholder="שם הקטגוריה (לדוגמה: אדמו״ר)" style="width:100%;padding:8px;margin-top:4px;border:1px solid var(--line);border-radius:6px;">
+    </div>`;
+
+    window.__delCat = (id) => {
+      CATEGORIES = CATEGORIES.filter(x => x.id !== id);
+      saveCategories();
+      document.getElementById('overlay').classList.remove('show');
+      renderCategoryCheckboxes();
+      toast('הקטגוריה נמחקה', 'ok');
+    };
+
+    const ok = await confirmDlg('ניהול קטגוריות', '', html);
+    if (ok) {
+      const input = document.getElementById('new-cat-name');
+      if (input && input.value.trim()) {
+        const name = input.value.trim();
+        const id = 'c_' + Date.now().toString(36);
+        CATEGORIES.push({ id, name, isSystem: false });
+        saveCategories();
+        renderCategoryCheckboxes();
+        toast('קטגוריה נוספה בהצלחה', 'ok');
+      }
+    }
   });
 
   fTopic.addEventListener('input', () => {
@@ -1135,17 +1149,18 @@
     const matches = [];
     for (const e of DATA) {
       const nt = normalize(e.topic);
-      if (nt.indexOf(q) >= 0 && !seen.has(nt + '|' + e.t)) {
-        seen.add(nt + '|' + e.t);
+      const typesStr = (e.types || [e.t || 'i']).join(',');
+      if (nt.indexOf(q) >= 0 && !seen.has(nt + '|' + typesStr)) {
+        seen.add(nt + '|' + typesStr);
         matches.push(e);
         if (matches.length >= 12) break;
       }
     }
     if (!matches.length) { topicSug.classList.remove('show'); return; }
     topicSug.innerHTML = matches.map(e =>
-      `<div class="sug-item" data-topic="${esc(e.topic)}" data-clar="${esc(e.clar || '')}" data-t="${e.t}" data-tags="${esc((e.customTags||[]).join(','))}">
+      `<div class="sug-item" data-topic="${esc(e.topic)}" data-clar="${esc(e.clar || '')}" data-types='${JSON.stringify(e.types || [e.t || 'i'])}'>
         ${esc(e.topic)}${e.clar ? ' <span class="clar">(' + esc(e.clar) + ')</span>' : ''}
-        <span class="sug-type">${TAG[e.t] || ''}</span>
+        <span class="sug-type">${getCatNames(e).join(', ')}</span>
       </div>`
     ).join('');
     topicSug.classList.add('show');
@@ -1153,9 +1168,13 @@
       item.addEventListener('click', () => {
         fTopic.value = item.dataset.topic;
         if (item.dataset.clar) fClar.value = item.dataset.clar;
-        if (item.dataset.tags) fTags.value = item.dataset.tags;
-        const radio = form.querySelector(`input[name="t"][value="${item.dataset.t}"]`);
-        if (radio) { radio.checked = true; updateFormVisibility(); }
+        try {
+          const tArr = JSON.parse(item.dataset.types);
+          form.querySelectorAll('input[name="types"]').forEach(cb => {
+            cb.checked = tArr.includes(cb.value);
+          });
+          updateFormVisibility();
+        } catch (_) {}
         topicSug.classList.remove('show');
         fTopic.focus();
       });
@@ -1169,7 +1188,6 @@
     editIndex = null;
     editIdEl.value = '';
     fTopic.value = '';
-    fTags.value = '';
     fClar.value = '';
     fDesc.value = '';
     fExcerpt.value = '';
@@ -1177,7 +1195,7 @@
     fPage.value = '';
     fPdfpage.value = '';
     fUrl.value = '';
-    form.querySelector('input[name="t"][value="i"]').checked = true;
+    form.querySelectorAll('input[name="types"]').forEach((cb, i) => { cb.checked = (i === 0); });
     saveBtn.textContent = 'שמור / הוסף חדש';
     deleteBtn.classList.add('hidden');
     updateFormVisibility();
@@ -1196,9 +1214,12 @@
     editIndex = idx;
     editIdEl.value = id;
     
-    form.querySelector(`input[name="t"][value="${e.t}"]`).checked = true;
+    const types = e.types || [e.t || 'i'];
+    form.querySelectorAll('input[name="types"]').forEach(cb => {
+      cb.checked = types.includes(cb.value);
+    });
+
     fTopic.value = e.topic || '';
-    fTags.value = e.customTags ? e.customTags.join(', ') : '';
     fClar.value = e.clar || '';
     fDesc.value = e.desc || '';
     fExcerpt.value = e.excerpt || '';
@@ -1236,83 +1257,45 @@
 
   form.addEventListener('submit', ev => {
     ev.preventDefault();
-    const t = getType();
+    const types = getSelectedTypes();
     const topic = fTopic.value.trim();
     if (!topic) { toast('חסר ערך', 'err'); return; }
-    
-    const customTags = parseTags(fTags.value);
 
-    if (t === 'i') {
-      const entry = {
-        t: 'i',
-        topic,
-        customTags: customTags.length ? customTags : undefined,
-        desc: fDesc.value.trim(),
-        page: fPage.value ? parseInt(fPage.value, 10) : undefined,
-        sichah: fSichah.value.trim(),
-        excerpt: fExcerpt.value.trim(),
-        url: fUrl.value.trim(),
-        pdfpage: fPdfpage.value ? parseInt(fPdfpage.value, 10) : undefined,
-        _id: editIdEl.value || uid()
-      };
-      
-      Object.keys(entry).forEach(k => { if (entry[k] === undefined || entry[k] === '') delete entry[k]; });
-      
-      if (editIndex !== null && DATA[editIndex] && DATA[editIndex]._id === entry._id) {
-        DATA[editIndex] = entry;
-        toast('עודכן', 'ok');
+    const clar = fClar.value.trim();
+    const entry = {
+      types,
+      t: types[0], // primary for backwards compatibility
+      topic,
+      clar,
+      desc: fDesc.value.trim(),
+      page: fPage.value ? parseInt(fPage.value, 10) : undefined,
+      sichah: fSichah.value.trim(),
+      excerpt: fExcerpt.value.trim(),
+      url: fUrl.value.trim(),
+      pdfpage: fPdfpage.value ? parseInt(fPdfpage.value, 10) : undefined,
+      _id: editIdEl.value || uid()
+    };
+    
+    Object.keys(entry).forEach(k => { if (entry[k] === undefined || entry[k] === '' || (Array.isArray(entry[k]) && entry[k].length === 0)) delete entry[k]; });
+    
+    if (editIndex !== null && DATA[editIndex] && DATA[editIndex]._id === entry._id) {
+      DATA[editIndex] = entry;
+      toast('עודכן', 'ok');
+    } else {
+      const existing = DATA.find(e =>
+        normalize(e.topic) === normalize(topic) &&
+        normalize(e.clar || '') === normalize(clar)
+      );
+      if (existing) {
+        // Merge types if it already exists
+        const exTypes = existing.types || [existing.t || 'i'];
+        types.forEach(t => { if (!exTypes.includes(t)) exTypes.push(t); });
+        existing.types = exTypes;
+        existing.t = exTypes[0];
+        toast('עודכו הקטגוריות לערך הקיים', 'ok');
       } else {
         DATA.push(entry);
         toast('נשמר', 'ok');
-      }
-    } else {
-      const clar = fClar.value.trim();
-      const src = {
-        s: fSichah.value.trim() || 'מקור',
-        u: fUrl.value.trim() || '',
-        dp: fPage.value ? parseInt(fPage.value, 10) : undefined,
-        pg: fPdfpage.value ? parseInt(fPdfpage.value, 10) : undefined
-      };
-      Object.keys(src).forEach(k => { if (src[k] === undefined || src[k] === '') delete src[k]; });
-
-      if (editIndex !== null && DATA[editIndex] && DATA[editIndex]._id === editIdEl.value) {
-        const e = DATA[editIndex];
-        e.topic = topic;
-        e.clar = clar;
-        e.t = t;
-        e.customTags = customTags.length ? customTags : undefined;
-        
-        if (!e.sources) e.sources = [];
-        const si = e.sources.findIndex(s => s.s === src.s);
-        if (si >= 0) e.sources[si] = src;
-        else e.sources.push(src);
-        toast('עודכן', 'ok');
-      } else {
-        const existing = DATA.find(e =>
-          e.t === t &&
-          normalize(e.topic) === normalize(topic) &&
-          normalize(e.clar || '') === normalize(clar)
-        );
-        if (existing) {
-          if (!existing.sources) existing.sources = [];
-          existing.sources.push(src);
-          if (customTags.length) {
-            const mergedTags = new Set(existing.customTags || []);
-            customTags.forEach(t => mergedTags.add(t));
-            existing.customTags = Array.from(mergedTags);
-          }
-          toast('נוסף מקור לערך קיים', 'ok');
-        } else {
-          DATA.push({
-            t,
-            topic,
-            clar,
-            customTags: customTags.length ? customTags : undefined,
-            sources: [src],
-            _id: uid()
-          });
-          toast('נשמר', 'ok');
-        }
       }
     }
     save();
@@ -1321,14 +1304,17 @@
   });
 
   function renderStats() {
-    const i = DATA.filter(e => e.t === 'i').length;
-    const n = DATA.filter(e => e.t === 'n').length;
-    const m = DATA.filter(e => e.t === 'm').length;
+    const statsHtml = CATEGORIES.map(cat => {
+      const count = DATA.filter(e => {
+        const types = e.types || [e.t || 'i'];
+        return types.includes(cat.id);
+      }).length;
+      return `<div class="stat"><div class="num">${count}</div><div class="lbl">${esc(cat.name)}</div></div>`;
+    }).join('');
+
     document.getElementById('stats').innerHTML = `
       <div class="stat"><div class="num">${DATA.length}</div><div class="lbl">סה״כ</div></div>
-      <div class="stat"><div class="num">${i}</div><div class="lbl">ענינים</div></div>
-      <div class="stat"><div class="num">${n}</div><div class="lbl">שמות</div></div>
-      <div class="stat"><div class="num">${m}</div><div class="lbl">מקומות</div></div>
+      ${statsHtml}
     `;
   }
 
@@ -1399,7 +1385,10 @@
       const text = await file.text();
       const arr = parseImport(text);
       if (!Array.isArray(arr)) throw new Error('לא מערך');
-      arr.forEach(e => { if (!e._id) e._id = uid(); });
+      arr.forEach(e => { 
+        if (!e._id) e._id = uid();
+        if (!e.types && e.t) e.types = [e.t];
+      });
       if (mode === 'replace') {
         const ok = await confirmDlg('החלפה', `להחליף את כל ${DATA.length} הערכים ב־${arr.length} ערכים מהקובץ?`);
         if (!ok) return;
@@ -1407,23 +1396,18 @@
       } else {
         const byKey = new Map();
         DATA.forEach(e => {
-          const k = e.t + '|' + normalize(e.topic) + '|' + normalize(e.clar || '');
+          const k = normalize(e.topic) + '|' + normalize(e.clar || '');
           byKey.set(k, e);
         });
         let added = 0, merged = 0;
         for (const e of arr) {
-          const k = e.t + '|' + normalize(e.topic) + '|' + normalize(e.clar || '');
-          if (e.t === 'i') {
-            DATA.push(e);
-            added++;
-          } else if (byKey.has(k)) {
+          const k = normalize(e.topic) + '|' + normalize(e.clar || '');
+          if (byKey.has(k)) {
             const ex = byKey.get(k);
-            if (!ex.sources) ex.sources = [];
-            (e.sources || []).forEach(s => {
-              if (!ex.sources.some(x => x.s === s.s && x.dp === s.dp)) {
-                ex.sources.push(s);
-              }
-            });
+            const exTypes = ex.types || [ex.t || 'i'];
+            const newTypes = e.types || [e.t || 'i'];
+            newTypes.forEach(nt => { if (!exTypes.includes(nt)) exTypes.push(nt); });
+            ex.types = exTypes;
             merged++;
           } else {
             DATA.push(e);
@@ -1460,8 +1444,9 @@
   load();
   ensureIds();
   updateAuthStatusUI();
+  renderCategoryCheckboxes();
   updateFormVisibility();
-  updateFiltersUI();
+  renderBrowseFilters();
   renderBrowse();
   renderStats();
 })();
