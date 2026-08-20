@@ -1,0 +1,1139 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#1a2942">
+<meta name="apple-mobile-web-app-title" content="עורך מפתחות">
+<title>עורך מפתחות — ספר השיחות</title>
+<style>
+  :root {
+    --navy: #1a2942;
+    --navy-light: #2a3f5f;
+    --gold: #c9a227;
+    --gold-light: #e8c547;
+    --cream: #f7f3e9;
+    --paper: #fffef9;
+    --text: #1a1a1a;
+    --muted: #6b6560;
+    --line: #e3dccd;
+    --danger: #b33a3a;
+    --success: #2d6a4f;
+    --safe-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  html, body {
+    height: 100%;
+    font-family: system-ui, -apple-system, 'Segoe UI', 'Heebo', 'Frank Ruhl Libre', sans-serif;
+    background: var(--cream);
+    color: var(--text);
+    line-height: 1.5;
+  }
+  body { display: flex; flex-direction: column; max-width: 640px; margin: 0 auto; }
+
+  /* Header */
+  header {
+    background: var(--navy);
+    color: var(--cream);
+    padding: 12px 16px;
+    padding-top: max(12px, env(safe-area-inset-top));
+    position: sticky; top: 0; z-index: 50;
+    box-shadow: 0 2px 12px rgba(0,0,0,.2);
+  }
+  header h1 { font-size: 1.15rem; font-weight: 600; text-align: center; }
+  header .sub { font-size: .75rem; opacity: .75; text-align: center; margin-top: 2px; }
+
+  /* Tabs */
+  .tabs {
+    display: flex;
+    background: var(--navy-light);
+    border-bottom: 1px solid rgba(255,255,255,.08);
+  }
+  .tab {
+    flex: 1;
+    border: none;
+    background: transparent;
+    color: rgba(255,255,255,.65);
+    font-size: .9rem;
+    padding: 11px 4px;
+    cursor: pointer;
+    font-family: inherit;
+    position: relative;
+  }
+  .tab.on { color: var(--gold); font-weight: 600; }
+  .tab.on::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 20%; right: 20%;
+    height: 2.5px;
+    background: var(--gold);
+    border-radius: 2px 2px 0 0;
+  }
+
+  /* Main content */
+  main {
+    flex: 1;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 14px 14px calc(20px + var(--safe-bottom));
+  }
+  .panel { display: none; }
+  .panel.on { display: block; }
+
+  /* Search */
+  .search-box {
+    position: relative;
+    margin-bottom: 12px;
+  }
+  .search-box input {
+    width: 100%;
+    padding: 12px 44px 12px 14px;
+    font-size: 1.05rem;
+    border: 1.5px solid var(--line);
+    border-radius: 10px;
+    background: var(--paper);
+    color: var(--text);
+    font-family: inherit;
+  }
+  .search-box input:focus { outline: none; border-color: var(--gold); }
+  .search-box .clear-btn {
+    position: absolute;
+    left: 10px; top: 50%; transform: translateY(-50%);
+    border: none; background: transparent;
+    font-size: 1.3rem; color: var(--muted);
+    cursor: pointer; display: none; padding: 4px 8px;
+  }
+
+  .count { text-align: center; color: var(--muted); font-size: .82rem; margin-bottom: 10px; min-height: 1.2em; }
+
+  /* Cards */
+  .card {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 12px 14px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: border-color .15s, box-shadow .15s;
+  }
+  .card:active { border-color: var(--gold); box-shadow: 0 0 0 2px rgba(201,162,39,.2); }
+  .card .topic {
+    font-size: 1.12rem;
+    font-weight: 600;
+    color: var(--navy);
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .card .clar { color: var(--muted); font-size: .88rem; font-weight: 400; }
+  .card .tag {
+    font-size: .68rem;
+    background: #efe9db;
+    color: #8a7a52;
+    border-radius: 999px;
+    padding: 1px 8px;
+    font-weight: 500;
+  }
+  .card .desc { color: var(--muted); font-size: .9rem; margin-top: 4px; }
+  .card .excerpt {
+    margin-top: 8px;
+    font-size: .92rem;
+    line-height: 1.7;
+    border-inline-start: 3px solid var(--gold-light);
+    padding-inline-start: 10px;
+    color: var(--text);
+  }
+  .card .meta {
+    margin-top: 8px;
+    font-size: .78rem;
+    color: var(--muted);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 12px;
+    align-items: center;
+  }
+  .card .actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+  }
+  .card .actions button {
+    flex: 1;
+    padding: 8px;
+    border-radius: 8px;
+    border: 1.5px solid var(--line);
+    background: var(--cream);
+    font-size: .85rem;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .card .actions .edit-btn { border-color: var(--navy); color: var(--navy); }
+  .card .actions .del-btn { border-color: var(--danger); color: var(--danger); }
+
+  /* A-Z groups */
+  .az-letter {
+    font-size: 1.2rem;
+    color: var(--gold);
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 3px;
+    margin: 16px 0 8px;
+    font-weight: 600;
+  }
+  .az-letter:first-child { margin-top: 0; }
+
+  /* Form */
+  .form-group { margin-bottom: 14px; }
+  .form-group label {
+    display: block;
+    font-size: .82rem;
+    color: var(--muted);
+    margin-bottom: 4px;
+    font-weight: 500;
+  }
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    width: 100%;
+    padding: 11px 12px;
+    font-size: 1rem;
+    border: 1.5px solid var(--line);
+    border-radius: 9px;
+    background: var(--paper);
+    color: var(--text);
+    font-family: inherit;
+    resize: vertical;
+  }
+  .form-group input:focus,
+  .form-group select:focus,
+  .form-group textarea:focus {
+    outline: none;
+    border-color: var(--gold);
+  }
+  .form-group textarea { min-height: 80px; line-height: 1.6; }
+  .form-group textarea.quote { min-height: 140px; }
+
+  .type-row {
+    display: flex;
+    gap: 8px;
+  }
+  .type-row label {
+    flex: 1;
+    text-align: center;
+    padding: 10px;
+    border: 1.5px solid var(--line);
+    border-radius: 9px;
+    background: var(--paper);
+    cursor: pointer;
+    font-size: .92rem;
+    color: var(--muted);
+  }
+  .type-row input { display: none; }
+  .type-row input:checked + span,
+  .type-row label:has(input:checked) {
+    background: var(--navy);
+    color: var(--cream);
+    border-color: var(--navy);
+    font-weight: 500;
+  }
+
+  /* Autocomplete suggestions */
+  .suggestions {
+    position: absolute;
+    left: 0; right: 0;
+    top: 100%;
+    background: var(--paper);
+    border: 1.5px solid var(--gold);
+    border-radius: 0 0 10px 10px;
+    max-height: 220px;
+    overflow-y: auto;
+    z-index: 40;
+    display: none;
+    box-shadow: 0 8px 20px rgba(0,0,0,.12);
+  }
+  .suggestions.show { display: block; }
+  .sug-item {
+    padding: 10px 14px;
+    cursor: pointer;
+    border-bottom: 1px solid var(--line);
+    font-size: .95rem;
+  }
+  .sug-item:last-child { border-bottom: none; }
+  .sug-item:active, .sug-item:hover { background: #f5f0e4; }
+  .sug-item .sug-type { font-size: .72rem; color: var(--muted); margin-inline-start: 6px; }
+
+  .topic-wrap { position: relative; }
+
+  /* Buttons */
+  .btn-row {
+    display: flex;
+    gap: 10px;
+    margin-top: 18px;
+    margin-bottom: 8px;
+  }
+  .btn {
+    flex: 1;
+    padding: 13px;
+    border: none;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .btn-primary { background: var(--navy); color: var(--cream); }
+  .btn-primary:active { background: var(--navy-light); }
+  .btn-secondary { background: var(--cream); color: var(--navy); border: 1.5px solid var(--navy); }
+  .btn-danger { background: var(--danger); color: #fff; }
+  .btn-sm {
+    padding: 8px 14px;
+    font-size: .85rem;
+    border-radius: 8px;
+  }
+
+  /* Toast */
+  .toast {
+    position: fixed;
+    bottom: calc(24px + var(--safe-bottom));
+    left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    background: var(--navy);
+    color: var(--cream);
+    padding: 10px 22px;
+    border-radius: 999px;
+    font-size: .9rem;
+    z-index: 100;
+    opacity: 0;
+    transition: transform .25s, opacity .25s;
+    pointer-events: none;
+    white-space: nowrap;
+    max-width: 90%;
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+  .toast.ok { background: var(--success); }
+  .toast.err { background: var(--danger); }
+
+  /* Empty state */
+  .empty {
+    text-align: center;
+    color: var(--muted);
+    padding: 40px 20px;
+    font-size: .95rem;
+  }
+
+  /* Tools panel */
+  .tools-section {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 14px;
+    margin-bottom: 12px;
+  }
+  .tools-section h3 {
+    font-size: .95rem;
+    margin-bottom: 10px;
+    color: var(--navy);
+  }
+  .tools-section p {
+    font-size: .82rem;
+    color: var(--muted);
+    margin-bottom: 10px;
+    line-height: 1.5;
+  }
+  .stats {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+  .stat {
+    flex: 1;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 12px 8px;
+    text-align: center;
+  }
+  .stat .num { font-size: 1.4rem; font-weight: 700; color: var(--navy); }
+  .stat .lbl { font-size: .75rem; color: var(--muted); margin-top: 2px; }
+
+  /* Confirm dialog */
+  .overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.45);
+    z-index: 80;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .overlay.show { display: flex; }
+  .dialog {
+    background: var(--paper);
+    border-radius: 14px;
+    padding: 22px 18px;
+    max-width: 340px;
+    width: 100%;
+    text-align: center;
+  }
+  .dialog h3 { margin-bottom: 8px; font-size: 1.1rem; }
+  .dialog p { color: var(--muted); font-size: .9rem; margin-bottom: 18px; }
+  .dialog .btn-row { margin-top: 0; }
+
+  mark { background: var(--gold-light); color: var(--navy); border-radius: 2px; padding: 0 2px; }
+
+  .hidden { display: none !important; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>עורך מפתחות</h1>
+  <div class="sub">ענינים · שמות · מקומות</div>
+</header>
+
+<div class="tabs">
+  <button class="tab on" data-tab="browse" id="tab-browse">עיון</button>
+  <button class="tab" data-tab="add" id="tab-add">הוספה / עריכה</button>
+  <button class="tab" data-tab="az" id="tab-az">א״ב</button>
+  <button class="tab" data-tab="tools" id="tab-tools">כלים</button>
+</div>
+
+<main>
+  <!-- BROWSE / SEARCH -->
+  <div class="panel on" id="panel-browse">
+    <div class="search-box">
+      <input type="search" id="q" placeholder="חיפוש נושא, שם או מקום…" autocomplete="off" enterkeyhint="search">
+      <button class="clear-btn" id="q-clear" aria-label="נקה">×</button>
+    </div>
+    <div class="count" id="count"></div>
+    <div id="results"></div>
+  </div>
+
+  <!-- ADD / EDIT -->
+  <div class="panel" id="panel-add">
+    <form id="entry-form" autocomplete="off">
+      <input type="hidden" id="edit-id" value="">
+
+      <div class="form-group">
+        <label>סוג ערך</label>
+        <div class="type-row">
+          <label><input type="radio" name="t" value="i" checked> <span>עניין</span></label>
+          <label><input type="radio" name="t" value="n"> <span>שם</span></label>
+          <label><input type="radio" name="t" value="m"> <span>מקום</span></label>
+        </div>
+      </div>
+
+      <div class="form-group topic-wrap">
+        <label>ערך (נושא / שם / מקום)</label>
+        <input type="text" id="f-topic" required placeholder="לדוגמה: אהבת ישראל">
+        <div class="suggestions" id="topic-sug"></div>
+      </div>
+
+      <div class="form-group" id="wrap-clar">
+        <label>הבהרה (לשמות — אופציונלי)</label>
+        <input type="text" id="f-clar" placeholder='לדוגמה: אדמו"ר הזקן'>
+      </div>
+
+      <div class="form-group" id="wrap-desc">
+        <label>תמציט (תיאור קצר)</label>
+        <input type="text" id="f-desc" placeholder="תיאור קצר של העניין בעמוד זה">
+      </div>
+
+      <div class="form-group" id="wrap-excerpt">
+        <label>ציטוט מלא</label>
+        <textarea id="f-excerpt" class="quote" placeholder="העתק כאן את הציטוט המלא מהשיחה…"></textarea>
+      </div>
+
+      <div class="form-group" id="wrap-sichah">
+        <label>שם השיחה / מקור</label>
+        <input type="text" id="f-sichah" placeholder='לדוגמה: ליל ז׳ תשרי תש"ז'>
+      </div>
+
+      <div class="form-group" id="wrap-page">
+        <label>עמוד בספר (מספר)</label>
+        <input type="number" id="f-page" min="1" placeholder="3">
+      </div>
+
+      <div class="form-group" id="wrap-pdfpage">
+        <label>עמוד ב־PDF (אופציונלי)</label>
+        <input type="number" id="f-pdfpage" min="1" placeholder="1">
+      </div>
+
+      <div class="form-group" id="wrap-url">
+        <label>קישור לקובץ / לדף הקריאה</label>
+        <input type="url" id="f-url" placeholder="https://sichotmeturgamot.github.io/read.html?file=...">
+      </div>
+
+      <!-- For names/places: multiple sources managed simply -->
+      <div class="form-group hidden" id="wrap-sources-note">
+        <label>מקורות (לשמות/מקומות)</label>
+        <p style="font-size:.82rem;color:var(--muted);margin-bottom:6px">
+          הוסף מקור אחד. אחרי שמירה תוכל לערוך שוב ולהוסיף מקורות נוספים לאותו ערך.
+        </p>
+      </div>
+
+      <div class="btn-row">
+        <button type="submit" class="btn btn-primary" id="save-btn">שמור</button>
+        <button type="button" class="btn btn-secondary" id="cancel-btn">נקה</button>
+      </div>
+      <button type="button" class="btn btn-danger hidden" id="delete-btn" style="width:100%;margin-top:4px">מחק ערך זה</button>
+    </form>
+  </div>
+
+  <!-- A-Z -->
+  <div class="panel" id="panel-az">
+    <div id="az-list"></div>
+  </div>
+
+  <!-- TOOLS -->
+  <div class="panel" id="panel-tools">
+    <div class="stats" id="stats"></div>
+
+    <div class="tools-section">
+      <h3>ייצוא נתונים</h3>
+      <p>הורד את כל הערכים כקובץ JSON (לגיבוי או להעברה למחשב).</p>
+      <button class="btn btn-primary btn-sm" id="btn-export-json" style="width:100%">הורד JSON</button>
+      <button class="btn btn-secondary btn-sm" id="btn-export-js" style="width:100%;margin-top:8px">הורד כ־mafteach.js</button>
+    </div>
+
+    <div class="tools-section">
+      <h3>ייבוא נתונים</h3>
+      <p>טען קובץ JSON או mafteach.js קיים. ניתן למזג עם הקיים או להחליף.</p>
+      <input type="file" id="import-file" accept=".json,.js,application/json,text/javascript" style="font-size:.85rem;margin-bottom:8px;width:100%">
+      <div class="btn-row" style="margin-top:0">
+        <button class="btn btn-primary btn-sm" id="btn-import-merge">מזג עם הקיים</button>
+        <button class="btn btn-secondary btn-sm" id="btn-import-replace">החלף הכל</button>
+      </div>
+    </div>
+
+    <div class="tools-section">
+      <h3>ניקוי</h3>
+      <p>מחיקת כל הערכים מהמכשיר (לא ניתן לשחזור).</p>
+      <button class="btn btn-danger btn-sm" id="btn-clear-all" style="width:100%">מחק הכל</button>
+    </div>
+
+    <div class="tools-section">
+      <h3>טיפ</h3>
+      <p style="margin-bottom:0">
+        כדי להתקין כאפליקציה בטלפון: ב-Safari לחץ על «שתף» ← «הוסף למסך הבית».
+        ב-Chrome: תפריט ⋮ ← «הוסף למסך הבית».
+      </p>
+    </div>
+  </div>
+</main>
+
+<div class="toast" id="toast"></div>
+
+<div class="overlay" id="overlay">
+  <div class="dialog">
+    <h3 id="dlg-title">אישור</h3>
+    <p id="dlg-msg"></p>
+    <div class="btn-row">
+      <button class="btn btn-danger" id="dlg-yes">כן</button>
+      <button class="btn btn-secondary" id="dlg-no">ביטול</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  const STORAGE_KEY = 'mafteach-editor-v1';
+  const TAG = { i: 'עניין', n: 'שם', m: 'מקום' };
+
+  // ---------- Data ----------
+  let DATA = [];
+  let editIndex = null; // index in DATA when editing
+
+  function load() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      DATA = raw ? JSON.parse(raw) : [];
+    } catch (_) { DATA = []; }
+  }
+  function save() {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(DATA)); }
+    catch (e) { toast('שגיאה בשמירה (אולי מקום אחסון מלא)', 'err'); }
+  }
+
+  // ---------- Utils ----------
+  function normalize(s) {
+    return String(s || '')
+      .replace(/[֑-ׇ]/g, '')
+      .replace(/[׳״'"‘’“”]/g, '')
+      .replace(/[‎‏]/g, '')
+      .replace(/[־–—-]/g, '')
+      .replace(/[.,:;!?()\[\]\/]/g, '')
+      .replace(/ך/g, 'כ').replace(/ם/g, 'מ').replace(/ן/g, 'נ').replace(/ף/g, 'פ').replace(/ץ/g, 'צ')
+      .replace(/\s+/g, ' ').trim();
+  }
+  function esc(s) {
+    return String(s || '').replace(/[&<>"']/g, c =>
+      ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  }
+  function hl(text, term) {
+    if (!term) return esc(text);
+    const t = esc(text);
+    try {
+      const re = new RegExp('(' + term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+      return t.replace(re, '<mark>$1</mark>');
+    } catch (_) { return t; }
+  }
+  function uid() {
+    return Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+  }
+  function toast(msg, type) {
+    const el = document.getElementById('toast');
+    el.textContent = msg;
+    el.className = 'toast show' + (type ? ' ' + type : '');
+    clearTimeout(toast._t);
+    toast._t = setTimeout(() => { el.className = 'toast'; }, 2400);
+  }
+  function confirmDlg(title, msg) {
+    return new Promise(resolve => {
+      const ov = document.getElementById('overlay');
+      document.getElementById('dlg-title').textContent = title;
+      document.getElementById('dlg-msg').textContent = msg;
+      ov.classList.add('show');
+      const yes = document.getElementById('dlg-yes');
+      const no = document.getElementById('dlg-no');
+      function done(v) {
+        ov.classList.remove('show');
+        yes.removeEventListener('click', onY);
+        no.removeEventListener('click', onN);
+        resolve(v);
+      }
+      function onY() { done(true); }
+      function onN() { done(false); }
+      yes.addEventListener('click', onY);
+      no.addEventListener('click', onN);
+    });
+  }
+
+  // Ensure every entry has a stable id
+  function ensureIds() {
+    let changed = false;
+    DATA.forEach(e => {
+      if (!e._id) { e._id = uid(); changed = true; }
+    });
+    if (changed) save();
+  }
+
+  // ---------- Tabs ----------
+  document.querySelectorAll('.tab').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('on'));
+      document.querySelectorAll('.panel').forEach(p => p.classList.remove('on'));
+      btn.classList.add('on');
+      document.getElementById('panel-' + btn.dataset.tab).classList.add('on');
+      if (btn.dataset.tab === 'browse') renderBrowse();
+      if (btn.dataset.tab === 'az') renderAZ();
+      if (btn.dataset.tab === 'tools') renderStats();
+      if (btn.dataset.tab === 'add') updateFormVisibility();
+    });
+  });
+
+  // ---------- Browse / Search ----------
+  const qEl = document.getElementById('q');
+  const qClear = document.getElementById('q-clear');
+  const resultsEl = document.getElementById('results');
+  const countEl = document.getElementById('count');
+
+  function scoreEntry(e, nq) {
+    const t = normalize(e.topic);
+    const c = normalize(e.clar || '');
+    const d = normalize(e.desc || '');
+    const x = normalize(e.excerpt || '');
+    if (t.indexOf(nq) === 0) return 6;
+    if (t.indexOf(nq) > 0) return 5;
+    if (c.indexOf(nq) >= 0) return 3;
+    if (d.indexOf(nq) >= 0) return 2;
+    if (x.indexOf(nq) >= 0) return 1;
+    // sources text
+    if (e.sources) {
+      for (const s of e.sources) {
+        if (normalize(s.s).indexOf(nq) >= 0) return 1.5;
+      }
+    }
+    return 0;
+  }
+
+  function cardHTML(e, term) {
+    const tag = TAG[e.t] || '';
+    const clar = e.clar ? ` <span class="clar">(${hl(e.clar, term)})</span>` : '';
+    let body = '';
+    if (e.t === 'i') {
+      if (e.desc) body += `<div class="desc">${hl(e.desc, term)}</div>`;
+      if (e.excerpt) body += `<div class="excerpt">${hl(e.excerpt, term)}</div>`;
+      body += `<div class="meta">`;
+      if (e.page) body += `<span>עמ׳ ${e.page}</span>`;
+      if (e.sichah) body += `<span>${esc(e.sichah)}</span>`;
+      body += `</div>`;
+    } else {
+      if (e.sources && e.sources.length) {
+        body += `<div class="meta">`;
+        body += e.sources.map(s => `<span>${esc(s.s)}${s.dp ? ' (עמ׳ ' + s.dp + ')' : ''}</span>`).join('');
+        body += `</div>`;
+      }
+    }
+    return `<div class="card" data-id="${esc(e._id)}">
+      <div class="topic">${hl(e.topic, term)}${clar}<span class="tag">${tag}</span></div>
+      ${body}
+      <div class="actions">
+        <button type="button" class="edit-btn" data-id="${esc(e._id)}">ערוך</button>
+        <button type="button" class="del-btn" data-id="${esc(e._id)}">מחק</button>
+      </div>
+    </div>`;
+  }
+
+  function renderBrowse() {
+    const raw = qEl.value.trim();
+    qClear.style.display = raw ? 'block' : 'none';
+    if (!raw) {
+      // show recent / all (limited)
+      const list = DATA.slice().reverse().slice(0, 40);
+      countEl.textContent = DATA.length ? `${DATA.length} ערכים · מציג ${list.length} אחרונים` : '';
+      resultsEl.innerHTML = list.length
+        ? list.map(e => cardHTML(e, '')).join('')
+        : '<div class="empty">אין ערכים עדיין.<br>עבור ללשונית «הוספה / עריכה» כדי להתחיל.</div>';
+      bindCardActions();
+      return;
+    }
+    const nq = normalize(raw);
+    if (!nq) { resultsEl.innerHTML = ''; countEl.textContent = ''; return; }
+    let scored = [];
+    for (const e of DATA) {
+      const sc = scoreEntry(e, nq);
+      if (sc > 0) scored.push({ e, sc });
+    }
+    scored.sort((a, b) => b.sc - a.sc);
+    const rows = scored.map(x => x.e);
+    countEl.textContent = rows.length
+      ? (rows.length === 1 ? 'תוצאה אחת' : rows.length + ' תוצאות')
+      : 'לא נמצאו תוצאות';
+    resultsEl.innerHTML = rows.length
+      ? rows.map(e => cardHTML(e, raw)).join('')
+      : '<div class="empty">לא נמצאו תוצאות</div>';
+    bindCardActions();
+  }
+
+  function bindCardActions() {
+    resultsEl.querySelectorAll('.edit-btn').forEach(btn => {
+      btn.addEventListener('click', ev => {
+        ev.stopPropagation();
+        startEdit(btn.dataset.id);
+      });
+    });
+    resultsEl.querySelectorAll('.del-btn').forEach(btn => {
+      btn.addEventListener('click', async ev => {
+        ev.stopPropagation();
+        await deleteById(btn.dataset.id);
+      });
+    });
+  }
+
+  qEl.addEventListener('input', renderBrowse);
+  qClear.addEventListener('click', () => { qEl.value = ''; qEl.focus(); renderBrowse(); });
+
+  // ---------- A-Z ----------
+  function heFirst(s) {
+    const c = normalize(s).charAt(0);
+    return /[א-ת]/.test(c) ? c : '#';
+  }
+  function renderAZ() {
+    const el = document.getElementById('az-list');
+    if (!DATA.length) {
+      el.innerHTML = '<div class="empty">אין ערכים</div>';
+      return;
+    }
+    // unique topics for display, but keep all entries under each
+    const byLetter = {};
+    const sorted = DATA.slice().sort((a, b) =>
+      normalize(a.topic).localeCompare(normalize(b.topic), 'he'));
+    for (const e of sorted) {
+      const L = heFirst(e.topic);
+      (byLetter[L] = byLetter[L] || []).push(e);
+    }
+    const letters = Object.keys(byLetter).sort((a, b) =>
+      a === '#' ? 1 : b === '#' ? -1 : a.localeCompare(b, 'he'));
+    el.innerHTML = letters.map(L =>
+      `<div class="az-letter">${esc(L)}</div>` +
+      byLetter[L].map(e => cardHTML(e, '')).join('')
+    ).join('');
+    // re-bind
+    el.querySelectorAll('.edit-btn').forEach(btn => {
+      btn.addEventListener('click', ev => {
+        ev.stopPropagation();
+        startEdit(btn.dataset.id);
+      });
+    });
+    el.querySelectorAll('.del-btn').forEach(btn => {
+      btn.addEventListener('click', async ev => {
+        ev.stopPropagation();
+        await deleteById(btn.dataset.id);
+      });
+    });
+  }
+
+  // ---------- Form ----------
+  const form = document.getElementById('entry-form');
+  const fTopic = document.getElementById('f-topic');
+  const fClar = document.getElementById('f-clar');
+  const fDesc = document.getElementById('f-desc');
+  const fExcerpt = document.getElementById('f-excerpt');
+  const fSichah = document.getElementById('f-sichah');
+  const fPage = document.getElementById('f-page');
+  const fPdfpage = document.getElementById('f-pdfpage');
+  const fUrl = document.getElementById('f-url');
+  const editIdEl = document.getElementById('edit-id');
+  const saveBtn = document.getElementById('save-btn');
+  const deleteBtn = document.getElementById('delete-btn');
+  const topicSug = document.getElementById('topic-sug');
+
+  function getType() {
+    return form.querySelector('input[name="t"]:checked').value;
+  }
+
+  function updateFormVisibility() {
+    const t = getType();
+    const isI = t === 'i';
+    document.getElementById('wrap-clar').classList.toggle('hidden', isI);
+    document.getElementById('wrap-desc').classList.toggle('hidden', !isI);
+    document.getElementById('wrap-excerpt').classList.toggle('hidden', !isI);
+    document.getElementById('wrap-sichah').classList.toggle('hidden', false);
+    document.getElementById('wrap-page').classList.toggle('hidden', false);
+    document.getElementById('wrap-pdfpage').classList.toggle('hidden', false);
+    document.getElementById('wrap-url').classList.toggle('hidden', false);
+    document.getElementById('wrap-sources-note').classList.toggle('hidden', isI);
+  }
+
+  form.querySelectorAll('input[name="t"]').forEach(r => {
+    r.addEventListener('change', updateFormVisibility);
+  });
+
+  // Topic autocomplete — existing values
+  fTopic.addEventListener('input', () => {
+    const q = normalize(fTopic.value);
+    if (q.length < 1) { topicSug.classList.remove('show'); return; }
+    const seen = new Set();
+    const matches = [];
+    for (const e of DATA) {
+      const nt = normalize(e.topic);
+      if (nt.indexOf(q) >= 0 && !seen.has(nt + '|' + e.t)) {
+        seen.add(nt + '|' + e.t);
+        matches.push(e);
+        if (matches.length >= 12) break;
+      }
+    }
+    if (!matches.length) { topicSug.classList.remove('show'); return; }
+    topicSug.innerHTML = matches.map(e =>
+      `<div class="sug-item" data-topic="${esc(e.topic)}" data-clar="${esc(e.clar || '')}" data-t="${e.t}">
+        ${esc(e.topic)}${e.clar ? ' <span class="clar">(' + esc(e.clar) + ')</span>' : ''}
+        <span class="sug-type">${TAG[e.t] || ''}</span>
+      </div>`
+    ).join('');
+    topicSug.classList.add('show');
+    topicSug.querySelectorAll('.sug-item').forEach(item => {
+      item.addEventListener('click', () => {
+        fTopic.value = item.dataset.topic;
+        if (item.dataset.clar) fClar.value = item.dataset.clar;
+        const radio = form.querySelector(`input[name="t"][value="${item.dataset.t}"]`);
+        if (radio) { radio.checked = true; updateFormVisibility(); }
+        topicSug.classList.remove('show');
+        fTopic.focus();
+      });
+    });
+  });
+  document.addEventListener('click', e => {
+    if (!e.target.closest('.topic-wrap')) topicSug.classList.remove('show');
+  });
+
+  function clearForm() {
+    editIndex = null;
+    editIdEl.value = '';
+    fTopic.value = '';
+    fClar.value = '';
+    fDesc.value = '';
+    fExcerpt.value = '';
+    fSichah.value = '';
+    fPage.value = '';
+    fPdfpage.value = '';
+    fUrl.value = '';
+    form.querySelector('input[name="t"][value="i"]').checked = true;
+    saveBtn.textContent = 'שמור';
+    deleteBtn.classList.add('hidden');
+    updateFormVisibility();
+  }
+
+  document.getElementById('cancel-btn').addEventListener('click', () => {
+    clearForm();
+    toast('הטופס נוקה');
+  });
+
+  function startEdit(id) {
+    const idx = DATA.findIndex(e => e._id === id);
+    if (idx < 0) return;
+    const e = DATA[idx];
+    editIndex = idx;
+    editIdEl.value = id;
+    form.querySelector(`input[name="t"][value="${e.t}"]`).checked = true;
+    fTopic.value = e.topic || '';
+    fClar.value = e.clar || '';
+    fDesc.value = e.desc || '';
+    fExcerpt.value = e.excerpt || '';
+    fSichah.value = e.sichah || (e.sources && e.sources[0] ? e.sources[0].s : '');
+    fPage.value = e.page || (e.sources && e.sources[0] ? e.sources[0].dp : '') || '';
+    fPdfpage.value = e.pdfpage || (e.sources && e.sources[0] ? e.sources[0].pg : '') || '';
+    fUrl.value = e.url || (e.sources && e.sources[0] ? e.sources[0].u : '') || '';
+    saveBtn.textContent = 'עדכן';
+    deleteBtn.classList.remove('hidden');
+    updateFormVisibility();
+    // switch tab
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('on'));
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('on'));
+    document.getElementById('tab-add').classList.add('on');
+    document.getElementById('panel-add').classList.add('on');
+    window.scrollTo(0, 0);
+  }
+
+  async function deleteById(id) {
+    const e = DATA.find(x => x._id === id);
+    if (!e) return;
+    const ok = await confirmDlg('מחיקה', `למחוק את «${e.topic}»?`);
+    if (!ok) return;
+    DATA = DATA.filter(x => x._id !== id);
+    save();
+    toast('נמחק', 'ok');
+    if (editIdEl.value === id) clearForm();
+    renderBrowse();
+    if (document.getElementById('panel-az').classList.contains('on')) renderAZ();
+    renderStats();
+  }
+
+  deleteBtn.addEventListener('click', async () => {
+    if (editIdEl.value) await deleteById(editIdEl.value);
+  });
+
+  form.addEventListener('submit', ev => {
+    ev.preventDefault();
+    const t = getType();
+    const topic = fTopic.value.trim();
+    if (!topic) { toast('חסר ערך', 'err'); return; }
+
+    if (t === 'i') {
+      const entry = {
+        t: 'i',
+        topic,
+        desc: fDesc.value.trim(),
+        page: fPage.value ? parseInt(fPage.value, 10) : undefined,
+        sichah: fSichah.value.trim(),
+        excerpt: fExcerpt.value.trim(),
+        url: fUrl.value.trim(),
+        pdfpage: fPdfpage.value ? parseInt(fPdfpage.value, 10) : undefined,
+        _id: editIdEl.value || uid()
+      };
+      // clean undefined
+      Object.keys(entry).forEach(k => { if (entry[k] === undefined || entry[k] === '') delete entry[k]; });
+      entry.t = 'i';
+      entry.topic = topic;
+      entry._id = editIdEl.value || uid();
+
+      if (editIndex !== null && DATA[editIndex] && DATA[editIndex]._id === entry._id) {
+        DATA[editIndex] = entry;
+        toast('עודכן', 'ok');
+      } else {
+        DATA.push(entry);
+        toast('נשמר', 'ok');
+      }
+    } else {
+      // name / place
+      const clar = fClar.value.trim();
+      const src = {
+        s: fSichah.value.trim() || 'מקור',
+        u: fUrl.value.trim() || '',
+        dp: fPage.value ? parseInt(fPage.value, 10) : undefined,
+        pg: fPdfpage.value ? parseInt(fPdfpage.value, 10) : undefined
+      };
+      Object.keys(src).forEach(k => { if (src[k] === undefined || src[k] === '') delete src[k]; });
+
+      if (editIndex !== null && DATA[editIndex] && DATA[editIndex]._id === editIdEl.value) {
+        // update existing
+        const e = DATA[editIndex];
+        e.topic = topic;
+        e.clar = clar;
+        e.t = t;
+        // replace or append source
+        if (!e.sources) e.sources = [];
+        // if same sichah exists, update it; else push
+        const si = e.sources.findIndex(s => s.s === src.s);
+        if (si >= 0) e.sources[si] = src;
+        else e.sources.push(src);
+        toast('עודכן', 'ok');
+      } else {
+        // try merge into existing same topic+clar+type
+        const existing = DATA.find(e =>
+          e.t === t &&
+          normalize(e.topic) === normalize(topic) &&
+          normalize(e.clar || '') === normalize(clar)
+        );
+        if (existing) {
+          if (!existing.sources) existing.sources = [];
+          existing.sources.push(src);
+          toast('נוסף מקור לערך קיים', 'ok');
+        } else {
+          DATA.push({
+            t,
+            topic,
+            clar,
+            sources: [src],
+            _id: uid()
+          });
+          toast('נשמר', 'ok');
+        }
+      }
+    }
+    save();
+    clearForm();
+    renderStats();
+  });
+
+  // ---------- Tools ----------
+  function renderStats() {
+    const i = DATA.filter(e => e.t === 'i').length;
+    const n = DATA.filter(e => e.t === 'n').length;
+    const m = DATA.filter(e => e.t === 'm').length;
+    document.getElementById('stats').innerHTML = `
+      <div class="stat"><div class="num">${DATA.length}</div><div class="lbl">סה״כ</div></div>
+      <div class="stat"><div class="num">${i}</div><div class="lbl">ענינים</div></div>
+      <div class="stat"><div class="num">${n}</div><div class="lbl">שמות</div></div>
+      <div class="stat"><div class="num">${m}</div><div class="lbl">מקומות</div></div>
+    `;
+  }
+
+  function download(filename, text, mime) {
+    const blob = new Blob([text], { type: mime || 'text/plain;charset=utf-8' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = filename;
+    a.click();
+    setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+  }
+
+  function stripIds(arr) {
+    return arr.map(e => {
+      const o = { ...e };
+      delete o._id;
+      return o;
+    });
+  }
+
+  document.getElementById('btn-export-json').addEventListener('click', () => {
+    download('mafteach-data.json', JSON.stringify(stripIds(DATA), null, 0), 'application/json');
+    toast('JSON הורד', 'ok');
+  });
+
+  document.getElementById('btn-export-js').addEventListener('click', () => {
+    const body = JSON.stringify(stripIds(DATA));
+    const js = `// נתוני המפתחות — נערך בעורך המפתחות\nconst MAFTEACH = ${body};\n`;
+    download('mafteach.js', js, 'text/javascript');
+    toast('mafteach.js הורד', 'ok');
+  });
+
+  function parseImport(text) {
+    text = text.trim();
+    // try pure JSON array
+    if (text.startsWith('[')) {
+      return JSON.parse(text);
+    }
+    // try const MAFTEACH = [...]
+    const m = text.match(/const\s+MAFTEACH\s*=\s*(\[[\s\S]*\])\s*;?\s*$/);
+    if (m) return JSON.parse(m[1]);
+    // try find first [ ... last ]
+    const start = text.indexOf('[');
+    const end = text.lastIndexOf(']');
+    if (start >= 0 && end > start) {
+      return JSON.parse(text.slice(start, end + 1));
+    }
+    throw new Error('פורמט לא מזוהה');
+  }
+
+  async function doImport(mode) {
+    const file = document.getElementById('import-file').files[0];
+    if (!file) { toast('בחר קובץ קודם', 'err'); return; }
+    try {
+      const text = await file.text();
+      const arr = parseImport(text);
+      if (!Array.isArray(arr)) throw new Error('לא מערך');
+      arr.forEach(e => { if (!e._id) e._id = uid(); });
+      if (mode === 'replace') {
+        const ok = await confirmDlg('החלפה', `להחליף את כל ${DATA.length} הערכים ב־${arr.length} ערכים מהקובץ?`);
+        if (!ok) return;
+        DATA = arr;
+      } else {
+        // merge by _id if present, else append; for n/m merge sources by topic+clar
+        const byKey = new Map();
+        DATA.forEach(e => {
+          const k = e.t + '|' + normalize(e.topic) + '|' + normalize(e.clar || '');
+          byKey.set(k, e);
+        });
+        let added = 0, merged = 0;
+        for (const e of arr) {
+          const k = e.t + '|' + normalize(e.topic) + '|' + normalize(e.clar || '');
+          if (e.t === 'i') {
+            DATA.push(e);
+            added++;
+          } else if (byKey.has(k)) {
+            const ex = byKey.get(k);
+            if (!ex.sources) ex.sources = [];
+            (e.sources || []).forEach(s => {
+              if (!ex.sources.some(x => x.s === s.s && x.dp === s.dp)) {
+                ex.sources.push(s);
+              }
+            });
+            merged++;
+          } else {
+            DATA.push(e);
+            byKey.set(k, e);
+            added++;
+          }
+        }
+        toast(`נוספו ${added}, מוזגו ${merged}`, 'ok');
+        save();
+        renderStats();
+        return;
+      }
+      save();
+      toast(`נטענו ${DATA.length} ערכים`, 'ok');
+      renderStats();
+    } catch (err) {
+      toast('שגיאה בייבוא: ' + err.message, 'err');
+    }
+  }
+
+  document.getElementById('btn-import-merge').addEventListener('click', () => doImport('merge'));
+  document.getElementById('btn-import-replace').addEventListener('click', () => doImport('replace'));
+
+  document.getElementById('btn-clear-all').addEventListener('click', async () => {
+    const ok = await confirmDlg('מחיקת הכל', 'למחוק את כל הערכים מהמכשיר? פעולה זו אינה ניתנת לשחזור.');
+    if (!ok) return;
+    DATA = [];
+    save();
+    clearForm();
+    renderBrowse();
+    renderAZ();
+    renderStats();
+    toast('הכל נמחק', 'ok');
+  });
+
+  // ---------- Init ----------
+  load();
+  ensureIds();
+  updateFormVisibility();
+  renderBrowse();
+  renderStats();
+})();
+</script>
+</body>
+</html>
