@@ -9,8 +9,8 @@
 <meta name="apple-mobile-web-app-title" content="עורך מפתחות">
 <title>עורך מפתחות — ספר השיחות</title>
 
-<!-- Manifest for standalone PWA installation -->
-<link rel="manifest" href="data:application/manifest+json;charset=utf-8,%7B%22name%22%3A%22%D7%A2%D7%95%D7%A8%D7%9A%20%D7%9E%D7%A4%D7%AA%D7%97%D7%95%D7%AA%22%2C%22short_name%22%3A%22%D7%9E%D7%A4%D7%AA%D7%97%D7%95%D7%AA%22%2C%22start_url%22%3A%22.%2Fmafteach-editor.html%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23f7f3e9%22%2C%22theme_color%22%3A%22%231a2942%22%7D">
+<!-- Unique PWA manifest to prevent conflicts with other apps on the same domain -->
+<link rel="manifest" href='data:application/manifest+json;charset=utf-8,{"name":"עורך מפתחות ספר השיחות","short_name":"מפתחות","start_url":"./mafteach-editor.html","display":"standalone","background_color":"#f7f3e9","theme_color":"#1a2942","icons":[{"src":"https://placehold.co/192x192/1a2942/c9a227?text=מ","sizes":"192x192","type":"image/png"}]}'>
 
 <style>
   :root {
@@ -113,7 +113,7 @@
   .filters-row {
     display: flex;
     gap: 8px;
-    margin-bottom: 12px;
+    margin-bottom: 10px;
     overflow-x: auto;
     padding-bottom: 4px;
   }
@@ -135,39 +135,39 @@
   }
   
   .tags-row {
-      display: flex;
-      gap: 6px;
-      margin-bottom: 12px;
-      flex-wrap: wrap;
+    display: flex;
+    gap: 6px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
   }
   .tag-filter {
-      padding: 4px 10px;
-      border-radius: 6px;
-      background: #e8e3d5;
-      color: var(--text);
-      font-size: 0.8rem;
-      cursor: pointer;
+    padding: 4px 10px;
+    border-radius: 6px;
+    background: #e8e3d5;
+    color: var(--text);
+    font-size: 0.8rem;
+    cursor: pointer;
   }
   .tag-filter.active {
-      background: var(--gold);
-      color: var(--navy);
-      font-weight: 600;
+    background: var(--gold);
+    color: var(--navy);
+    font-weight: 600;
   }
 
   .controls-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
   }
   .toggle-quotes-btn {
-      font-size: 0.8rem;
-      color: var(--navy);
-      background: none;
-      border: 1px solid var(--navy);
-      border-radius: 4px;
-      padding: 4px 8px;
-      cursor: pointer;
+    font-size: 0.8rem;
+    color: var(--navy);
+    background: none;
+    border: 1px solid var(--navy);
+    border-radius: 4px;
+    padding: 4px 8px;
+    cursor: pointer;
   }
 
   .count { color: var(--muted); font-size: .82rem; }
@@ -195,9 +195,9 @@
   }
   .card .clar { color: var(--muted); font-size: .88rem; font-weight: 400; }
   .card .card-tags {
-      display: flex;
-      gap: 4px;
-      margin-top: 4px;
+    display: flex;
+    gap: 4px;
+    margin-top: 4px;
   }
   .card .tag {
     font-size: .68rem;
@@ -208,17 +208,17 @@
     font-weight: 500;
   }
   .card .custom-tag {
-      background: #dbe4ef;
-      color: #3b5a82;
+    background: #dbe4ef;
+    color: #3b5a82;
   }
   .card .desc { color: var(--muted); font-size: .9rem; margin-top: 4px; }
   
   .card .excerpt-container {
-      margin-top: 8px;
-      display: none; /* Hidden by default */
+    margin-top: 8px;
+    display: none;
   }
   .card.show-quote .excerpt-container {
-      display: block;
+    display: block;
   }
   .card .excerpt {
     font-size: .92rem;
@@ -253,22 +253,22 @@
   }
   .card .actions .link-btn { border-color: var(--navy); color: var(--navy); }
   
-  /* Editor List */
+  /* Editor List in Add Panel */
   .editor-list-container {
-      margin-bottom: 20px;
-      border: 1px solid var(--line);
-      border-radius: 10px;
-      background: var(--paper);
-      max-height: 200px;
-      overflow-y: auto;
+    margin-bottom: 20px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: var(--paper);
+    max-height: 200px;
+    overflow-y: auto;
   }
   .editor-list-item {
-      padding: 10px;
-      border-bottom: 1px solid var(--line);
-      cursor: pointer;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid var(--line);
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
   }
   .editor-list-item:last-child { border-bottom: none; }
   .editor-list-item:hover { background: #f5f0e4; }
@@ -453,7 +453,7 @@
   .stat {
     flex: 1;
     background: var(--paper);
-    border: 1px solid var(--line);
+    border: 1.5px solid var(--line);
     border-radius: 10px;
     padding: 12px 8px;
     text-align: center;
@@ -503,7 +503,9 @@
 </div>
 
 <main>
+  <!-- BROWSE -->
   <div class="panel on" id="panel-browse">
+    <!-- Type filters -->
     <div class="filters-row" id="type-filters">
         <button class="filter-btn active" data-type="all">הכל</button>
         <button class="filter-btn" data-type="i">עניינים</button>
@@ -511,9 +513,8 @@
         <button class="filter-btn" data-type="m">מקומות</button>
     </div>
     
-    <div class="tags-row" id="custom-tags-container">
-        <!-- Dynamic tags will go here -->
-    </div>
+    <!-- Custom custom tags filters row -->
+    <div class="tags-row" id="custom-tags-container"></div>
 
     <div class="search-box">
       <input type="search" id="q" placeholder="חיפוש נושא, שם או מקום…" autocomplete="off" enterkeyhint="search">
@@ -530,14 +531,11 @@
     </div>
   </div>
 
+  <!-- ADD / EDIT -->
   <div class="panel" id="panel-add">
-    
-    <!-- List of entries to edit (Only shown here) -->
     <div class="form-group">
         <label>בחר ערך לעריכה (או הוסף חדש למטה)</label>
-        <div class="editor-list-container" id="editor-list">
-            <!-- Populated by JS -->
-        </div>
+        <div class="editor-list-container" id="editor-list"></div>
     </div>
 
     <hr style="border:0; border-top:1px solid var(--line); margin: 20px 0;">
@@ -601,7 +599,6 @@
         <input type="url" id="f-url" placeholder="https://...">
       </div>
 
-      <!-- For names/places: multiple sources managed simply -->
       <div class="form-group hidden" id="wrap-sources-note">
         <label>מקורות (לשמות/מקומות)</label>
         <p style="font-size:.82rem;color:var(--muted);margin-bottom:6px">
@@ -627,37 +624,28 @@
     <div class="stats" id="stats"></div>
 
     <div class="tools-section">
-      <h3>חיבור ל-GitHub (ענן)</h3>
-      <p>הגדר פעם אחת, והמערכת תעדכן אוטומטית את קובץ <code>mafteach.js</code> בגיטהאב בכל פעם שתשמור או תערוך ערך.</p>
+      <h3>סנכרון אוטומטי ל־GitHub</h3>
+      <p>הכנס את פרטי הריפו והטוקן שלך פעם אחת, והם יישמרו בדפדפן. כל שינוי או הוספה יעדכנו אוטומטית את קובץ ה־<code>mafteach.js</code> בענן.</p>
       <div class="form-group">
-        <label>GitHub Personal Token</label>
-        <input type="password" id="gh-token" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx">
-        <div class="help-text">שמור רק בדפדפן שלך. נדרשת הרשאת 'repo'.</div>
+        <label>שם משתמש בגיטהאב (Owner)</label>
+        <input type="text" id="gh-owner" placeholder="sichotmeturgamot">
       </div>
-      <div style="display:flex; gap:10px;">
-         <div class="form-group" style="flex:1">
-           <label>שם משתמש (Owner)</label>
-           <input type="text" id="gh-owner" value="sichotmeturgamot">
-         </div>
-         <div class="form-group" style="flex:1">
-           <label>שם ריפו (Repo)</label>
-           <input type="text" id="gh-repo" value="mafteach">
-         </div>
+      <div class="form-group">
+        <label>שם הריפו (Repository)</label>
+        <input type="text" id="gh-repo" placeholder="mafteach">
+      </div>
+      <div class="form-group">
+        <label>טוקן גישה (Personal Access Token)</label>
+        <input type="password" id="gh-token" placeholder="ghp_...">
       </div>
       <button class="btn btn-primary btn-sm" id="btn-save-gh" style="width:100%">שמור הגדרות סנכרון</button>
     </div>
 
     <div class="tools-section">
-      <h3>ייצוא נתונים</h3>
-      <p>הורד את כל הערכים כקובץ JSON (לגיבוי או להעברה למחשב).</p>
-      <button class="btn btn-primary btn-sm" id="btn-export-json" style="width:100%">הורד JSON</button>
-      <button class="btn btn-secondary btn-sm" id="btn-export-js" style="width:100%;margin-top:8px">הורד כ־mafteach.js</button>
-    </div>
-
-    <div class="tools-section">
-      <h3>ייבוא נתונים</h3>
-      <p>טען קובץ JSON או mafteach.js קיים. ניתן למזג עם הקיים או להחליף.</p>
-      <input type="file" id="import-file" accept=".json,.js,application/json,text/javascript" style="font-size:.85rem;margin-bottom:8px;width:100%">
+      <h3>ייצוא / ייבוא ידני</h3>
+      <p>גיבוי מקומי או טעינת קובץ נתונים חיצוני.</p>
+      <button class="btn btn-secondary btn-sm" id="btn-export-js" style="width:100%">הורד כ־mafteach.js</button>
+      <input type="file" id="import-file" accept=".json,.js,application/json,text/javascript" style="font-size:.85rem;margin:10px 0 8px;width:100%">
       <div class="btn-row" style="margin-top:0">
         <button class="btn btn-primary btn-sm" id="btn-import-merge">מזג עם הקיים</button>
         <button class="btn btn-secondary btn-sm" id="btn-import-replace">החלף הכל</button>
@@ -666,8 +654,16 @@
 
     <div class="tools-section">
       <h3>ניקוי</h3>
-      <p>מחיקת כל הערכים מהמכשיר (לא ניתן לשחזור).</p>
+      <p>מחיקת כל הערכים מהמכשיר.</p>
       <button class="btn btn-danger btn-sm" id="btn-clear-all" style="width:100%">מחק הכל</button>
+    </div>
+
+    <div class="tools-section">
+      <h3>טיפ להתקנה כאפליקציה</h3>
+      <p style="margin-bottom:0">
+        ב-Safari: לחץ על «שתף» ← «הוסף למסך הבית».<br>
+        ב-Chrome: תפריט ⋮ ← «הוסף למסך הבית».
+      </p>
     </div>
   </div>
 </main>
@@ -687,7 +683,8 @@
 
 <script>
 (function () {
-  const STORAGE_KEY = 'mafteach-editor-v2';
+  const STORAGE_KEY = 'mafteach-editor-v3';
+  const GH_CONFIG_KEY = 'mafteach-gh-config';
   const TAG = { i: 'עניין', n: 'שם', m: 'מקום' };
 
   let DATA = [];
@@ -695,10 +692,6 @@
   let currentTypeFilter = 'all';
   let activeCustomFilters = new Set();
   let showAllQuotes = false;
-  
-  // -- GITHUB SYNC CONFIG --
-  const GH_KEY = 'mafteach-gh-config';
-  let ghConfig = { token: '', owner: 'sichotmeturgamot', repo: 'mafteach' };
 
   function load() {
     try {
@@ -709,72 +702,61 @@
   function save() {
     try { localStorage.setItem(STORAGE_KEY, JSON.stringify(DATA)); }
     catch (e) { toast('שגיאה בשמירה (אולי מקום אחסון מלא)', 'err'); }
+    syncToGitHub();
   }
 
-  function saveAndSync() {
-      save();
-      if (ghConfig.token) syncToGitHub();
-  }
-
-  function loadGhConfig() {
-      try {
-          const c = localStorage.getItem(GH_KEY);
-          if (c) ghConfig = JSON.parse(c);
-          if (document.getElementById('gh-token')) {
-              document.getElementById('gh-token').value = ghConfig.token || '';
-              document.getElementById('gh-owner').value = ghConfig.owner || 'sichotmeturgamot';
-              document.getElementById('gh-repo').value = ghConfig.repo || 'mafteach';
-          }
-      } catch(e) {}
-  }
-
+  // GitHub Auto-Sync Engine
   async function syncToGitHub() {
-      if (!ghConfig.token) return;
+    const rawCfg = localStorage.getItem(GH_CONFIG_KEY);
+    if (!rawCfg) return;
+    try {
+      const { owner, repo, token } = JSON.parse(rawCfg);
+      if (!owner || !repo || !token) return;
+
+      const path = 'mafteach.js';
+      const cleanData = stripIds(DATA);
+      const fileContent = `// נתוני המפתחות — נערך אוטומטית בעורך המפתחות\nconst MAFTEACH = ${JSON.stringify(cleanData)};\n`;
+      const encodedContent = btoa(unescape(encodeURIComponent(fileContent)));
+
+      const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${path}`;
       
-      try {
-          toast('מסנכרן לענן (GitHub)...');
-          const path = 'mafteach.js';
-          const branch = 'main';
-          const apiUrl = `https://api.github.com/repos/${ghConfig.owner}/${ghConfig.repo}/contents/${path}`;
-          
-          let sha = null;
-          const getRes = await fetch(apiUrl + `?ref=${branch}`, {
-              headers: { 'Authorization': `token ${ghConfig.token}` }
-          });
-          
-          if (getRes.ok) {
-              const data = await getRes.json();
-              sha = data.sha;
-          } else if (getRes.status !== 404) {
-              throw new Error('שגיאת גישה לגיטהאב. בדוק הרשאות.');
-          }
-          
-          const bodyStr = JSON.stringify(stripIds(DATA));
-          const jsContent = `// נתוני המפתחות — נערך בעורך המפתחות\nconst MAFTEACH = ${bodyStr};\n`;
-          const base64Content = btoa(unescape(encodeURIComponent(jsContent)));
-          
-          const putRes = await fetch(apiUrl, {
-              method: 'PUT',
-              headers: {
-                  'Authorization': `token ${ghConfig.token}`,
-                  'Content-Type': 'application/json'
-              },
-              body: JSON.stringify({
-                  message: 'עדכון מפתחות מהעורך',
-                  content: base64Content,
-                  sha: sha,
-                  branch: branch
-              })
-          });
-          
-          if (!putRes.ok) throw new Error('השמירה לגיטהאב נכשלה.');
-          toast('סונכרן בהצלחה ל-GitHub!', 'ok');
-      } catch (err) {
-          toast('שגיאת סנכרון: ' + err.message, 'err');
+      // 1. Get current file sha if exists
+      let sha = '';
+      const getRes = await fetch(apiUrl, {
+        headers: { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json' }
+      });
+      if (getRes.ok) {
+        const fileData = await getRes.json();
+        sha = fileData.sha;
       }
+
+      // 2. Put updated content
+      const putRes = await fetch(apiUrl, {
+        method: 'PUT',
+        headers: {
+          'Authorization': `token ${token}`,
+          'Accept': 'application/vnd.github.v3+json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          message: 'Update mafteach.js automatically from editor',
+          content: encodedContent,
+          sha: sha || undefined
+        })
+      });
+
+      if (putRes.ok) {
+        toast('הענן עודכן אוטומטית ב־GitHub!', 'ok');
+      } else {
+        const errJson = await putRes.json();
+        console.error('GitHub Sync Error:', errJson);
+        toast('שגיאה בסנכרון לענן (בדוק טוקן)', 'err');
+      }
+    } catch (e) {
+      console.error('GitHub Sync Exception:', e);
+    }
   }
 
-  // ---------- Utils ----------
   function normalize(s) {
     return String(s || '')
       .replace(/[֑-ׇ]/g, '')
@@ -789,16 +771,9 @@
     return String(s || '').replace(/[&<>"']/g, c =>
       ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   }
-  
-  // Removed highlight function, replaced with simple escape
-  function noHl(text) {
-      return esc(text);
-  }
-
   function uid() {
     return Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
   }
-  
   function toast(msg, type) {
     const el = document.getElementById('toast');
     el.textContent = msg;
@@ -806,7 +781,6 @@
     clearTimeout(toast._t);
     toast._t = setTimeout(() => { el.className = 'toast'; }, 2400);
   }
-  
   function confirmDlg(title, msg) {
     return new Promise(resolve => {
       const ov = document.getElementById('overlay');
@@ -836,24 +810,22 @@
     if (changed) save();
   }
   
-  // Process tags from string to array
   function parseTags(tagString) {
-      if (!tagString) return [];
-      return tagString.split(',').map(t => t.trim()).filter(t => t.length > 0);
+    if (!tagString) return [];
+    return tagString.split(',').map(t => t.trim()).filter(t => t.length > 0);
   }
 
-  // Get all unique tags from data
   function getAllUniqueTags() {
-      const tags = new Set();
-      DATA.forEach(e => {
-          if (e.customTags && Array.isArray(e.customTags)) {
-              e.customTags.forEach(t => tags.add(t));
-          }
-      });
-      return Array.from(tags).sort();
+    const tags = new Set();
+    DATA.forEach(e => {
+      if (e.customTags && Array.isArray(e.customTags)) {
+        e.customTags.forEach(t => tags.add(t));
+      }
+    });
+    return Array.from(tags).sort();
   }
 
-  // ---------- Tabs ----------
+  // Tabs navigation
   document.querySelectorAll('.tab').forEach(btn => {
     btn.addEventListener('click', () => {
       document.querySelectorAll('.tab').forEach(t => t.classList.remove('on'));
@@ -862,19 +834,21 @@
       document.getElementById('panel-' + btn.dataset.tab).classList.add('on');
       
       if (btn.dataset.tab === 'browse') {
-          updateFiltersUI();
-          renderBrowse();
+        updateFiltersUI();
+        renderBrowse();
       }
       if (btn.dataset.tab === 'az') renderAZ();
-      if (btn.dataset.tab === 'tools') renderStats();
+      if (btn.dataset.tab === 'tools') {
+        renderStats();
+        loadGhConfigUI();
+      }
       if (btn.dataset.tab === 'add') {
-          renderEditorList();
-          updateFormVisibility();
+        renderEditorList();
+        updateFormVisibility();
       }
     });
   });
 
-  // ---------- Browse / Search ----------
   const qEl = document.getElementById('q');
   const qClear = document.getElementById('q-clear');
   const resultsEl = document.getElementById('results');
@@ -882,53 +856,48 @@
   const browseControls = document.getElementById('browse-controls');
   const globalQuoteToggle = document.getElementById('global-quote-toggle');
 
-  // Set up type filters
   document.querySelectorAll('.filter-btn').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-          document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-          e.target.classList.add('active');
-          currentTypeFilter = e.target.dataset.type;
-          renderBrowse();
-      });
+    btn.addEventListener('click', (e) => {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      e.target.classList.add('active');
+      currentTypeFilter = e.target.dataset.type;
+      renderBrowse();
+    });
   });
 
-  // Set up dynamic tags
   function updateFiltersUI() {
-      const container = document.getElementById('custom-tags-container');
-      const tags = getAllUniqueTags();
-      
-      if (tags.length === 0) {
-          container.innerHTML = '';
-          return;
-      }
-      
-      container.innerHTML = tags.map(tag => 
-          `<button class="tag-filter ${activeCustomFilters.has(tag) ? 'active' : ''}" data-tag="${esc(tag)}">${esc(tag)}</button>`
-      ).join('');
-      
-      container.querySelectorAll('.tag-filter').forEach(btn => {
-          btn.addEventListener('click', (e) => {
-              const tag = e.target.dataset.tag;
-              if (activeCustomFilters.has(tag)) {
-                  activeCustomFilters.delete(tag);
-                  e.target.classList.remove('active');
-              } else {
-                  activeCustomFilters.add(tag);
-                  e.target.classList.add('active');
-              }
-              renderBrowse();
-          });
+    const container = document.getElementById('custom-tags-container');
+    const tags = getAllUniqueTags();
+    if (tags.length === 0) {
+      container.innerHTML = '';
+      return;
+    }
+    container.innerHTML = tags.map(tag => 
+      `<button class="tag-filter ${activeCustomFilters.has(tag) ? 'active' : ''}" data-tag="${esc(tag)}">${esc(tag)}</button>`
+    ).join('');
+    
+    container.querySelectorAll('.tag-filter').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const tag = e.target.dataset.tag;
+        if (activeCustomFilters.has(tag)) {
+          activeCustomFilters.delete(tag);
+          e.target.classList.remove('active');
+        } else {
+          activeCustomFilters.add(tag);
+          e.target.classList.add('active');
+        }
+        renderBrowse();
       });
+    });
   }
 
   globalQuoteToggle.addEventListener('click', () => {
-      showAllQuotes = !showAllQuotes;
-      globalQuoteToggle.textContent = showAllQuotes ? 'הסתר ציטוטים' : 'הצג ציטוטים';
-      
-      document.querySelectorAll('#panel-browse .card').forEach(card => {
-          if (showAllQuotes) card.classList.add('show-quote');
-          else card.classList.remove('show-quote');
-      });
+    showAllQuotes = !showAllQuotes;
+    globalQuoteToggle.textContent = showAllQuotes ? 'הסתר ציטוטים' : 'הצג ציטוטים';
+    document.querySelectorAll('#panel-browse .card').forEach(card => {
+      if (showAllQuotes) card.classList.add('show-quote');
+      else card.classList.remove('show-quote');
+    });
   });
 
   function scoreEntry(e, nq) {
@@ -951,13 +920,13 @@
 
   function cardHTML(e, isBrowse = true) {
     const tag = TAG[e.t] || '';
-    const clar = e.clar ? ` <span class="clar">(${noHl(e.clar)})</span>` : '';
+    const clar = e.clar ? ` <span class="clar">(${esc(e.clar)})</span>` : '';
     
     let tagsHtml = `<span class="tag">${tag}</span>`;
     if (e.customTags && e.customTags.length > 0) {
-        e.customTags.forEach(ct => {
-            tagsHtml += `<span class="tag custom-tag">${esc(ct)}</span>`;
-        });
+      e.customTags.forEach(ct => {
+        tagsHtml += `<span class="tag custom-tag">${esc(ct)}</span>`;
+      });
     }
 
     let body = '';
@@ -965,9 +934,9 @@
     let targetUrl = e.url || (e.sources && e.sources[0] ? e.sources[0].u : '');
     
     if (e.t === 'i') {
-      if (e.desc) body += `<div class="desc">${noHl(e.desc)}</div>`;
+      if (e.desc) body += `<div class="desc">${esc(e.desc)}</div>`;
       if (e.excerpt) {
-          body += `<div class="excerpt-container"><div class="excerpt">${noHl(e.excerpt).replace(/\n/g, '<br>')}</div></div>`;
+        body += `<div class="excerpt-container"><div class="excerpt">${esc(e.excerpt).replace(/\n/g, '<br>')}</div></div>`;
       }
       body += `<div class="meta">`;
       if (e.page) body += `<span>עמ׳ ${e.page}</span>`;
@@ -983,16 +952,16 @@
     
     let actions = '';
     if (isBrowse && hasUrl) {
-        actions = `
-        <div class="actions">
-            <button type="button" class="link-btn" onclick="window.open('${esc(targetUrl)}', '_blank'); event.stopPropagation();">פתח שיחה במקור</button>
-        </div>`;
+      actions = `
+      <div class="actions">
+        <button type="button" class="link-btn" onclick="window.open('${esc(targetUrl)}', '_blank'); event.stopPropagation();">פתח שיחה במקור</button>
+      </div>`;
     }
 
     const quoteClass = (showAllQuotes && e.excerpt) ? 'show-quote' : '';
 
     return `<div class="card ${quoteClass}" data-id="${esc(e._id)}" ${hasUrl && isBrowse ? `onclick="window.open('${esc(targetUrl)}', '_blank')"` : ''}>
-      <div class="topic">${noHl(e.topic)}${clar}</div>
+      <div class="topic">${esc(e.topic)}${clar}</div>
       <div class="card-tags">${tagsHtml}</div>
       ${body}
       ${actions}
@@ -1003,7 +972,6 @@
     const raw = qEl.value.trim();
     qClear.style.display = raw ? 'block' : 'none';
     
-    // Default view when nothing is typed and no custom filters are active
     if (!raw && currentTypeFilter === 'all' && activeCustomFilters.size === 0) {
       browseControls.classList.add('hidden');
       resultsEl.innerHTML = '<div class="empty">התחל להקליד בשורת החיפוש או בחר מסנן למעלה.</div>';
@@ -1013,40 +981,34 @@
     const nq = normalize(raw);
     let filtered = [];
 
-    // Filter logic
     for (const e of DATA) {
-        // 1. Type filter
-        if (currentTypeFilter !== 'all' && e.t !== currentTypeFilter) continue;
-        
-        // 2. Custom tags filter (must match AT LEAST ONE active filter if any are selected)
-        if (activeCustomFilters.size > 0) {
-            let hasMatchingTag = false;
-            if (e.customTags && e.customTags.length > 0) {
-                for (const tag of e.customTags) {
-                    if (activeCustomFilters.has(tag)) {
-                        hasMatchingTag = true;
-                        break;
-                    }
-                }
+      if (currentTypeFilter !== 'all' && e.t !== currentTypeFilter) continue;
+      
+      if (activeCustomFilters.size > 0) {
+        let hasMatchingTag = false;
+        if (e.customTags && e.customTags.length > 0) {
+          for (const tag of e.customTags) {
+            if (activeCustomFilters.has(tag)) {
+              hasMatchingTag = true;
+              break;
             }
-            if (!hasMatchingTag) continue;
+          }
         }
+        if (!hasMatchingTag) continue;
+      }
 
-        // 3. Search text filter
-        if (nq) {
-            const sc = scoreEntry(e, nq);
-            if (sc > 0) filtered.push({ e, sc });
-        } else {
-            filtered.push({ e, sc: 1 }); // Just keep it if no search term
-        }
+      if (nq) {
+        const sc = scoreEntry(e, nq);
+        if (sc > 0) filtered.push({ e, sc });
+      } else {
+        filtered.push({ e, sc: 1 });
+      }
     }
 
-    // Sort
     if (nq) {
-        filtered.sort((a, b) => b.sc - a.sc);
+      filtered.sort((a, b) => b.sc - a.sc);
     } else {
-        // Alphabetical if just filtering
-        filtered.sort((a, b) => normalize(a.e.topic).localeCompare(normalize(b.e.topic), 'he'));
+      filtered.sort((a, b) => normalize(a.e.topic).localeCompare(normalize(b.e.topic), 'he'));
     }
 
     const rows = filtered.map(x => x.e);
@@ -1064,34 +1026,31 @@
   qEl.addEventListener('input', renderBrowse);
   qClear.addEventListener('click', () => { qEl.value = ''; qEl.focus(); renderBrowse(); });
 
-  // ---------- Editor List (New) ----------
   function renderEditorList() {
-      const container = document.getElementById('editor-list');
-      if (DATA.length === 0) {
-          container.innerHTML = '<div class="empty" style="padding:10px">אין ערכים במערכת</div>';
-          return;
-      }
+    const container = document.getElementById('editor-list');
+    if (DATA.length === 0) {
+      container.innerHTML = '<div class="empty" style="padding:10px">אין ערכים במערכת</div>';
+      return;
+    }
 
-      // Sort alphabetically for the editor list
-      const sorted = DATA.slice().sort((a, b) => 
-          normalize(a.topic).localeCompare(normalize(b.topic), 'he')
-      );
+    const sorted = DATA.slice().sort((a, b) => 
+      normalize(a.topic).localeCompare(normalize(b.topic), 'he')
+    );
 
-      container.innerHTML = sorted.map(e => 
-          `<div class="editor-list-item" data-id="${esc(e._id)}">
-              <span class="item-title">${esc(e.topic)}${e.clar ? ' ('+esc(e.clar)+')' : ''}</span>
-              <span class="item-type">${TAG[e.t]}</span>
-          </div>`
-      ).join('');
+    container.innerHTML = sorted.map(e => 
+      `<div class="editor-list-item" data-id="${esc(e._id)}">
+        <span class="item-title">${esc(e.topic)}${e.clar ? ' ('+esc(e.clar)+')' : ''}</span>
+        <span class="item-type">${TAG[e.t]}</span>
+      </div>`
+    ).join('');
 
-      container.querySelectorAll('.editor-list-item').forEach(item => {
-          item.addEventListener('click', () => {
-              startEdit(item.dataset.id);
-          });
+    container.querySelectorAll('.editor-list-item').forEach(item => {
+      item.addEventListener('click', () => {
+        startEdit(item.dataset.id);
       });
+    });
   }
 
-  // ---------- A-Z ----------
   function heFirst(s) {
     const c = normalize(s).charAt(0);
     return /[א-ת]/.test(c) ? c : '#';
@@ -1102,7 +1061,6 @@
       el.innerHTML = '<div class="empty">אין ערכים</div>';
       return;
     }
-    
     const byLetter = {};
     const sorted = DATA.slice().sort((a, b) =>
       normalize(a.topic).localeCompare(normalize(b.topic), 'he'));
@@ -1117,11 +1075,10 @@
       
     el.innerHTML = letters.map(L =>
       `<div class="az-letter">${esc(L)}</div>` +
-      byLetter[L].map(e => cardHTML(e, false)).join('') // false = no actions on A-Z
+      byLetter[L].map(e => cardHTML(e, false)).join('')
     ).join('');
   }
 
-  // ---------- Form ----------
   const form = document.getElementById('entry-form');
   const fTopic = document.getElementById('f-topic');
   const fTags = document.getElementById('f-tags');
@@ -1158,7 +1115,6 @@
     r.addEventListener('change', updateFormVisibility);
   });
 
-  // Autocomplete
   fTopic.addEventListener('input', () => {
     const q = normalize(fTopic.value);
     if (q.length < 1) { topicSug.classList.remove('show'); return; }
@@ -1212,8 +1168,6 @@
     saveBtn.textContent = 'שמור / הוסף חדש';
     deleteBtn.classList.add('hidden');
     updateFormVisibility();
-    
-    // Highlight items in editor list if one was selected
     document.querySelectorAll('.editor-list-item').forEach(i => i.style.background = '');
   }
 
@@ -1244,10 +1198,9 @@
     deleteBtn.classList.remove('hidden');
     updateFormVisibility();
     
-    // Visual cue in the list
     document.querySelectorAll('.editor-list-item').forEach(i => {
-        if(i.dataset.id === id) i.style.background = '#e8f0fe';
-        else i.style.background = '';
+      if(i.dataset.id === id) i.style.background = '#e8f0fe';
+      else i.style.background = '';
     });
   }
 
@@ -1258,9 +1211,8 @@
     if (!ok) return;
     
     DATA = DATA.filter(x => x._id !== id);
-    saveAndSync();
+    save();
     toast('נמחק', 'ok');
-    
     if (editIdEl.value === id) clearForm();
     renderEditorList();
   }
@@ -1331,11 +1283,10 @@
         if (existing) {
           if (!existing.sources) existing.sources = [];
           existing.sources.push(src);
-          // Merge custom tags if updating existing
           if (customTags.length) {
-              const mergedTags = new Set(existing.customTags || []);
-              customTags.forEach(t => mergedTags.add(t));
-              existing.customTags = Array.from(mergedTags);
+            const mergedTags = new Set(existing.customTags || []);
+            customTags.forEach(t => mergedTags.add(t));
+            existing.customTags = Array.from(mergedTags);
           }
           toast('נוסף מקור לערך קיים', 'ok');
         } else {
@@ -1351,12 +1302,11 @@
         }
       }
     }
-    saveAndSync();
+    save();
     clearForm();
     renderEditorList();
   });
 
-  // ---------- Tools ----------
   function renderStats() {
     const i = DATA.filter(e => e.t === 'i').length;
     const n = DATA.filter(e => e.t === 'n').length;
@@ -1368,6 +1318,29 @@
       <div class="stat"><div class="num">${m}</div><div class="lbl">מקומות</div></div>
     `;
   }
+
+  // GitHub Config UI Actions
+  function loadGhConfigUI() {
+    try {
+      const cfg = JSON.parse(localStorage.getItem(GH_CONFIG_KEY) || '{}');
+      if (cfg.owner) document.getElementById('gh-owner').value = cfg.owner;
+      if (cfg.repo) document.getElementById('gh-repo').value = cfg.repo;
+      if (cfg.token) document.getElementById('gh-token').value = cfg.token;
+    } catch (_) {}
+  }
+
+  document.getElementById('btn-save-gh').addEventListener('click', () => {
+    const owner = document.getElementById('gh-owner').value.trim();
+    const repo = document.getElementById('gh-repo').value.trim();
+    const token = document.getElementById('gh-token').value.trim();
+    if (!owner || !repo || !token) {
+      toast('נא למלא את כל שדות הסנכרון', 'err');
+      return;
+    }
+    localStorage.setItem(GH_CONFIG_KEY, JSON.stringify({ owner, repo, token }));
+    toast('הגדרות הסנכרון נשמרו בהצלחה!', 'ok');
+    syncToGitHub();
+  });
 
   function download(filename, text, mime) {
     const blob = new Blob([text], { type: mime || 'text/plain;charset=utf-8' });
@@ -1385,11 +1358,6 @@
       return o;
     });
   }
-
-  document.getElementById('btn-export-json').addEventListener('click', () => {
-    download('mafteach-data.json', JSON.stringify(stripIds(DATA), null, 0), 'application/json');
-    toast('JSON הורד', 'ok');
-  });
 
   document.getElementById('btn-export-js').addEventListener('click', () => {
     const body = JSON.stringify(stripIds(DATA));
@@ -1451,11 +1419,11 @@
           }
         }
         toast(`נוספו ${added}, מוזגו ${merged}`, 'ok');
-        saveAndSync();
+        save();
         renderStats();
         return;
       }
-      saveAndSync();
+      save();
       toast(`נטענו ${DATA.length} ערכים`, 'ok');
       renderStats();
     } catch (err) {
@@ -1470,26 +1438,13 @@
     const ok = await confirmDlg('מחיקת הכל', 'למחוק את כל הערכים מהמכשיר? פעולה זו אינה ניתנת לשחזור.');
     if (!ok) return;
     DATA = [];
-    saveAndSync();
+    save();
     clearForm();
     renderStats();
     toast('הכל נמחק', 'ok');
   });
 
-  document.getElementById('btn-save-gh').addEventListener('click', () => {
-      ghConfig = {
-          token: document.getElementById('gh-token').value.trim(),
-          owner: document.getElementById('gh-owner').value.trim(),
-          repo: document.getElementById('gh-repo').value.trim()
-      };
-      localStorage.setItem(GH_KEY, JSON.stringify(ghConfig));
-      toast('הגדרות סנכרון נשמרו', 'ok');
-      if (ghConfig.token) syncToGitHub();
-  });
-
-  // ---------- Init ----------
   load();
-  loadGhConfig();
   ensureIds();
   updateFormVisibility();
   updateFiltersUI();
