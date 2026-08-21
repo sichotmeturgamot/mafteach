@@ -41,6 +41,11 @@
   .count { color: var(--muted); font-size: .82rem; }
   .toggle-quotes-btn { font-size: .8rem; color: var(--navy); background: var(--paper); border: 1.5px solid var(--navy); border-radius: 6px; padding: 5px 10px; cursor: pointer; font-family: inherit; }
   .toggle-quotes-btn.on { background: var(--navy); color: var(--cream); }
+  .q-show {
+    background: transparent; border: none; color: var(--gold); cursor: pointer;
+    font-size: .88rem; padding: 4px 0; font-family: inherit; margin-top: 6px; display: block;
+  }
+  .q-show:hover { text-decoration: underline; }
   .card { background: var(--paper); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; margin-bottom: 10px; }
   .card .topic { font-size: 1.12rem; font-weight: 600; color: var(--navy); display: flex; align-items: baseline; gap: 6px; flex-wrap: wrap; }
   .card .clar { color: var(--muted); font-size: .88rem; font-weight: 400; }
@@ -174,7 +179,13 @@
     </form>
   </div>
 
-  <div class="panel" id="panel-az"><div id="az-list"></div></div>
+  <div class="panel" id="panel-az">
+    <div class="controls-row" style="margin-top:4px">
+      <div class="count" id="az-count"></div>
+      <button class="toggle-quotes-btn" id="quote-toggle-az" type="button">הצג ציטוטים</button>
+    </div>
+    <div id="az-list"></div>
+  </div>
 
   <div class="panel" id="panel-tools">
     <div class="stats" id="stats"></div>
@@ -250,7 +261,7 @@
   const QUOTES_KEY = 'mafteach-show-quotes-v1';
   const GH_KEY = 'mafteach-gh-cfg-v1';
   const GH_OWNER = 'sichotmeturgamot';
-  const GH_REPO = 'sichotmeturgamot.github.io';
+  const GH_REPO = 'mafteach';
   const GH_BRANCH = 'main';
   const GH_PATH = 'mafteach.js';
   const API = 'https://api.github.com';
@@ -374,16 +385,36 @@
   const quoteToggle = document.getElementById('quote-toggle');
 
   function applyQuoteLabel() {
-    quoteToggle.textContent = showQuotes ? 'הסתר ציטוטים' : 'הצג ציטוטים';
+    const label = showQuotes ? 'הסתר ציטוטים' : 'הצג ציטוטים';
+    quoteToggle.textContent = label;
     quoteToggle.classList.toggle('on', showQuotes);
+    const azBtn = document.getElementById('quote-toggle-az');
+    if (azBtn) {
+      azBtn.textContent = label;
+      azBtn.classList.toggle('on', showQuotes);
+    }
   }
-  applyQuoteLabel();
-  quoteToggle.addEventListener('click', () => {
+  function toggleQuotes() {
     showQuotes = !showQuotes;
     try { localStorage.setItem(QUOTES_KEY, showQuotes ? '1' : '0'); } catch (_) {}
     applyQuoteLabel();
     renderBrowse();
     if (document.getElementById('panel-az').classList.contains('on')) renderAZ();
+  }
+  applyQuoteLabel();
+  quoteToggle.addEventListener('click', toggleQuotes);
+  const quoteToggleAz = document.getElementById('quote-toggle-az');
+  if (quoteToggleAz) quoteToggleAz.addEventListener('click', toggleQuotes);
+
+  // הצגה/הסתרה פרטנית של ציטוט (כמו ב-search.html)
+  document.addEventListener('click', e => {
+    const btn = e.target.closest('.q-show');
+    if (!btn) return;
+    const ex = btn.nextElementSibling;
+    if (!ex || !ex.classList.contains('excerpt')) return;
+    const hidden = ex.style.display === 'none' || !ex.style.display;
+    ex.style.display = hidden ? 'block' : 'none';
+    btn.textContent = hidden ? 'הסתר ציטוט ▴' : 'הצג ציטוט ▾';
   });
 
   function renderBrowseFilters() {
@@ -421,7 +452,14 @@
     const clar = e.clar ? ` <span class="clar">(${esc(e.clar)})</span>` : '';
     let body = '';
     if (e.desc) body += `<div class="desc">${esc(e.desc)}</div>`;
-    if (e.excerpt && showQuotes) body += `<div class="excerpt">${esc(e.excerpt)}</div>`;
+    if (e.excerpt) {
+      if (showQuotes) {
+        body += `<div class="excerpt">${esc(e.excerpt)}</div>`;
+      } else {
+        body += `<button type="button" class="q-show">הצג ציטוט ▾</button>`;
+        body += `<div class="excerpt" style="display:none">${esc(e.excerpt)}</div>`;
+      }
+    }
     body += `<div class="meta">`;
     if (e.page) body += `<span>עמ׳ ${e.page}</span>`;
     if (e.sichah) body += `<span>${esc(e.sichah)}</span>`;
@@ -466,7 +504,12 @@
   }
   function renderAZ() {
     const el = document.getElementById('az-list');
-    if (!DATA.length) { el.innerHTML = '<div class="empty">אין ערכים</div>'; return; }
+    const azCount = document.getElementById('az-count');
+    if (!DATA.length) {
+      el.innerHTML = '<div class="empty">אין ערכים</div>';
+      if (azCount) azCount.textContent = '';
+      return;
+    }
     const byLetter = {};
     const sorted = DATA.slice().sort((a, b) => normalize(a.topic).localeCompare(normalize(b.topic), 'he'));
     for (const e of sorted) {
@@ -474,6 +517,7 @@
       (byLetter[L] = byLetter[L] || []).push(e);
     }
     const letters = Object.keys(byLetter).sort((a, b) => a === '#' ? 1 : b === '#' ? -1 : a.localeCompare(b, 'he'));
+    if (azCount) azCount.textContent = sorted.length === 1 ? 'ערך אחד' : sorted.length + ' ערכים';
     el.innerHTML = letters.map(L =>
       `<div class="az-letter">${esc(L)}</div>` + byLetter[L].map(cardHTML).join('')
     ).join('');
