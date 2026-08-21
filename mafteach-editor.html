@@ -4,858 +4,325 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#1a2942">
-<meta name="apple-mobile-web-app-title" content="עורך מפתחות">
+<meta name="apple-mobile-web-app-title" content="מפתחות-עורך">
+<meta name="description" content="עורך מפתחות פרטי לשיחות אדמו״ר הריי״צ">
+<link rel="manifest" href='data:application/manifest+json;charset=utf-8,{"id":"/mafteach-editor-private-v1","name":"עורך מפתחות — ספר השיחות (פרטי)","short_name":"מפתחות-עורך","description":"עורך מפתחות פרטי","start_url":"./mafteach-editor.html","scope":"./","display":"standalone","orientation":"portrait-primary","background_color":"#1a2942","theme_color":"#1a2942","lang":"he","dir":"rtl","icons":[{"src":"data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 192 192%22%3E%3Crect fill=%22%231a2942%22 width=%22192%22 height=%22192%22 rx=%2232%22/%3E%3Ccircle cx=%2296%22 cy=%2296%22 r=%2270%22 fill=%22%23c9a227%22/%3E%3Ccircle cx=%2296%22 cy=%2296%22 r=%2252%22 fill=%22%231a2942%22/%3E%3Crect x=%2272%22 y=%2260%22 width=%2248%22 height=%2272%22 rx=%226%22 fill=%22%23f7f3e9%22/%3E%3Cline x1=%2296%22 y1=%2274%22 x2=%2296%22 y2=%22118%22 stroke=%22%23c9a227%22 stroke-width=%224%22/%3E%3C/svg%3E","sizes":"192x192","type":"image/svg+xml","purpose":"any maskable"}]}'>
 <title>עורך מפתחות — ספר השיחות</title>
-
-<!-- Unique PWA manifest with dynamic unique ID to prevent conflicts -->
-<link rel="manifest" href='data:application/manifest+json;charset=utf-8,{"name":"עורך מפתחות ספר השיחות - mafteach","short_name":"מפתחות-mafteach","start_url":"./mafteach-editor.html","display":"standalone","background_color":"#f7f3e9","theme_color":"#1a2942","icons":[{"src":"https://placehold.co/192x192/1a2942/c9a227?text=%D7%9E","sizes":"192x192","type":"image/png"}]}'>
-
 <style>
   :root {
-    --navy: #1a2942;
-    --navy-light: #2a3f5f;
-    --gold: #c9a227;
-    --gold-light: #e8c547;
-    --cream: #f7f3e9;
-    --paper: #fffef9;
-    --text: #1a1a1a;
-    --muted: #6b6560;
-    --line: #e3dccd;
-    --danger: #b33a3a;
-    --success: #2d6a4f;
+    --navy: #1a2942; --navy-light: #2a3f5f; --gold: #c9a227; --gold-light: #e8c547;
+    --cream: #f7f3e9; --paper: #fffef9; --text: #1a1a1a; --muted: #6b6560;
+    --line: #e3dccd; --danger: #b33a3a; --success: #2d6a4f;
     --safe-bottom: env(safe-area-inset-bottom, 0px);
   }
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-  html, body {
-    height: 100%;
-    font-family: system-ui, -apple-system, 'Segoe UI', 'Heebo', 'Frank Ruhl Libre', sans-serif;
-    background: var(--cream);
-    color: var(--text);
-    line-height: 1.5;
-  }
+  html, body { height: 100%; font-family: system-ui, -apple-system, 'Segoe UI', 'Heebo', sans-serif; background: var(--cream); color: var(--text); line-height: 1.5; }
   body { display: flex; flex-direction: column; max-width: 640px; margin: 0 auto; }
-
-  /* Header */
-  header {
-    background: var(--navy);
-    color: var(--cream);
-    padding: 12px 16px;
-    padding-top: max(12px, env(safe-area-inset-top));
-    position: sticky; top: 0; z-index: 50;
-    box-shadow: 0 2px 12px rgba(0,0,0,.2);
-  }
-  .header-top { display: flex; justify-content: space-between; align-items: center; }
-  header h1 { font-size: 1.15rem; font-weight: 600; text-align: center; flex: 1; }
+  header { background: var(--navy); color: var(--cream); padding: 12px 16px; padding-top: max(12px, env(safe-area-inset-top)); position: sticky; top: 0; z-index: 50; box-shadow: 0 2px 12px rgba(0,0,0,.2); }
+  header h1 { font-size: 1.15rem; font-weight: 600; text-align: center; }
   header .sub { font-size: .75rem; opacity: .75; text-align: center; margin-top: 2px; }
-
-  /* Connection badge */
-  .auth-badge {
-    font-size: 0.72rem;
-    padding: 3px 8px;
-    border-radius: 999px;
-    font-weight: 500;
-    white-space: nowrap;
-  }
-  .auth-badge.connected { background: rgba(45,106,79,.25); color: #74c69d; border: 1px solid #74c69d; }
-  .auth-badge.disconnected { background: rgba(179,58,58,.25); color: #ffb7b7; border: 1px solid #ffb7b7; }
-
-  /* Tabs */
-  .tabs {
-    display: flex;
-    background: var(--navy-light);
-    border-bottom: 1px solid rgba(255,255,255,.08);
-  }
-  .tab {
-    flex: 1;
-    border: none;
-    background: transparent;
-    color: rgba(255,255,255,.65);
-    font-size: .9rem;
-    padding: 11px 4px;
-    cursor: pointer;
-    font-family: inherit;
-    position: relative;
-  }
+  .tabs { display: flex; background: var(--navy-light); border-bottom: 1px solid rgba(255,255,255,.08); }
+  .tab { flex: 1; border: none; background: transparent; color: rgba(255,255,255,.65); font-size: .9rem; padding: 11px 4px; cursor: pointer; font-family: inherit; position: relative; }
   .tab.on { color: var(--gold); font-weight: 600; }
-  .tab.on::after {
-    content: '';
-    position: absolute;
-    bottom: 0; left: 20%; right: 20%;
-    height: 2.5px;
-    background: var(--gold);
-    border-radius: 2px 2px 0 0;
-  }
-
-  /* Main content */
-  main {
-    flex: 1;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-    padding: 14px 14px calc(20px + var(--safe-bottom));
-  }
-  .panel { display: none; }
-  .panel.on { display: block; }
-
-  /* Search & Filters */
-  .search-box {
-    position: relative;
-    margin-bottom: 12px;
-  }
-  .search-box input {
-    width: 100%;
-    padding: 12px 44px 12px 14px;
-    font-size: 1.05rem;
-    border: 1.5px solid var(--line);
-    border-radius: 10px;
-    background: var(--paper);
-    color: var(--text);
-    font-family: inherit;
-  }
+  .tab.on::after { content: ''; position: absolute; bottom: 0; left: 20%; right: 20%; height: 2.5px; background: var(--gold); border-radius: 2px 2px 0 0; }
+  main { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 14px 14px calc(20px + var(--safe-bottom)); }
+  .panel { display: none; } .panel.on { display: block; }
+  .filters-row { display: flex; gap: 8px; margin-bottom: 12px; overflow-x: auto; padding-bottom: 4px; -webkit-overflow-scrolling: touch; }
+  .filter-btn { padding: 7px 14px; border: 1.5px solid var(--line); border-radius: 999px; background: var(--paper); color: var(--muted); font-size: .88rem; cursor: pointer; white-space: nowrap; font-family: inherit; }
+  .filter-btn.active { background: var(--navy); color: var(--cream); border-color: var(--navy); font-weight: 600; }
+  .search-box { position: relative; margin-bottom: 10px; }
+  .search-box input { width: 100%; padding: 12px 44px 12px 14px; font-size: 1.05rem; border: 1.5px solid var(--line); border-radius: 10px; background: var(--paper); color: var(--text); font-family: inherit; }
   .search-box input:focus { outline: none; border-color: var(--gold); }
-  .search-box .clear-btn {
-    position: absolute;
-    left: 10px; top: 50%; transform: translateY(-50%);
-    border: none; background: transparent;
-    font-size: 1.3rem; color: var(--muted);
-    cursor: pointer; display: none; padding: 4px 8px;
-  }
-
-  .filters-row {
-    display: flex;
-    gap: 8px;
-    margin-bottom: 10px;
-    overflow-x: auto;
-    padding-bottom: 4px;
-  }
-  .filter-btn {
-    padding: 6px 12px;
-    border: 1px solid var(--line);
-    border-radius: 20px;
-    background: var(--paper);
-    color: var(--muted);
-    font-size: .85rem;
-    cursor: pointer;
-    white-space: nowrap;
-  }
-  .filter-btn.active {
-    background: var(--navy);
-    color: var(--cream);
-    border-color: var(--navy);
-    font-weight: 600;
-  }
-
-  .controls-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
-  }
-  .toggle-quotes-btn {
-    font-size: 0.8rem;
-    color: var(--navy);
-    background: none;
-    border: 1px solid var(--navy);
-    border-radius: 4px;
-    padding: 4px 8px;
-    cursor: pointer;
-  }
-
+  .search-box .clear-btn { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); border: none; background: transparent; font-size: 1.3rem; color: var(--muted); cursor: pointer; display: none; padding: 4px 8px; }
+  .controls-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; min-height: 1.4em; }
   .count { color: var(--muted); font-size: .82rem; }
-
-  /* Cards */
-  .card {
-    background: var(--paper);
-    border: 1px solid var(--line);
-    border-radius: 10px;
-    padding: 12px 14px;
-    margin-bottom: 10px;
-    cursor: pointer;
-    transition: border-color .15s, box-shadow .15s;
-  }
-  .card:active { border-color: var(--gold); box-shadow: 0 0 0 2px rgba(201,162,39,.2); }
-  .card .topic {
-    font-size: 1.12rem;
-    font-weight: 600;
-    color: var(--navy);
-    display: flex;
-    align-items: baseline;
-    gap: 6px;
-    flex-wrap: wrap;
-  }
+  .toggle-quotes-btn { font-size: .8rem; color: var(--navy); background: var(--paper); border: 1.5px solid var(--navy); border-radius: 6px; padding: 5px 10px; cursor: pointer; font-family: inherit; }
+  .toggle-quotes-btn.on { background: var(--navy); color: var(--cream); }
+  .card { background: var(--paper); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; margin-bottom: 10px; }
+  .card .topic { font-size: 1.12rem; font-weight: 600; color: var(--navy); display: flex; align-items: baseline; gap: 6px; flex-wrap: wrap; }
   .card .clar { color: var(--muted); font-size: .88rem; font-weight: 400; }
-  .card .tag {
-    font-size: .68rem;
-    background: #efe9db;
-    color: #8a7a52;
-    border-radius: 999px;
-    padding: 1px 8px;
-    font-weight: 500;
-  }
+  .card .tag { font-size: .68rem; background: #efe9db; color: #8a7a52; border-radius: 999px; padding: 1px 8px; font-weight: 500; }
   .card .desc { color: var(--muted); font-size: .9rem; margin-top: 4px; }
-  
-  .card .excerpt-container {
-    margin-top: 8px;
-    display: none;
-  }
-  .card.show-quote .excerpt-container {
-    display: block;
-  }
-  .card .excerpt {
-    font-size: .92rem;
-    line-height: 1.7;
-    border-inline-start: 3px solid var(--gold-light);
-    padding-inline-start: 10px;
-    color: var(--text);
-  }
-  .card .meta {
-    margin-top: 8px;
-    font-size: .78rem;
-    color: var(--muted);
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px 12px;
-    align-items: center;
-  }
-  .card .actions {
-    display: flex;
-    gap: 8px;
-    margin-top: 10px;
-  }
-  .card .actions .link-btn {
-    flex: 1;
-    padding: 8px;
-    border-radius: 8px;
-    border: 1.5px solid var(--navy);
-    background: var(--cream);
-    color: var(--navy);
-    font-size: .85rem;
-    cursor: pointer;
-    font-family: inherit;
-    text-align: center;
-  }
-  
-  /* Editor List in Add Panel */
-  .editor-list-container {
-    margin-bottom: 20px;
-    border: 1px solid var(--line);
-    border-radius: 10px;
-    background: var(--paper);
-    max-height: 200px;
-    overflow-y: auto;
-  }
-  .editor-list-item {
-    padding: 10px;
-    border-bottom: 1px solid var(--line);
-    cursor: pointer;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  .editor-list-item:last-child { border-bottom: none; }
-  .editor-list-item:hover { background: #f5f0e4; }
-  .editor-list-item .item-title { font-weight: 500; }
-  .editor-list-item .item-type { font-size: 0.75rem; color: var(--muted); }
-
-  /* A-Z groups */
-  .az-letter {
-    font-size: 1.2rem;
-    color: var(--gold);
-    border-bottom: 1px solid var(--line);
-    padding-bottom: 3px;
-    margin: 16px 0 8px;
-    font-weight: 600;
-  }
+  .card .excerpt { margin-top: 8px; font-size: .92rem; line-height: 1.7; border-inline-start: 3px solid var(--gold-light); padding-inline-start: 10px; color: var(--text); }
+  .card .meta { margin-top: 8px; font-size: .78rem; color: var(--muted); display: flex; flex-wrap: wrap; gap: 6px 12px; align-items: center; }
+  .card .link-btn { display: inline-block; margin-top: 10px; padding: 8px 14px; border-radius: 8px; border: 1.5px solid var(--navy); background: var(--cream); color: var(--navy); font-size: .88rem; text-decoration: none; font-family: inherit; font-weight: 500; }
+  .card .link-btn:active { background: var(--navy); color: var(--cream); }
+  .az-letter { font-size: 1.2rem; color: var(--gold); border-bottom: 1px solid var(--line); padding-bottom: 3px; margin: 16px 0 8px; font-weight: 600; }
   .az-letter:first-child { margin-top: 0; }
-
-  /* Form */
+  .editor-list-container { margin-bottom: 16px; border: 1px solid var(--line); border-radius: 10px; background: var(--paper); max-height: 200px; overflow-y: auto; }
+  .editor-list-item { padding: 10px 12px; border-bottom: 1px solid var(--line); cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+  .editor-list-item:last-child { border-bottom: none; }
+  .editor-list-item:active, .editor-list-item.selected { background: #e8f0fe; }
+  .editor-list-item .item-title { font-weight: 500; font-size: .95rem; }
+  .editor-list-item .item-type { font-size: .72rem; color: var(--muted); flex-shrink: 0; }
   .form-group { margin-bottom: 14px; }
-  .form-group label {
-    display: block;
-    font-size: .82rem;
-    color: var(--muted);
-    margin-bottom: 4px;
-    font-weight: 500;
-  }
-  .form-group input,
-  .form-group select,
-  .form-group textarea {
-    width: 100%;
-    padding: 11px 12px;
-    font-size: 1rem;
-    border: 1.5px solid var(--line);
-    border-radius: 9px;
-    background: var(--paper);
-    color: var(--text);
-    font-family: inherit;
-    resize: vertical;
-  }
-  .form-group input:focus,
-  .form-group select:focus,
-  .form-group textarea:focus {
-    outline: none;
-    border-color: var(--gold);
-  }
-  .form-group textarea { min-height: 80px; line-height: 1.6; }
-  .form-group textarea.quote { min-height: 140px; }
-
-  .checkbox-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
-    gap: 8px;
-  }
-  .checkbox-grid label {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    padding: 9px 10px;
-    border: 1.5px solid var(--line);
-    border-radius: 9px;
-    background: var(--paper);
-    cursor: pointer;
-    font-size: .9rem;
-    color: var(--text);
-    font-weight: normal;
-    margin-bottom: 0;
-  }
-  .checkbox-grid label:has(input:checked) {
-    background: var(--navy);
-    color: var(--cream);
-    border-color: var(--navy);
-    font-weight: 500;
-  }
-  .checkbox-grid input[type="checkbox"] {
-    width: 16px;
-    height: 16px;
-    accent-color: var(--gold);
-  }
-
-  /* Autocomplete suggestions */
-  .suggestions {
-    position: absolute;
-    left: 0; right: 0;
-    top: 100%;
-    background: var(--paper);
-    border: 1.5px solid var(--gold);
-    border-radius: 0 0 10px 10px;
-    max-height: 220px;
-    overflow-y: auto;
-    z-index: 40;
-    display: none;
-    box-shadow: 0 8px 20px rgba(0,0,0,.12);
-  }
-  .suggestions.show { display: block; }
-  .sug-item {
-    padding: 10px 14px;
-    cursor: pointer;
-    border-bottom: 1px solid var(--line);
-    font-size: .95rem;
-  }
-  .sug-item:last-child { border-bottom: none; }
-  .sug-item:active, .sug-item:hover { background: #f5f0e4; }
-  .sug-item .sug-type { font-size: .72rem; color: var(--muted); margin-inline-start: 6px; }
-
+  .form-group label { display: block; font-size: .82rem; color: var(--muted); margin-bottom: 4px; font-weight: 500; }
+  .form-group input, .form-group textarea { width: 100%; padding: 11px 12px; font-size: 1rem; border: 1.5px solid var(--line); border-radius: 9px; background: var(--paper); color: var(--text); font-family: inherit; resize: vertical; }
+  .form-group input:focus, .form-group textarea:focus { outline: none; border-color: var(--gold); }
+  .form-group textarea.quote { min-height: 140px; line-height: 1.6; }
+  .checkbox-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 8px; }
+  .checkbox-grid label { display: flex; align-items: center; gap: 6px; padding: 9px 10px; border: 1.5px solid var(--line); border-radius: 9px; background: var(--paper); cursor: pointer; font-size: .9rem; color: var(--text); font-weight: normal; margin-bottom: 0; }
+  .checkbox-grid label:has(input:checked) { background: var(--navy); color: var(--cream); border-color: var(--navy); font-weight: 500; }
+  .checkbox-grid input[type="checkbox"] { width: 16px; height: 16px; accent-color: var(--gold); }
   .topic-wrap { position: relative; }
-
-  /* Buttons */
-  .btn-row {
-    display: flex;
-    gap: 10px;
-    margin-top: 18px;
-    margin-bottom: 8px;
-  }
-  .btn {
-    flex: 1;
-    padding: 13px;
-    border: none;
-    border-radius: 10px;
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    font-family: inherit;
-  }
+  .suggestions { position: absolute; left: 0; right: 0; top: 100%; background: var(--paper); border: 1.5px solid var(--gold); border-radius: 0 0 10px 10px; max-height: 220px; overflow-y: auto; z-index: 40; display: none; box-shadow: 0 8px 20px rgba(0,0,0,.12); }
+  .suggestions.show { display: block; }
+  .sug-item { padding: 10px 14px; cursor: pointer; border-bottom: 1px solid var(--line); font-size: .95rem; }
+  .sug-item:last-child { border-bottom: none; }
+  .sug-item:active { background: #f5f0e4; }
+  .sug-item .sug-type { font-size: .72rem; color: var(--muted); margin-inline-start: 6px; }
+  .btn-row { display: flex; gap: 10px; margin-top: 18px; margin-bottom: 8px; }
+  .btn { flex: 1; padding: 13px; border: none; border-radius: 10px; font-size: 1rem; font-weight: 600; cursor: pointer; font-family: inherit; }
   .btn-primary { background: var(--navy); color: var(--cream); }
   .btn-primary:active { background: var(--navy-light); }
   .btn-secondary { background: var(--cream); color: var(--navy); border: 1.5px solid var(--navy); }
   .btn-danger { background: var(--danger); color: #fff; }
-  .btn-sm {
-    padding: 8px 14px;
-    font-size: .85rem;
-    border-radius: 8px;
-  }
-
-  /* Toast */
-  .toast {
-    position: fixed;
-    bottom: calc(24px + var(--safe-bottom));
-    left: 50%;
-    transform: translateX(-50%) translateY(80px);
-    background: var(--navy);
-    color: var(--cream);
-    padding: 10px 22px;
-    border-radius: 999px;
-    font-size: .9rem;
-    z-index: 100;
-    opacity: 0;
-    transition: transform .25s, opacity .25s;
-    pointer-events: none;
-    white-space: nowrap;
-    max-width: 90%;
-  }
+  .btn-sm { padding: 8px 14px; font-size: .85rem; border-radius: 8px; }
+  .toast { position: fixed; bottom: calc(24px + var(--safe-bottom)); left: 50%; transform: translateX(-50%) translateY(80px); background: var(--navy); color: var(--cream); padding: 10px 22px; border-radius: 999px; font-size: .9rem; z-index: 100; opacity: 0; transition: transform .25s, opacity .25s; pointer-events: none; white-space: nowrap; max-width: 90%; }
   .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
-  .toast.ok { background: var(--success); }
-  .toast.err { background: var(--danger); }
-
-  /* Empty state */
-  .empty {
-    text-align: center;
-    color: var(--muted);
-    padding: 40px 20px;
-    font-size: .95rem;
-  }
-
-  /* Tools panel */
-  .tools-section {
-    background: var(--paper);
-    border: 1px solid var(--line);
-    border-radius: 10px;
-    padding: 14px;
-    margin-bottom: 12px;
-  }
-  .tools-section h3 {
-    font-size: .95rem;
-    margin-bottom: 10px;
-    color: var(--navy);
-  }
-  .tools-section p {
-    font-size: .82rem;
-    color: var(--muted);
-    margin-bottom: 10px;
-    line-height: 1.5;
-  }
-  .stats {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 14px;
-  }
-  .stat {
-    flex: 1;
-    background: var(--paper);
-    border: 1.5px solid var(--line);
-    border-radius: 10px;
-    padding: 12px 8px;
-    text-align: center;
-  }
-  .stat .num { font-size: 1.4rem; font-weight: 700; color: var(--navy); }
-  .stat .lbl { font-size: .75rem; color: var(--muted); margin-top: 2px; }
-
-  /* Confirm dialog */
-  .overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,.45);
-    z-index: 80;
-    display: none;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-  }
+  .toast.ok { background: var(--success); } .toast.err { background: var(--danger); }
+  .empty { text-align: center; color: var(--muted); padding: 40px 20px; font-size: .95rem; }
+  .tools-section { background: var(--paper); border: 1px solid var(--line); border-radius: 10px; padding: 14px; margin-bottom: 12px; }
+  .tools-section h3 { font-size: .95rem; margin-bottom: 10px; color: var(--navy); }
+  .tools-section p { font-size: .82rem; color: var(--muted); margin-bottom: 10px; line-height: 1.5; }
+  .stats { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
+  .stat { flex: 1 1 70px; background: var(--paper); border: 1px solid var(--line); border-radius: 10px; padding: 12px 6px; text-align: center; }
+  .stat .num { font-size: 1.3rem; font-weight: 700; color: var(--navy); }
+  .stat .lbl { font-size: .72rem; color: var(--muted); margin-top: 2px; }
+  .overlay { position: fixed; inset: 0; background: rgba(0,0,0,.45); z-index: 80; display: none; align-items: center; justify-content: center; padding: 20px; }
   .overlay.show { display: flex; }
-  .dialog {
-    background: var(--paper);
-    border-radius: 14px;
-    padding: 22px 18px;
-    max-width: 340px;
-    width: 100%;
-    text-align: center;
-  }
+  .dialog { background: var(--paper); border-radius: 14px; padding: 22px 18px; max-width: 360px; width: 100%; text-align: center; }
   .dialog h3 { margin-bottom: 8px; font-size: 1.1rem; }
-  .dialog p { color: var(--muted); font-size: .9rem; margin-bottom: 18px; }
+  .dialog p { color: var(--muted); font-size: .9rem; margin-bottom: 12px; }
   .dialog .btn-row { margin-top: 0; }
-
+  #install-bar { display: none; position: fixed; bottom: calc(16px + var(--safe-bottom)); left: 12px; right: 12px; max-width: 480px; margin: 0 auto; background: var(--navy); color: var(--cream); border-radius: 14px; padding: 12px 14px; z-index: 90; box-shadow: 0 8px 28px rgba(0,0,0,.35); align-items: center; gap: 10px; }
+  #install-bar.show { display: flex; }
+  #install-bar p { flex: 1; font-size: .88rem; line-height: 1.35; margin: 0; }
+  #install-bar button { border: none; border-radius: 8px; padding: 8px 14px; font-family: inherit; font-size: .88rem; font-weight: 600; cursor: pointer; }
+  #install-btn { background: var(--gold); color: var(--navy); }
+  #install-dismiss { background: transparent; color: rgba(255,255,255,.7); padding: 8px; }
   .hidden { display: none !important; }
 </style>
 </head>
 <body>
-
 <header>
-  <div class="header-top">
-    <div></div>
-    <h1>עורך מפתחות</h1>
-    <div id="auth-badge" class="auth-badge disconnected">מנותק מענן</div>
-  </div>
-  <div class="sub">ענינים · שמות · מקומות ועוד</div>
+  <h1>עורך מפתחות</h1>
+  <div class="sub">ענינים · שמות · מקומות · פרטי</div>
 </header>
-
 <div class="tabs">
-  <button class="tab on" data-tab="browse" id="tab-browse">עיון</button>
-  <button class="tab" data-tab="add" id="tab-add">הוספה / עריכה</button>
-  <button class="tab" data-tab="az" id="tab-az">א״ב</button>
-  <button class="tab" data-tab="tools" id="tab-tools">כלים</button>
+  <button class="tab on" data-tab="browse" type="button">עיון</button>
+  <button class="tab" data-tab="add" type="button">עריכה</button>
+  <button class="tab" data-tab="az" type="button">א״ב</button>
+  <button class="tab" data-tab="tools" type="button">כלים</button>
 </div>
-
 <main>
-  <!-- BROWSE -->
   <div class="panel on" id="panel-browse">
-    <!-- Dynamic type filters row -->
     <div class="filters-row" id="type-filters"></div>
-
     <div class="search-box">
       <input type="search" id="q" placeholder="חיפוש נושא, שם או מקום…" autocomplete="off" enterkeyhint="search">
-      <button class="clear-btn" id="q-clear" aria-label="נקה">×</button>
+      <button class="clear-btn" id="q-clear" type="button" aria-label="נקה">×</button>
     </div>
-    
-    <div class="controls-row hidden" id="browse-controls">
-        <div class="count" id="count"></div>
-        <button class="toggle-quotes-btn" id="global-quote-toggle">הצג ציטוטים</button>
+    <div class="controls-row" id="browse-controls">
+      <div class="count" id="count"></div>
+      <button class="toggle-quotes-btn" id="quote-toggle" type="button">הצג ציטוטים</button>
     </div>
-    
-    <div id="results">
-        <div class="empty">התחל להקליד בשורת החיפוש או בחר מסנן כדי לראות תוצאות.</div>
-    </div>
+    <div id="results"><div class="empty">הקלד בשורת החיפוש כדי לראות תוצאות.</div></div>
   </div>
 
-  <!-- ADD / EDIT -->
   <div class="panel" id="panel-add">
     <div class="form-group">
-        <label>בחר ערך לעריכה (או הוסף חדש למטה)</label>
-        <div class="editor-list-container" id="editor-list"></div>
+      <label>בחר ערך לעריכה (או מלא טופס חדש למטה)</label>
+      <div class="search-box" style="margin-bottom:8px">
+        <input type="search" id="edit-list-q" placeholder="סינון רשימת ערכים…" autocomplete="off">
+      </div>
+      <div class="editor-list-container" id="editor-list"></div>
     </div>
-
-    <hr style="border:0; border-top:1px solid var(--line); margin: 20px 0;">
-
+    <hr style="border:0;border-top:1px solid var(--line);margin:16px 0">
     <form id="entry-form" autocomplete="off">
       <input type="hidden" id="edit-id" value="">
-
       <div class="form-group">
-        <label style="display:flex;justify-content:space-between;align-items:center;">
-          <span>שייך לקטגוריות (ניתן לבחור אחת או יותר)</span>
-          <button type="button" class="btn btn-secondary btn-sm" id="btn-manage-cats" style="padding:2px 8px;font-size:0.75rem;">ניהול קטגוריות</button>
+        <label style="display:flex;justify-content:space-between;align-items:center">
+          <span>קטגוריות (אחת או יותר)</span>
+          <button type="button" class="btn btn-secondary btn-sm" id="btn-manage-cats" style="padding:3px 10px;font-size:.75rem;flex:none">ניהול קטגוריות</button>
         </label>
-        <div class="checkbox-grid" id="type-checkboxes-container"></div>
+        <div class="checkbox-grid" id="type-checkboxes"></div>
       </div>
-
       <div class="form-group topic-wrap">
         <label>ערך (נושא / שם / מקום)</label>
         <input type="text" id="f-topic" required placeholder="לדוגמה: אהבת ישראל">
         <div class="suggestions" id="topic-sug"></div>
       </div>
-
-      <div class="form-group" id="wrap-clar">
-        <label>הבהרה (אופציונלי)</label>
-        <input type="text" id="f-clar" placeholder='לדוגמה: אדמו"ר הזקן'>
-      </div>
-
-      <div class="form-group" id="wrap-desc">
-        <label>תמצית (תיאור קצר)</label>
-        <input type="text" id="f-desc" placeholder="תיאור קצר של העניין בעמוד זה">
-      </div>
-
-      <div class="form-group" id="wrap-excerpt">
-        <label>ציטוט מלא (יוסתר כברירת מחדל)</label>
-        <textarea id="f-excerpt" class="quote" placeholder="העתק כאן את הציטוט המלא מהשיחה…"></textarea>
-      </div>
-
-      <div class="form-group" id="wrap-sichah">
-        <label>שם השיחה / מקור</label>
-        <input type="text" id="f-sichah" placeholder='לדוגמה: ליל ז׳ תשרי תש"ז'>
-      </div>
-
-      <div class="form-group" id="wrap-page">
-        <label>עמוד בספר (מספר)</label>
-        <input type="number" id="f-page" min="1" placeholder="3">
-      </div>
-
-      <div class="form-group" id="wrap-pdfpage">
-        <label>עמוד ב־PDF (אופציונלי)</label>
-        <input type="number" id="f-pdfpage" min="1" placeholder="1">
-      </div>
-
-      <div class="form-group" id="wrap-url">
-        <label>קישור לשיחה</label>
-        <input type="url" id="f-url" placeholder="https://...">
-      </div>
-
+      <div class="form-group"><label>הבהרה (אופציונלי)</label><input type="text" id="f-clar" placeholder='לדוגמה: אדמו"ר הזקן'></div>
+      <div class="form-group"><label>תמצית</label><input type="text" id="f-desc" placeholder="תיאור קצר"></div>
+      <div class="form-group"><label>ציטוט מלא</label><textarea id="f-excerpt" class="quote" placeholder="העתק את הציטוט המלא…"></textarea></div>
+      <div class="form-group"><label>שם השיחה / מקור</label><input type="text" id="f-sichah" placeholder='ליל ז׳ תשרי תש"ז'></div>
+      <div class="form-group"><label>עמוד בספר</label><input type="number" id="f-page" min="1" placeholder="3"></div>
+      <div class="form-group"><label>עמוד ב־PDF (אופציונלי)</label><input type="number" id="f-pdfpage" min="1" placeholder="1"></div>
+      <div class="form-group"><label>קישור לשיחה</label><input type="url" id="f-url" placeholder="https://sichotmeturgamot.github.io/read.html?..."></div>
       <div class="btn-row">
-        <button type="submit" class="btn btn-primary" id="save-btn">שמור / הוסף חדש</button>
-        <button type="button" class="btn btn-secondary" id="cancel-btn">נקה טופס</button>
+        <button type="submit" class="btn btn-primary" id="save-btn">שמור / הוסף</button>
+        <button type="button" class="btn btn-secondary" id="cancel-btn">נקה</button>
       </div>
       <button type="button" class="btn btn-danger hidden" id="delete-btn" style="width:100%;margin-top:4px">מחק ערך זה</button>
     </form>
   </div>
 
-  <!-- A-Z -->
-  <div class="panel" id="panel-az">
-    <div id="az-list"></div>
-  </div>
+  <div class="panel" id="panel-az"><div id="az-list"></div></div>
 
-  <!-- TOOLS -->
   <div class="panel" id="panel-tools">
     <div class="stats" id="stats"></div>
-
     <div class="tools-section">
-      <h3>חיבור ענן (GitHub)</h3>
-      <p id="connection-status-text" style="font-weight:600;margin-bottom:8px">סטטוס: מנותק</p>
-      <p>הכנס את פרטי הריפו והטוקן שלך. הם יישמרו בדפדפן, ומעכשיו כל שמירה או עריכה תעדכן אוטומטית את קובץ ה־<code>mafteach.js</code> בריפו שלך.</p>
-      <div class="form-group">
-        <label>שם משתמש בגיטהאב (Owner)</label>
-        <input type="text" id="gh-owner" placeholder="sichotmeturgamot">
-      </div>
-      <div class="form-group">
-        <label>שם הריפו (Repository)</label>
-        <input type="text" id="gh-repo" placeholder="mafteach">
-      </div>
-      <div class="form-group">
-        <label>טוקן גישה (Personal Access Token)</label>
-        <input type="password" id="gh-token" placeholder="ghp_...">
-      </div>
-      <button class="btn btn-primary btn-sm" id="btn-save-gh" style="width:100%">שמור חיבור ענן</button>
+      <h3>התקנה כאפליקציה</h3>
+      <p>באנדרואיד (Chrome): תפריט ⋮ ← «התקן אפליקציה» / «הוסף למסך הבית».<br>האייקון ייקרא <b>מפתחות-עורך</b> — שונה מאפליקציות אחרות.</p>
     </div>
-
     <div class="tools-section">
-      <h3>ייצוא / ייבוא ידני</h3>
-      <p>גיבוי מקומי או טעינת קובץ נתונים חיצוני.</p>
-      <button class="btn btn-secondary btn-sm" id="btn-export-js" style="width:100%">הורד כ־mafteach.js</button>
-      <input type="file" id="import-file" accept=".json,.js,application/json,text/javascript" style="font-size:.85rem;margin:10px 0 8px;width:100%">
+      <h3>ייצוא / ייבוא</h3>
+      <p>גיבוי מקומי. הנתונים נשמרים רק במכשיר שלך.</p>
+      <button class="btn btn-secondary btn-sm" id="btn-export-js" style="width:100%">הורד mafteach.js</button>
+      <button class="btn btn-secondary btn-sm" id="btn-export-json" style="width:100%;margin-top:8px">הורד JSON</button>
+      <input type="file" id="import-file" accept=".json,.js,text/javascript,application/json" style="font-size:.85rem;margin:10px 0 8px;width:100%">
       <div class="btn-row" style="margin-top:0">
-        <button class="btn btn-primary btn-sm" id="btn-import-merge">מזג עם הקיים</button>
-        <button class="btn btn-secondary btn-sm" id="btn-import-replace">החלף הכל</button>
+        <button class="btn btn-primary btn-sm" id="btn-import-merge" type="button">מזג</button>
+        <button class="btn btn-secondary btn-sm" id="btn-import-replace" type="button">החלף</button>
       </div>
     </div>
-
     <div class="tools-section">
       <h3>ניקוי</h3>
-      <p>מחיקת כל הערכים מהמכשיר.</p>
+      <p>מחיקת כל הערכים מהמכשיר (לא ניתן לשחזור).</p>
       <button class="btn btn-danger btn-sm" id="btn-clear-all" style="width:100%">מחק הכל</button>
     </div>
   </div>
 </main>
 
+<div id="install-bar" role="dialog">
+  <p>התקן «מפתחות-עורך» במסך הבית</p>
+  <button type="button" id="install-btn">התקן</button>
+  <button type="button" id="install-dismiss" aria-label="סגור">✕</button>
+</div>
 <div class="toast" id="toast"></div>
-
 <div class="overlay" id="overlay">
   <div class="dialog">
     <h3 id="dlg-title">אישור</h3>
     <p id="dlg-msg"></p>
-    <div id="dlg-body" style="margin-bottom:14px"></div>
-    <div class="btn-row" id="dlg-btn-row">
-      <button class="btn btn-danger" id="dlg-yes">כן</button>
-      <button class="btn btn-secondary" id="dlg-no">ביטול</button>
+    <div id="dlg-body"></div>
+    <div class="btn-row">
+      <button class="btn btn-danger" id="dlg-yes" type="button">כן</button>
+      <button class="btn btn-secondary" id="dlg-no" type="button">ביטול</button>
     </div>
   </div>
 </div>
 
 <script>
 (function () {
-  const STORAGE_KEY = 'mafteach-editor-v5';
-  const CATS_KEY = 'mafteach-categories-v2';
-  const GH_CONFIG_KEY = 'mafteach-gh-config';
+  const STORAGE_KEY = 'mafteach-editor-private-v1';
+  const CATS_KEY = 'mafteach-cats-private-v1';
+  const QUOTES_KEY = 'mafteach-show-quotes-v1';
 
   let CATEGORIES = [
-    { id: 'i', name: 'עניינים', isSystem: true },
+    { id: 'i', name: 'ענינים', isSystem: true },
     { id: 'n', name: 'שמות', isSystem: true },
     { id: 'm', name: 'מקומות', isSystem: true }
   ];
-
   let DATA = [];
-  let editIndex = null; 
-  let currentTypeFilter = 'all';
-  let showAllQuotes = false;
-
-  function loadCategories() {
-    try {
-      const raw = localStorage.getItem(CATS_KEY);
-      if (raw) {
-        CATEGORIES = JSON.parse(raw);
-      }
-    } catch (_) {}
-  }
-  function saveCategories() {
-    try { localStorage.setItem(CATS_KEY, JSON.stringify(CATEGORIES)); } catch (_) {}
-  }
-
-  function load() {
-    loadCategories();
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      DATA = raw ? JSON.parse(raw) : [];
-      // Backward compatibility: normalize single .t string to .types array
-      DATA.forEach(e => {
-        if (!e.types && e.t) e.types = [e.t];
-        if (!e.types) e.types = ['i'];
-      });
-    } catch (_) { DATA = []; }
-  }
-  function save() {
-    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(DATA)); }
-    catch (e) { toast('שגיאה בשמירה (אולי מקום אחסון מלא)', 'err'); }
-    syncToGitHub();
-  }
-
-  function getCatNames(entry) {
-    const types = entry.types || [entry.t || 'i'];
-    return types.map(id => {
-      const c = CATEGORIES.find(x => x.id === id);
-      return c ? c.name : id;
-    });
-  }
-
-  function updateAuthStatusUI() {
-    const badge = document.getElementById('auth-badge');
-    const statusText = document.getElementById('connection-status-text');
-    const rawCfg = localStorage.getItem(GH_CONFIG_KEY);
-    
-    if (rawCfg) {
-      try {
-        const { owner, repo, token } = JSON.parse(rawCfg);
-        if (owner && repo && token) {
-          badge.className = 'auth-badge connected';
-          badge.textContent = 'מחובר לענן';
-          if (statusText) statusText.textContent = `סטטוס: מחובר ל־${owner}/${repo} ✓`;
-          return;
-        }
-      } catch (_) {}
-    }
-    badge.className = 'auth-badge disconnected';
-    badge.textContent = 'מנותק מענן';
-    if (statusText) statusText.textContent = 'סטטוס: מנותק (הזן פרטים למטה כדי להתחבר)';
-  }
-
-  async function syncToGitHub() {
-    const rawCfg = localStorage.getItem(GH_CONFIG_KEY);
-    if (!rawCfg) return;
-    try {
-      const { owner, repo, token } = JSON.parse(rawCfg);
-      if (!owner || !repo || !token) return;
-
-      const path = 'mafteach.js';
-      const cleanData = stripIds(DATA);
-      const fileContent = `// נתוני המפתחות — נערך אוטומטית בעורך המפתחות\nconst MAFTEACH = ${JSON.stringify(cleanData)};\n`;
-      const encodedContent = btoa(unescape(encodeURIComponent(fileContent)));
-
-      const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${path}`;
-      
-      let sha = '';
-      const getRes = await fetch(apiUrl, {
-        headers: { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json' }
-      });
-      
-      if (getRes.ok) {
-        const fileData = await getRes.json();
-        sha = fileData.sha;
-      }
-
-      const putRes = await fetch(apiUrl, {
-        method: 'PUT',
-        headers: {
-          'Authorization': `token ${token}`,
-          'Accept': 'application/vnd.github.v3+json',
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          message: 'Update mafteach.js automatically from editor',
-          content: encodedContent,
-          sha: sha || undefined
-        })
-      });
-
-      if (putRes.ok) {
-        toast('הענן עודכן אוטומטית ב־GitHub!', 'ok');
-      } else {
-        const errJson = await putRes.json();
-        console.error('GitHub Sync Error:', errJson);
-        toast('שגיאת ענן: ' + (errJson.message || 'בדוק טוקן והרשאות'), 'err');
-      }
-    } catch (e) {
-      console.error('GitHub Sync Exception:', e);
-      toast('שגיאת תקשורת בסנכרון לענן', 'err');
-    }
-  }
+  let editIndex = null;
+  let currentFilter = 'all';
+  let showQuotes = false;
+  try { showQuotes = localStorage.getItem(QUOTES_KEY) === '1'; } catch (_) {}
 
   function normalize(s) {
-    return String(s || '')
-      .replace(/[֑-ׇ]/g, '')
-      .replace(/[׳״'"‘’“”]/g, '')
-      .replace(/[‎‏]/g, '')
-      .replace(/[־–—-]/g, '')
-      .replace(/[.,:;!?()\[\]\/]/g, '')
+    return String(s || '').replace(/[֑-ׇ]/g, '').replace(/[׳״'"‘’“”]/g, '')
+      .replace(/[‎‏]/g, '').replace(/[־–—-]/g, '').replace(/[.,:;!?()\[\]\/]/g, '')
       .replace(/ך/g, 'כ').replace(/ם/g, 'מ').replace(/ן/g, 'נ').replace(/ף/g, 'פ').replace(/ץ/g, 'צ')
       .replace(/\s+/g, ' ').trim();
   }
   function esc(s) {
-    return String(s || '').replace(/[&<>"']/g, c =>
-      ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    return String(s || '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   }
-  function uid() {
-    return Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
-  }
+  function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 7); }
   function toast(msg, type) {
     const el = document.getElementById('toast');
     el.textContent = msg;
     el.className = 'toast show' + (type ? ' ' + type : '');
     clearTimeout(toast._t);
-    toast._t = setTimeout(() => { el.className = 'toast'; }, 3000);
+    toast._t = setTimeout(() => { el.className = 'toast'; }, 2400);
   }
-  function confirmDlg(title, msg, customHtml) {
+  function confirmDlg(title, msg, bodyHtml) {
     return new Promise(resolve => {
       const ov = document.getElementById('overlay');
       document.getElementById('dlg-title').textContent = title;
       document.getElementById('dlg-msg').textContent = msg || '';
-      const bodyEl = document.getElementById('dlg-body');
-      bodyEl.innerHTML = customHtml || '';
+      document.getElementById('dlg-body').innerHTML = bodyHtml || '';
+      document.getElementById('dlg-yes').textContent = 'כן';
+      document.getElementById('dlg-no').style.display = '';
       ov.classList.add('show');
       const yes = document.getElementById('dlg-yes');
       const no = document.getElementById('dlg-no');
-      const btnRow = document.getElementById('dlg-btn-row');
-      btnRow.style.display = 'flex';
+      function done(v) { ov.classList.remove('show'); yes.onclick = no.onclick = null; resolve(v); }
+      yes.onclick = () => done(true);
+      no.onclick = () => done(false);
+    });
+  }
+  function entryTypes(e) {
+    if (e.types && e.types.length) return e.types;
+    if (e.t) return [e.t];
+    return ['i'];
+  }
+  function catName(id) {
+    const c = CATEGORIES.find(x => x.id === id);
+    return c ? c.name : id;
+  }
+  function getCatNames(e) { return entryTypes(e).map(catName); }
 
-      function done(v) {
-        ov.classList.remove('show');
-        bodyEl.innerHTML = '';
-        yes.removeEventListener('click', onY);
-        no.removeEventListener('click', onN);
-        resolve(v);
+  function loadCategories() {
+    try {
+      const raw = localStorage.getItem(CATS_KEY);
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        if (Array.isArray(parsed) && parsed.length) CATEGORIES = parsed;
       }
-      function onY() { done(true); }
-      function onN() { done(false); }
-      yes.addEventListener('click', onY);
-      no.addEventListener('click', onN);
+    } catch (_) {}
+    const sys = [
+      { id: 'i', name: 'ענינים', isSystem: true },
+      { id: 'n', name: 'שמות', isSystem: true },
+      { id: 'm', name: 'מקומות', isSystem: true }
+    ];
+    sys.forEach(s => {
+      if (!CATEGORIES.some(c => c.id === s.id)) CATEGORIES.unshift(s);
     });
   }
-
-  function ensureIds() {
-    let changed = false;
-    DATA.forEach(e => {
-      if (!e._id) { e._id = uid(); changed = true; }
-      if (!e.types && e.t) { e.types = [e.t]; changed = true; }
-    });
-    if (changed) save();
+  function saveCategories() {
+    try { localStorage.setItem(CATS_KEY, JSON.stringify(CATEGORIES)); } catch (_) {}
+  }
+  function load() {
+    loadCategories();
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      DATA = raw ? JSON.parse(raw) : [];
+      DATA.forEach(e => {
+        if (!e._id) e._id = uid();
+        if (!e.types) e.types = e.t ? [e.t] : ['i'];
+      });
+    } catch (_) { DATA = []; }
+  }
+  function save() {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(DATA)); }
+    catch (e) { toast('שגיאה בשמירה', 'err'); }
   }
 
-  // Tabs navigation
   document.querySelectorAll('.tab').forEach(btn => {
     btn.addEventListener('click', () => {
       document.querySelectorAll('.tab').forEach(t => t.classList.remove('on'));
       document.querySelectorAll('.panel').forEach(p => p.classList.remove('on'));
       btn.classList.add('on');
-      document.getElementById('panel-' + btn.dataset.tab).classList.add('on');
-      
-      if (btn.dataset.tab === 'browse') {
-        renderBrowseFilters();
-        renderBrowse();
-      }
-      if (btn.dataset.tab === 'az') renderAZ();
-      if (btn.dataset.tab === 'tools') {
-        renderStats();
-        loadGhConfigUI();
-        updateAuthStatusUI();
-      }
-      if (btn.dataset.tab === 'add') {
-        renderCategoryCheckboxes();
-        renderEditorList();
-        updateFormVisibility();
-      }
+      const tab = btn.dataset.tab;
+      document.getElementById('panel-' + tab).classList.add('on');
+      if (tab === 'browse') { renderBrowseFilters(); renderBrowse(); }
+      if (tab === 'add') { renderCategoryCheckboxes(); renderEditorList(); }
+      if (tab === 'az') renderAZ();
+      if (tab === 'tools') renderStats();
     });
   });
 
@@ -863,37 +330,38 @@
   const qClear = document.getElementById('q-clear');
   const resultsEl = document.getElementById('results');
   const countEl = document.getElementById('count');
-  const browseControls = document.getElementById('browse-controls');
-  const globalQuoteToggle = document.getElementById('global-quote-toggle');
+  const quoteToggle = document.getElementById('quote-toggle');
+
+  function applyQuoteLabel() {
+    quoteToggle.textContent = showQuotes ? 'הסתר ציטוטים' : 'הצג ציטוטים';
+    quoteToggle.classList.toggle('on', showQuotes);
+  }
+  applyQuoteLabel();
+  quoteToggle.addEventListener('click', () => {
+    showQuotes = !showQuotes;
+    try { localStorage.setItem(QUOTES_KEY, showQuotes ? '1' : '0'); } catch (_) {}
+    applyQuoteLabel();
+    renderBrowse();
+    if (document.getElementById('panel-az').classList.contains('on')) renderAZ();
+  });
 
   function renderBrowseFilters() {
-    const tfContainer = document.getElementById('type-filters');
-    let tfHtml = `<button class="filter-btn ${currentTypeFilter === 'all' ? 'active' : ''}" data-type="all">הכל</button>`;
-    CATEGORIES.forEach(cat => {
-      tfHtml += `<button class="filter-btn ${currentTypeFilter === cat.id ? 'active' : ''}" data-type="${cat.id}">${esc(cat.name)}</button>`;
-    });
-    tfContainer.innerHTML = tfHtml;
-
-    tfContainer.querySelectorAll('.filter-btn').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        tfContainer.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-        e.target.classList.add('active');
-        currentTypeFilter = e.target.dataset.type;
+    const el = document.getElementById('type-filters');
+    const items = [{ id: 'all', name: 'הכל' }].concat(CATEGORIES);
+    el.innerHTML = items.map(c =>
+      `<button type="button" class="filter-btn${currentFilter === c.id ? ' active' : ''}" data-f="${esc(c.id)}">${esc(c.name)}</button>`
+    ).join('');
+    el.querySelectorAll('.filter-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        currentFilter = btn.dataset.f;
+        renderBrowseFilters();
         renderBrowse();
       });
     });
   }
 
-  globalQuoteToggle.addEventListener('click', () => {
-    showAllQuotes = !showAllQuotes;
-    globalQuoteToggle.textContent = showAllQuotes ? 'הסתר ציטוטים' : 'הצג ציטוטים';
-    document.querySelectorAll('#panel-browse .card').forEach(card => {
-      if (showAllQuotes) card.classList.add('show-quote');
-      else card.classList.remove('show-quote');
-    });
-  });
-
   function scoreEntry(e, nq) {
+    if (!nq) return 0;
     const t = normalize(e.topic);
     const c = normalize(e.clar || '');
     const d = normalize(e.desc || '');
@@ -903,131 +371,53 @@
     if (c.indexOf(nq) >= 0) return 3;
     if (d.indexOf(nq) >= 0) return 2;
     if (x.indexOf(nq) >= 0) return 1;
-    if (e.sources) {
-      for (const s of e.sources) {
-        if (normalize(s.s).indexOf(nq) >= 0) return 1.5;
-      }
-    }
+    if (e.sichah && normalize(e.sichah).indexOf(nq) >= 0) return 1.5;
     return 0;
   }
 
-  function cardHTML(e, isBrowse = true) {
-    const names = getCatNames(e);
+  function cardHTML(e) {
+    const tags = getCatNames(e).map(n => `<span class="tag">${esc(n)}</span>`).join('');
     const clar = e.clar ? ` <span class="clar">(${esc(e.clar)})</span>` : '';
-    
-    let tagsHtml = names.map(name => `<span class="tag">${esc(name)}</span>`).join('');
-
     let body = '';
-    let hasUrl = e.url || (e.sources && e.sources[0] && e.sources[0].u);
-    let targetUrl = e.url || (e.sources && e.sources[0] ? e.sources[0].u : '');
-    
-    const isGeneralTopic = (!e.sources || e.t === 'i' || (e.types && e.types.includes('i')));
-    
-    if (isGeneralTopic && (e.desc || e.excerpt || e.page || e.sichah)) {
-      if (e.desc) body += `<div class="desc">${esc(e.desc)}</div>`;
-      if (e.excerpt) {
-        body += `<div class="excerpt-container"><div class="excerpt">${esc(e.excerpt).replace(/\n/g, '<br>')}</div></div>`;
-      }
-      body += `<div class="meta">`;
-      if (e.page) body += `<span>עמ׳ ${e.page}</span>`;
-      if (e.sichah) body += `<span>${esc(e.sichah)}</span>`;
-      body += `</div>`;
-    } else {
-      if (e.sources && e.sources.length) {
-        body += `<div class="meta">`;
-        body += e.sources.map(s => `<span>${esc(s.s)}${s.dp ? ' (עמ׳ ' + s.dp + ')' : ''}</span>`).join('');
-        body += `</div>`;
-      }
+    if (e.desc) body += `<div class="desc">${esc(e.desc)}</div>`;
+    if (e.excerpt && showQuotes) body += `<div class="excerpt">${esc(e.excerpt)}</div>`;
+    body += `<div class="meta">`;
+    if (e.page) body += `<span>עמ׳ ${e.page}</span>`;
+    if (e.sichah) body += `<span>${esc(e.sichah)}</span>`;
+    body += `</div>`;
+    let link = e.url || '';
+    if (!link && e.sources && e.sources[0] && e.sources[0].u) link = e.sources[0].u;
+    if (link) {
+      let href = link;
+      if (e.page && href.indexOf('disp=') < 0) href += (href.indexOf('?') >= 0 ? '&' : '?') + 'disp=' + e.page;
+      if (e.pdfpage && href.indexOf('page=') < 0) href += (href.indexOf('?') >= 0 ? '&' : '?') + 'page=' + e.pdfpage;
+      body += `<a class="link-btn" href="${esc(href)}" target="_blank" rel="noopener">פתיחת השיחה ←</a>`;
     }
-    
-    let actions = '';
-    if (isBrowse && hasUrl) {
-      actions = `
-      <div class="actions">
-        <button type="button" class="link-btn" onclick="window.open('${esc(targetUrl)}', '_blank'); event.stopPropagation();">פתח שיחה במקור</button>
-      </div>`;
-    }
-
-    const quoteClass = (showAllQuotes && e.excerpt) ? 'show-quote' : '';
-
-    return `<div class="card ${quoteClass}" data-id="${esc(e._id)}" ${hasUrl && isBrowse ? `onclick="window.open('${esc(targetUrl)}', '_blank')"` : ''}>
-      <div class="topic">${esc(e.topic)}${clar}</div>
-      <div class="card-tags" style="margin-top:4px;display:flex;gap:4px;flex-wrap:wrap;">${tagsHtml}</div>
-      ${body}
-      ${actions}
-    </div>`;
+    return `<div class="card"><div class="topic">${esc(e.topic)}${clar}${tags}</div>${body}</div>`;
   }
 
   function renderBrowse() {
     const raw = qEl.value.trim();
     qClear.style.display = raw ? 'block' : 'none';
-    
-    if (!raw && currentTypeFilter === 'all') {
-      browseControls.classList.add('hidden');
-      resultsEl.innerHTML = '<div class="empty">התחל להקליד בשורת החיפוש או בחר מסנן למעלה.</div>';
+    if (!raw) {
+      countEl.textContent = '';
+      resultsEl.innerHTML = '<div class="empty">הקלד בשורת החיפוש כדי לראות תוצאות.</div>';
       return;
     }
-
     const nq = normalize(raw);
-    let filtered = [];
-
+    let scored = [];
     for (const e of DATA) {
-      const types = e.types || [e.t || 'i'];
-      if (currentTypeFilter !== 'all' && !types.includes(currentTypeFilter)) continue;
-
-      if (nq) {
-        const sc = scoreEntry(e, nq);
-        if (sc > 0) filtered.push({ e, sc });
-      } else {
-        filtered.push({ e, sc: 1 });
-      }
+      if (currentFilter !== 'all' && !entryTypes(e).includes(currentFilter)) continue;
+      const sc = scoreEntry(e, nq);
+      if (sc > 0) scored.push({ e, sc });
     }
-
-    if (nq) {
-      filtered.sort((a, b) => b.sc - a.sc);
-    } else {
-      filtered.sort((a, b) => normalize(a.e.topic).localeCompare(normalize(b.e.topic), 'he'));
-    }
-
-    const rows = filtered.map(x => x.e);
-    
-    browseControls.classList.remove('hidden');
-    countEl.textContent = rows.length
-      ? (rows.length === 1 ? 'תוצאה אחת' : rows.length + ' תוצאות')
-      : 'לא נמצאו תוצאות';
-      
-    resultsEl.innerHTML = rows.length
-      ? rows.map(e => cardHTML(e, true)).join('')
-      : '<div class="empty">לא נמצאו תוצאות</div>';
+    scored.sort((a, b) => b.sc - a.sc || normalize(a.e.topic).localeCompare(normalize(b.e.topic), 'he'));
+    const rows = scored.map(x => x.e);
+    countEl.textContent = rows.length ? (rows.length === 1 ? 'תוצאה אחת' : rows.length + ' תוצאות') : 'לא נמצאו תוצאות';
+    resultsEl.innerHTML = rows.length ? rows.map(cardHTML).join('') : '<div class="empty">לא נמצאו תוצאות</div>';
   }
-
   qEl.addEventListener('input', renderBrowse);
   qClear.addEventListener('click', () => { qEl.value = ''; qEl.focus(); renderBrowse(); });
-
-  function renderEditorList() {
-    const container = document.getElementById('editor-list');
-    if (DATA.length === 0) {
-      container.innerHTML = '<div class="empty" style="padding:10px">אין ערכים במערכת</div>';
-      return;
-    }
-
-    const sorted = DATA.slice().sort((a, b) => 
-      normalize(a.topic).localeCompare(normalize(b.topic), 'he')
-    );
-
-    container.innerHTML = sorted.map(e => 
-      `<div class="editor-list-item" data-id="${esc(e._id)}">
-        <span class="item-title">${esc(e.topic)}${e.clar ? ' ('+esc(e.clar)+')' : ''}</span>
-        <span class="item-type">${getCatNames(e).join(', ')}</span>
-      </div>`
-    ).join('');
-
-    container.querySelectorAll('.editor-list-item').forEach(item => {
-      item.addEventListener('click', () => {
-        startEdit(item.dataset.id);
-      });
-    });
-  }
 
   function heFirst(s) {
     const c = normalize(s).charAt(0);
@@ -1035,25 +425,16 @@
   }
   function renderAZ() {
     const el = document.getElementById('az-list');
-    if (!DATA.length) {
-      el.innerHTML = '<div class="empty">אין ערכים</div>';
-      return;
-    }
+    if (!DATA.length) { el.innerHTML = '<div class="empty">אין ערכים</div>'; return; }
     const byLetter = {};
-    const sorted = DATA.slice().sort((a, b) =>
-      normalize(a.topic).localeCompare(normalize(b.topic), 'he'));
-      
+    const sorted = DATA.slice().sort((a, b) => normalize(a.topic).localeCompare(normalize(b.topic), 'he'));
     for (const e of sorted) {
       const L = heFirst(e.topic);
       (byLetter[L] = byLetter[L] || []).push(e);
     }
-    
-    const letters = Object.keys(byLetter).sort((a, b) =>
-      a === '#' ? 1 : b === '#' ? -1 : a.localeCompare(b, 'he'));
-      
+    const letters = Object.keys(byLetter).sort((a, b) => a === '#' ? 1 : b === '#' ? -1 : a.localeCompare(b, 'he'));
     el.innerHTML = letters.map(L =>
-      `<div class="az-letter">${esc(L)}</div>` +
-      byLetter[L].map(e => cardHTML(e, false)).join('')
+      `<div class="az-letter">${esc(L)}</div>` + byLetter[L].map(cardHTML).join('')
     ).join('');
   }
 
@@ -1070,172 +451,131 @@
   const saveBtn = document.getElementById('save-btn');
   const deleteBtn = document.getElementById('delete-btn');
   const topicSug = document.getElementById('topic-sug');
+  const editListQ = document.getElementById('edit-list-q');
 
   function getSelectedTypes() {
     const checked = form.querySelectorAll('input[name="types"]:checked');
     const arr = Array.from(checked).map(cb => cb.value);
-    return arr.length ? arr : [CATEGORIES[0] ? CATEGORIES[0].id : 'i'];
+    return arr.length ? arr : ['i'];
   }
-
-  function renderCategoryCheckboxes() {
-    const container = document.getElementById('type-checkboxes-container');
-    const selected = getSelectedTypes();
-    
-    container.innerHTML = CATEGORIES.map((cat, idx) => `
-      <label>
-        <input type="checkbox" name="types" value="${cat.id}" ${selected.includes(cat.id) || (idx === 0 && selected.length === 0) ? 'checked' : ''}>
-        <span>${esc(cat.name)}</span>
-      </label>
-    `).join('');
-
-    container.querySelectorAll('input[name="types"]').forEach(cb => {
-      cb.addEventListener('change', updateFormVisibility);
+  function renderCategoryCheckboxes(preselect) {
+    const container = document.getElementById('type-checkboxes');
+    const selected = preselect || getSelectedTypes();
+    container.innerHTML = CATEGORIES.map(cat =>
+      `<label><input type="checkbox" name="types" value="${esc(cat.id)}" ${selected.includes(cat.id) ? 'checked' : ''}><span>${esc(cat.name)}</span></label>`
+    ).join('');
+  }
+  function renderEditorList() {
+    const container = document.getElementById('editor-list');
+    const q = normalize(editListQ.value);
+    let list = DATA.slice().sort((a, b) => normalize(a.topic).localeCompare(normalize(b.topic), 'he'));
+    if (q) list = list.filter(e => normalize(e.topic).indexOf(q) >= 0 || normalize(e.clar || '').indexOf(q) >= 0);
+    if (!list.length) { container.innerHTML = '<div class="empty" style="padding:16px">אין ערכים</div>'; return; }
+    container.innerHTML = list.map(e =>
+      `<div class="editor-list-item${editIdEl.value === e._id ? ' selected' : ''}" data-id="${esc(e._id)}">
+        <span class="item-title">${esc(e.topic)}${e.clar ? ' (' + esc(e.clar) + ')' : ''}</span>
+        <span class="item-type">${esc(getCatNames(e).join(', '))}</span>
+      </div>`
+    ).join('');
+    container.querySelectorAll('.editor-list-item').forEach(item => {
+      item.addEventListener('click', () => startEdit(item.dataset.id));
     });
   }
+  editListQ.addEventListener('input', renderEditorList);
 
-  function updateFormVisibility() {
-    const types = getSelectedTypes();
-    // Show detailed excerpt/desc if 'i' (عניינים) is among selected types or no standard categories
-    const isI = types.includes('i') || types.length === 0;
-    document.getElementById('wrap-clar').classList.toggle('hidden', false);
-    document.getElementById('wrap-desc').classList.toggle('hidden', !isI);
-    document.getElementById('wrap-excerpt').classList.toggle('hidden', !isI);
-    document.getElementById('wrap-sichah').classList.toggle('hidden', false);
-    document.getElementById('wrap-page').classList.toggle('hidden', false);
-    document.getElementById('wrap-pdfpage').classList.toggle('hidden', false);
-    document.getElementById('wrap-url').classList.toggle('hidden', false);
-  }
-
-  document.getElementById('btn-manage-cats').addEventListener('click', async () => {
-    let html = `<div style="max-height:220px;overflow-y:auto;margin-bottom:12px;text-align:right;">`;
+  document.getElementById('btn-manage-cats').addEventListener('click', () => {
+    let html = '<div style="max-height:220px;overflow-y:auto;text-align:right;margin-bottom:12px">';
     CATEGORIES.forEach(c => {
-      html += `<div style="display:flex;justify-content:space-between;align-items:center;padding:6px;border-bottom:1px solid var(--line);">
-        <span><b>${esc(c.name)}</b> (${c.id})</span>
-        ${!c.isSystem ? `<button type="button" class="btn btn-danger btn-sm" onclick="window.__delCat('${c.id}')">מחק</button>` : '<span style="font-size:0.75rem;color:var(--muted)">מערכת</span>'}
+      html += `<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--line)">
+        <span><b>${esc(c.name)}</b> <span style="color:var(--muted);font-size:.75rem">(${esc(c.id)})</span></span>
+        ${!c.isSystem ? `<button type="button" class="btn btn-danger btn-sm" data-del="${esc(c.id)}" style="flex:none;padding:4px 10px">מחק</button>` : '<span style="font-size:.72rem;color:var(--muted)">מערכת</span>'}
       </div>`;
     });
-    html += `</div>
-    <div style="text-align:right;border-top:1px solid var(--line);padding-top:10px;">
-      <label style="font-size:0.8rem;color:var(--muted)">הוסף קטגוריה חדשה:</label>
-      <input type="text" id="new-cat-name" placeholder="שם הקטגוריה (לדוגמה: אדמו״ר)" style="width:100%;padding:8px;margin-top:4px;border:1px solid var(--line);border-radius:6px;">
+    html += `</div><div style="text-align:right;border-top:1px solid var(--line);padding-top:10px">
+      <label style="font-size:.8rem;color:var(--muted)">קטגוריה חדשה</label>
+      <input type="text" id="new-cat-name" placeholder="לדוגמה: אדמו״ר" style="width:100%;padding:8px;margin-top:4px;border:1.5px solid var(--line);border-radius:6px;font-family:inherit">
     </div>`;
-
-    window.__delCat = (id) => {
-      CATEGORIES = CATEGORIES.filter(x => x.id !== id);
-      saveCategories();
-      document.getElementById('overlay').classList.remove('show');
-      renderCategoryCheckboxes();
-      toast('הקטגוריה נמחקה', 'ok');
-    };
-
-    const ok = await confirmDlg('ניהול קטגוריות', '', html);
-    if (ok) {
+    const ov = document.getElementById('overlay');
+    document.getElementById('dlg-title').textContent = 'ניהול קטגוריות';
+    document.getElementById('dlg-msg').textContent = '';
+    document.getElementById('dlg-body').innerHTML = html;
+    document.getElementById('dlg-yes').textContent = 'הוסף / סגור';
+    document.getElementById('dlg-no').style.display = '';
+    ov.classList.add('show');
+    document.getElementById('dlg-body').querySelectorAll('[data-del]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        CATEGORIES = CATEGORIES.filter(x => x.id !== btn.dataset.del);
+        saveCategories();
+        ov.classList.remove('show');
+        renderCategoryCheckboxes();
+        renderBrowseFilters();
+        toast('קטגוריה נמחקה', 'ok');
+      });
+    });
+    document.getElementById('dlg-yes').onclick = () => {
       const input = document.getElementById('new-cat-name');
-      if (input && input.value.trim()) {
-        const name = input.value.trim();
-        const id = 'c_' + Date.now().toString(36);
-        CATEGORIES.push({ id, name, isSystem: false });
+      const name = input ? input.value.trim() : '';
+      if (name) {
+        CATEGORIES.push({ id: 'c_' + Date.now().toString(36), name, isSystem: false });
         saveCategories();
         renderCategoryCheckboxes();
-        toast('קטגוריה נוספה בהצלחה', 'ok');
+        renderBrowseFilters();
+        toast('קטגוריה נוספה', 'ok');
       }
-    }
+      ov.classList.remove('show');
+    };
+    document.getElementById('dlg-no').onclick = () => { ov.classList.remove('show'); };
   });
 
   fTopic.addEventListener('input', () => {
     const q = normalize(fTopic.value);
     if (q.length < 1) { topicSug.classList.remove('show'); return; }
-    const seen = new Set();
-    const matches = [];
+    const seen = new Set(); const matches = [];
     for (const e of DATA) {
       const nt = normalize(e.topic);
-      const typesStr = (e.types || [e.t || 'i']).join(',');
-      if (nt.indexOf(q) >= 0 && !seen.has(nt + '|' + typesStr)) {
-        seen.add(nt + '|' + typesStr);
-        matches.push(e);
-        if (matches.length >= 12) break;
-      }
+      const key = nt + '|' + normalize(e.clar || '');
+      if (nt.indexOf(q) >= 0 && !seen.has(key)) { seen.add(key); matches.push(e); if (matches.length >= 12) break; }
     }
     if (!matches.length) { topicSug.classList.remove('show'); return; }
     topicSug.innerHTML = matches.map(e =>
-      `<div class="sug-item" data-topic="${esc(e.topic)}" data-clar="${esc(e.clar || '')}" data-types='${JSON.stringify(e.types || [e.t || 'i'])}'>
-        ${esc(e.topic)}${e.clar ? ' <span class="clar">(' + esc(e.clar) + ')</span>' : ''}
-        <span class="sug-type">${getCatNames(e).join(', ')}</span>
-      </div>`
+      `<div class="sug-item" data-id="${esc(e._id)}">${esc(e.topic)}${e.clar ? ' <span class="clar">(' + esc(e.clar) + ')</span>' : ''}<span class="sug-type">${esc(getCatNames(e).join(', '))}</span></div>`
     ).join('');
     topicSug.classList.add('show');
     topicSug.querySelectorAll('.sug-item').forEach(item => {
-      item.addEventListener('click', () => {
-        fTopic.value = item.dataset.topic;
-        if (item.dataset.clar) fClar.value = item.dataset.clar;
-        try {
-          const tArr = JSON.parse(item.dataset.types);
-          form.querySelectorAll('input[name="types"]').forEach(cb => {
-            cb.checked = tArr.includes(cb.value);
-          });
-          updateFormVisibility();
-        } catch (_) {}
-        topicSug.classList.remove('show');
-        fTopic.focus();
-      });
+      item.addEventListener('click', () => { startEdit(item.dataset.id); topicSug.classList.remove('show'); });
     });
   });
-  document.addEventListener('click', e => {
-    if (!e.target.closest('.topic-wrap')) topicSug.classList.remove('show');
-  });
+  document.addEventListener('click', e => { if (!e.target.closest('.topic-wrap')) topicSug.classList.remove('show'); });
 
   function clearForm() {
-    editIndex = null;
-    editIdEl.value = '';
-    fTopic.value = '';
-    fClar.value = '';
-    fDesc.value = '';
-    fExcerpt.value = '';
-    fSichah.value = '';
-    fPage.value = '';
-    fPdfpage.value = '';
-    fUrl.value = '';
-    form.querySelectorAll('input[name="types"]').forEach((cb, i) => { cb.checked = (i === 0); });
-    saveBtn.textContent = 'שמור / הוסף חדש';
+    editIndex = null; editIdEl.value = '';
+    fTopic.value = ''; fClar.value = ''; fDesc.value = ''; fExcerpt.value = '';
+    fSichah.value = ''; fPage.value = ''; fPdfpage.value = ''; fUrl.value = '';
+    renderCategoryCheckboxes(['i']);
+    saveBtn.textContent = 'שמור / הוסף';
     deleteBtn.classList.add('hidden');
-    updateFormVisibility();
-    document.querySelectorAll('.editor-list-item').forEach(i => i.style.background = '');
+    renderEditorList();
   }
-
-  document.getElementById('cancel-btn').addEventListener('click', () => {
-    clearForm();
-    toast('הטופס נוקה');
-  });
+  document.getElementById('cancel-btn').addEventListener('click', () => { clearForm(); toast('הטופס נוקה'); });
 
   function startEdit(id) {
     const idx = DATA.findIndex(e => e._id === id);
     if (idx < 0) return;
     const e = DATA[idx];
-    editIndex = idx;
-    editIdEl.value = id;
-    
-    const types = e.types || [e.t || 'i'];
-    form.querySelectorAll('input[name="types"]').forEach(cb => {
-      cb.checked = types.includes(cb.value);
-    });
-
+    editIndex = idx; editIdEl.value = id;
+    renderCategoryCheckboxes(entryTypes(e));
     fTopic.value = e.topic || '';
     fClar.value = e.clar || '';
     fDesc.value = e.desc || '';
     fExcerpt.value = e.excerpt || '';
-    fSichah.value = e.sichah || (e.sources && e.sources[0] ? e.sources[0].s : '');
+    fSichah.value = e.sichah || (e.sources && e.sources[0] ? e.sources[0].s : '') || '';
     fPage.value = e.page || (e.sources && e.sources[0] ? e.sources[0].dp : '') || '';
     fPdfpage.value = e.pdfpage || (e.sources && e.sources[0] ? e.sources[0].pg : '') || '';
     fUrl.value = e.url || (e.sources && e.sources[0] ? e.sources[0].u : '') || '';
-    
-    saveBtn.textContent = 'עדכן ערך קיים';
+    saveBtn.textContent = 'עדכן ערך';
     deleteBtn.classList.remove('hidden');
-    updateFormVisibility();
-    
-    document.querySelectorAll('.editor-list-item').forEach(i => {
-      if(i.dataset.id === id) i.style.background = '#e8f0fe';
-      else i.style.background = '';
-    });
+    renderEditorList();
+    form.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
   async function deleteById(id) {
@@ -1243,211 +583,119 @@
     if (!e) return;
     const ok = await confirmDlg('מחיקה', `למחוק את «${e.topic}»?`);
     if (!ok) return;
-    
     DATA = DATA.filter(x => x._id !== id);
-    save();
-    toast('נמחק', 'ok');
-    if (editIdEl.value === id) clearForm();
-    renderEditorList();
+    save(); toast('נמחק', 'ok');
+    if (editIdEl.value === id) clearForm(); else renderEditorList();
+    renderStats();
   }
-
-  deleteBtn.addEventListener('click', async () => {
-    if (editIdEl.value) await deleteById(editIdEl.value);
-  });
+  deleteBtn.addEventListener('click', () => { if (editIdEl.value) deleteById(editIdEl.value); });
 
   form.addEventListener('submit', ev => {
     ev.preventDefault();
     const types = getSelectedTypes();
     const topic = fTopic.value.trim();
     if (!topic) { toast('חסר ערך', 'err'); return; }
-
-    const clar = fClar.value.trim();
     const entry = {
-      types,
-      t: types[0], // primary for backwards compatibility
-      topic,
-      clar,
-      desc: fDesc.value.trim(),
+      types, t: types[0], topic,
+      clar: fClar.value.trim() || undefined,
+      desc: fDesc.value.trim() || undefined,
       page: fPage.value ? parseInt(fPage.value, 10) : undefined,
-      sichah: fSichah.value.trim(),
-      excerpt: fExcerpt.value.trim(),
-      url: fUrl.value.trim(),
+      sichah: fSichah.value.trim() || undefined,
+      excerpt: fExcerpt.value.trim() || undefined,
+      url: fUrl.value.trim() || undefined,
       pdfpage: fPdfpage.value ? parseInt(fPdfpage.value, 10) : undefined,
       _id: editIdEl.value || uid()
     };
-    
-    Object.keys(entry).forEach(k => { if (entry[k] === undefined || entry[k] === '' || (Array.isArray(entry[k]) && entry[k].length === 0)) delete entry[k]; });
-    
+    Object.keys(entry).forEach(k => { if (entry[k] === undefined || entry[k] === '') delete entry[k]; });
+    entry.types = types; entry.t = types[0]; entry.topic = topic; entry._id = editIdEl.value || uid();
     if (editIndex !== null && DATA[editIndex] && DATA[editIndex]._id === entry._id) {
-      DATA[editIndex] = entry;
-      toast('עודכן', 'ok');
+      DATA[editIndex] = entry; toast('עודכן', 'ok');
     } else {
-      const existing = DATA.find(e =>
-        normalize(e.topic) === normalize(topic) &&
-        normalize(e.clar || '') === normalize(clar)
-      );
-      if (existing) {
-        // Merge types if it already exists
-        const exTypes = existing.types || [existing.t || 'i'];
-        types.forEach(t => { if (!exTypes.includes(t)) exTypes.push(t); });
-        existing.types = exTypes;
-        existing.t = exTypes[0];
-        toast('עודכו הקטגוריות לערך הקיים', 'ok');
-      } else {
-        DATA.push(entry);
-        toast('נשמר', 'ok');
-      }
+      DATA.push(entry); toast('נשמר', 'ok');
     }
-    save();
-    clearForm();
-    renderEditorList();
+    save(); clearForm(); renderStats();
   });
 
   function renderStats() {
-    const statsHtml = CATEGORIES.map(cat => {
-      const count = DATA.filter(e => {
-        const types = e.types || [e.t || 'i'];
-        return types.includes(cat.id);
-      }).length;
-      return `<div class="stat"><div class="num">${count}</div><div class="lbl">${esc(cat.name)}</div></div>`;
-    }).join('');
-
-    document.getElementById('stats').innerHTML = `
-      <div class="stat"><div class="num">${DATA.length}</div><div class="lbl">סה״כ</div></div>
-      ${statsHtml}
-    `;
+    const parts = [`<div class="stat"><div class="num">${DATA.length}</div><div class="lbl">סה״כ</div></div>`];
+    CATEGORIES.forEach(cat => {
+      const n = DATA.filter(e => entryTypes(e).includes(cat.id)).length;
+      parts.push(`<div class="stat"><div class="num">${n}</div><div class="lbl">${esc(cat.name)}</div></div>`);
+    });
+    document.getElementById('stats').innerHTML = parts.join('');
   }
-
-  function loadGhConfigUI() {
-    try {
-      const cfg = JSON.parse(localStorage.getItem(GH_CONFIG_KEY) || '{}');
-      if (cfg.owner) document.getElementById('gh-owner').value = cfg.owner;
-      if (cfg.repo) document.getElementById('gh-repo').value = cfg.repo;
-      if (cfg.token) document.getElementById('gh-token').value = cfg.token;
-    } catch (_) {}
-  }
-
-  document.getElementById('btn-save-gh').addEventListener('click', () => {
-    const owner = document.getElementById('gh-owner').value.trim();
-    const repo = document.getElementById('gh-repo').value.trim();
-    const token = document.getElementById('gh-token').value.trim();
-    if (!owner || !repo || !token) {
-      toast('נא למלא את כל שדות הסנכרון', 'err');
-      return;
-    }
-    localStorage.setItem(GH_CONFIG_KEY, JSON.stringify({ owner, repo, token }));
-    toast('הגדרות החיבור נשמרו בהצלחה!', 'ok');
-    updateAuthStatusUI();
-    syncToGitHub();
-  });
-
+  function stripIds(arr) { return arr.map(e => { const o = { ...e }; delete o._id; return o; }); }
   function download(filename, text, mime) {
     const blob = new Blob([text], { type: mime || 'text/plain;charset=utf-8' });
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = filename;
-    a.click();
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = filename; a.click();
     setTimeout(() => URL.revokeObjectURL(a.href), 2000);
   }
-
-  function stripIds(arr) {
-    return arr.map(e => {
-      const o = { ...e };
-      delete o._id;
-      return o;
-    });
-  }
-
   document.getElementById('btn-export-js').addEventListener('click', () => {
-    const body = JSON.stringify(stripIds(DATA));
-    const js = `// נתוני המפתחות — נערך בעורך המפתחות\nconst MAFTEACH = ${body};\n`;
-    download('mafteach.js', js, 'text/javascript');
-    toast('mafteach.js הורד', 'ok');
+    download('mafteach.js', `// נתוני המפתחות\nconst MAFTEACH = ${JSON.stringify(stripIds(DATA))};\n`, 'text/javascript');
+    toast('הורד', 'ok');
   });
-
+  document.getElementById('btn-export-json').addEventListener('click', () => {
+    download('mafteach-data.json', JSON.stringify(stripIds(DATA)), 'application/json');
+    toast('הורד', 'ok');
+  });
   function parseImport(text) {
     text = text.trim();
     if (text.startsWith('[')) return JSON.parse(text);
-    const m = text.match(/const\s+MAFTEACH\s*=\s*(\[[\s\S]*\])\s*;?\s*$/);
+    const m = text.match(/const\s+MAFTEACH\s*=\s*(\[[\s\S]*\])/);
     if (m) return JSON.parse(m[1]);
-    const start = text.indexOf('[');
-    const end = text.lastIndexOf(']');
-    if (start >= 0 && end > start) {
-      return JSON.parse(text.slice(start, end + 1));
-    }
+    const start = text.indexOf('['), end = text.lastIndexOf(']');
+    if (start >= 0 && end > start) return JSON.parse(text.slice(start, end + 1));
     throw new Error('פורמט לא מזוהה');
   }
-
   async function doImport(mode) {
     const file = document.getElementById('import-file').files[0];
-    if (!file) { toast('בחר קובץ קודם', 'err'); return; }
+    if (!file) { toast('בחר קובץ', 'err'); return; }
     try {
-      const text = await file.text();
-      const arr = parseImport(text);
+      const arr = parseImport(await file.text());
       if (!Array.isArray(arr)) throw new Error('לא מערך');
-      arr.forEach(e => { 
-        if (!e._id) e._id = uid();
-        if (!e.types && e.t) e.types = [e.t];
-      });
+      arr.forEach(e => { if (!e._id) e._id = uid(); if (!e.types) e.types = e.t ? [e.t] : ['i']; });
       if (mode === 'replace') {
-        const ok = await confirmDlg('החלפה', `להחליף את כל ${DATA.length} הערכים ב־${arr.length} ערכים מהקובץ?`);
+        const ok = await confirmDlg('החלפה', `להחליף ${DATA.length} ערכים ב־${arr.length}?`);
         if (!ok) return;
         DATA = arr;
       } else {
         const byKey = new Map();
-        DATA.forEach(e => {
-          const k = normalize(e.topic) + '|' + normalize(e.clar || '');
-          byKey.set(k, e);
-        });
+        DATA.forEach(e => byKey.set(normalize(e.topic) + '|' + normalize(e.clar || ''), e));
         let added = 0, merged = 0;
         for (const e of arr) {
           const k = normalize(e.topic) + '|' + normalize(e.clar || '');
           if (byKey.has(k)) {
-            const ex = byKey.get(k);
-            const exTypes = ex.types || [ex.t || 'i'];
-            const newTypes = e.types || [e.t || 'i'];
-            newTypes.forEach(nt => { if (!exTypes.includes(nt)) exTypes.push(nt); });
-            ex.types = exTypes;
-            merged++;
-          } else {
-            DATA.push(e);
-            byKey.set(k, e);
-            added++;
-          }
+            const ex = byKey.get(k); const et = entryTypes(ex);
+            entryTypes(e).forEach(t => { if (!et.includes(t)) et.push(t); });
+            ex.types = et; merged++;
+          } else { DATA.push(e); byKey.set(k, e); added++; }
         }
-        toast(`נוספו ${added}, מוזגו ${merged}`, 'ok');
-        save();
-        renderStats();
-        return;
+        toast(`נוספו ${added}, מוזגו ${merged}`, 'ok'); save(); renderStats(); return;
       }
-      save();
-      toast(`נטענו ${DATA.length} ערכים`, 'ok');
-      renderStats();
-    } catch (err) {
-      toast('שגיאה בייבוא: ' + err.message, 'err');
-    }
+      save(); toast(`נטענו ${DATA.length}`, 'ok'); renderStats();
+    } catch (err) { toast('שגיאה: ' + err.message, 'err'); }
   }
-
   document.getElementById('btn-import-merge').addEventListener('click', () => doImport('merge'));
   document.getElementById('btn-import-replace').addEventListener('click', () => doImport('replace'));
-
   document.getElementById('btn-clear-all').addEventListener('click', async () => {
-    const ok = await confirmDlg('מחיקת הכל', 'למחוק את כל הערכים מהמכשיר? פעולה זו אינה ניתנת לשחזור.');
+    const ok = await confirmDlg('מחיקת הכל', 'למחוק את כל הערכים מהמכשיר?');
     if (!ok) return;
-    DATA = [];
-    save();
-    clearForm();
-    renderStats();
-    toast('הכל נמחק', 'ok');
+    DATA = []; save(); clearForm(); renderStats(); toast('הכל נמחק', 'ok');
   });
 
+  let deferredPrompt = null;
+  const installBar = document.getElementById('install-bar');
+  window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); deferredPrompt = e; installBar.classList.add('show'); });
+  document.getElementById('install-btn').addEventListener('click', async () => {
+    if (!deferredPrompt) return;
+    deferredPrompt.prompt(); await deferredPrompt.userChoice; deferredPrompt = null; installBar.classList.remove('show');
+  });
+  document.getElementById('install-dismiss').addEventListener('click', () => installBar.classList.remove('show'));
+
   load();
-  ensureIds();
-  updateAuthStatusUI();
-  renderCategoryCheckboxes();
-  updateFormVisibility();
   renderBrowseFilters();
   renderBrowse();
+  renderCategoryCheckboxes(['i']);
   renderStats();
 })();
 </script>
