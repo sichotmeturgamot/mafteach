@@ -182,23 +182,7 @@
     <div class="tools-section">
       <h3>חיבור GitHub</h3>
       <p id="gh-status-text" style="font-weight:600;margin-bottom:8px">סטטוס: מנותק</p>
-      <p>אותו מנגנון כמו ב־admin: התחברות עם טוקן, וכל שמירה/מחיקה מעדכנת ישירות את <code>mafteach.js</code> בריפו.</p>
-      <div class="form-group">
-        <label>שם משתמש (Owner)</label>
-        <input type="text" id="gh-owner" class="en" placeholder="sichotmeturgamot" style="direction:ltr;text-align:left">
-      </div>
-      <div class="form-group">
-        <label>שם הריפו (Repository)</label>
-        <input type="text" id="gh-repo" class="en" placeholder="sichotmeturgamot.github.io" style="direction:ltr;text-align:left">
-      </div>
-      <div class="form-group">
-        <label>Branch</label>
-        <input type="text" id="gh-branch" class="en" value="main" style="direction:ltr;text-align:left">
-      </div>
-      <div class="form-group">
-        <label>נתיב הקובץ בריפו</label>
-        <input type="text" id="gh-path" class="en" value="mafteach.js" style="direction:ltr;text-align:left">
-      </div>
+      <p>הזן טוקן — והעריכות יישמרו ישירות ל־<code>mafteach.js</code> בריפו.</p>
       <div class="form-group">
         <label>טוקן גישה (Personal Access Token)</label>
         <input type="password" id="gh-token" class="en" placeholder="github_pat_... / ghp_..." style="direction:ltr;text-align:left">
@@ -207,11 +191,11 @@
         <input type="checkbox" id="gh-remember" checked style="width:auto"> זכור במכשיר זה (לא במחשב ציבורי)
       </label>
       <div class="btn-row" style="margin-top:0">
-        <button class="btn btn-primary btn-sm" id="btn-gh-connect" type="button">התחבר וטען מהענן</button>
+        <button class="btn btn-primary btn-sm" id="btn-gh-connect" type="button">התחבר וטען</button>
         <button class="btn btn-secondary btn-sm" id="btn-gh-disconnect" type="button">נתק</button>
       </div>
-      <button class="btn btn-secondary btn-sm" id="btn-gh-pull" type="button" style="width:100%;margin-top:8px">↻ משוך מחדש מ־GitHub</button>
-      <button class="btn btn-primary btn-sm" id="btn-gh-push" type="button" style="width:100%;margin-top:8px">↑ דחוף עכשיו ל־GitHub</button>
+      <button class="btn btn-secondary btn-sm" id="btn-gh-pull" type="button" style="width:100%;margin-top:8px">↻ משוך מחדש</button>
+      <button class="btn btn-primary btn-sm" id="btn-gh-push" type="button" style="width:100%;margin-top:8px">↑ דחוף עכשיו</button>
       <p style="font-size:.78rem;color:var(--muted);margin-top:10px;margin-bottom:0;line-height:1.5">
         <b>יצירת טוקן:</b> GitHub → Settings → Developer settings → Fine-grained tokens →
         גישה רק לריפו של האתר, הרשאת <code>Contents: Read and write</code>.
@@ -265,6 +249,10 @@
   const CATS_KEY = 'mafteach-cats-private-v1';
   const QUOTES_KEY = 'mafteach-show-quotes-v1';
   const GH_KEY = 'mafteach-gh-cfg-v1';
+  const GH_OWNER = 'sichotmeturgamot';
+  const GH_REPO = 'sichotmeturgamot.github.io';
+  const GH_BRANCH = 'main';
+  const GH_PATH = 'mafteach.js';
   const API = 'https://api.github.com';
   let ghCfg = null; // {owner, repo, branch, token, path}
   let ghFileSha = null;
@@ -753,15 +741,11 @@
       if (raw) ghCfg = JSON.parse(raw);
     } catch (_) { ghCfg = null; }
     if (ghCfg) {
-      const o = document.getElementById('gh-owner');
-      const r = document.getElementById('gh-repo');
-      const b = document.getElementById('gh-branch');
-      const p = document.getElementById('gh-path');
+      ghCfg.owner = GH_OWNER;
+      ghCfg.repo = GH_REPO;
+      ghCfg.branch = GH_BRANCH;
+      ghCfg.path = GH_PATH;
       const t = document.getElementById('gh-token');
-      if (o && ghCfg.owner) o.value = ghCfg.owner;
-      if (r && ghCfg.repo) r.value = ghCfg.repo;
-      if (b && ghCfg.branch) b.value = ghCfg.branch;
-      if (p && ghCfg.path) p.value = ghCfg.path;
       if (t && ghCfg.token) t.value = ghCfg.token;
     }
     updateGhUI();
@@ -785,9 +769,7 @@
       }
     }
     if (st) {
-      st.textContent = ok
-        ? ('סטטוס: מחובר ל־' + ghCfg.owner + '/' + ghCfg.repo + ' → ' + (ghCfg.path || 'mafteach.js'))
-        : 'סטטוס: מנותק';
+      st.textContent = ok ? 'סטטוס: מחובר' : 'סטטוס: מנותק';
     }
   }
 
@@ -846,8 +828,8 @@
 
   async function pullFromGitHub() {
     if (!ghCfg || !ghCfg.token) throw new Error('לא מחובר');
-    const path = encodeURIComponent(ghCfg.path || 'mafteach.js').replace(/%2F/g, '/');
-    const ref = ghCfg.branch || 'main';
+    const path = 'mafteach.js';
+    const ref = 'main';
     const f = await ghFetch('/repos/' + ghCfg.owner + '/' + ghCfg.repo + '/contents/' + path + '?ref=' + encodeURIComponent(ref));
     ghFileSha = f.sha;
     const text = b64ToUtf8(f.content);
@@ -870,8 +852,8 @@
     if (ghBusy) return;
     ghBusy = true;
     try {
-      const path = ghCfg.path || 'mafteach.js';
-      const ref = ghCfg.branch || 'main';
+      const path = 'mafteach.js';
+      const ref = 'main';
       // רענון sha אם חסר
       if (!ghFileSha) {
         try {
@@ -925,13 +907,9 @@
   }
 
   document.getElementById('btn-gh-connect').addEventListener('click', async () => {
-    const owner = document.getElementById('gh-owner').value.trim();
-    const repo = document.getElementById('gh-repo').value.trim();
-    const branch = document.getElementById('gh-branch').value.trim() || 'main';
-    const path = document.getElementById('gh-path').value.trim() || 'mafteach.js';
     const token = document.getElementById('gh-token').value.trim();
-    if (!owner || !repo || !token) { toast('נא למלא Owner, Repo וטוקן', 'err'); return; }
-    ghCfg = { owner, repo, branch, path, token };
+    if (!token) { toast('נא להזין טוקן', 'err'); return; }
+    ghCfg = { owner: GH_OWNER, repo: GH_REPO, branch: GH_BRANCH, path: GH_PATH, token };
     if (document.getElementById('gh-remember').checked) {
       try { localStorage.setItem(GH_KEY, JSON.stringify(ghCfg)); } catch (_) {}
     }
