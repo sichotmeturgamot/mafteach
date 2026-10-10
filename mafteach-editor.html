@@ -2,145 +2,188 @@
 <html lang="he" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#1a2942">
 <meta name="apple-mobile-web-app-title" content="מפתחות-עורך">
-<meta name="description" content="עורך מפתחות פרטי לשיחות אדמו״ר הריי״צ">
-<link rel="manifest" href='data:application/manifest+json;charset=utf-8,{"id":"/mafteach-editor-private-v1","name":"עורך מפתחות — ספר השיחות (פרטי)","short_name":"מפתחות-עורך","description":"עורך מפתחות פרטי","start_url":"./mafteach-editor.html","scope":"./","display":"standalone","orientation":"portrait-primary","background_color":"#1a2942","theme_color":"#1a2942","lang":"he","dir":"rtl","icons":[{"src":"data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 192 192%22%3E%3Crect fill=%22%231a2942%22 width=%22192%22 height=%22192%22 rx=%2232%22/%3E%3Ccircle cx=%2296%22 cy=%2296%22 r=%2270%22 fill=%22%23c9a227%22/%3E%3Ccircle cx=%2296%22 cy=%2296%22 r=%2252%22 fill=%22%231a2942%22/%3E%3Crect x=%2272%22 y=%2260%22 width=%2248%22 height=%2272%22 rx=%226%22 fill=%22%23f7f3e9%22/%3E%3Cline x1=%2296%22 y1=%2274%22 x2=%2296%22 y2=%22118%22 stroke=%22%23c9a227%22 stroke-width=%224%22/%3E%3C/svg%3E","sizes":"192x192","type":"image/svg+xml","purpose":"any maskable"}]}'>
-<title>עורך מפתחות — ספר השיחות</title>
+<meta name="description" content="עורך מפתחות — ענינים, שמות ומקומות לספרים">
+<link rel="manifest" href='data:application/manifest+json;charset=utf-8,{"id":"/mafteach-editor-private-v1","name":"עורך מפתחות","short_name":"מפתחות-עורך","description":"עורך מפתחות","start_url":"./mafteach-editor.html","scope":"./","display":"standalone","orientation":"portrait-primary","background_color":"#1a2942","theme_color":"#1a2942","lang":"he","dir":"rtl","icons":[{"src":"data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 192 192%22%3E%3Crect fill=%22%231a2942%22 width=%22192%22 height=%22192%22 rx=%2232%22/%3E%3Ccircle cx=%2296%22 cy=%2296%22 r=%2270%22 fill=%22%23c9a227%22/%3E%3Ccircle cx=%2296%22 cy=%2296%22 r=%2252%22 fill=%22%231a2942%22/%3E%3Crect x=%2272%22 y=%2260%22 width=%2248%22 height=%2272%22 rx=%226%22 fill=%22%23f7f3e9%22/%3E%3Cline x1=%2296%22 y1=%2274%22 x2=%2296%22 y2=%22118%22 stroke=%22%23c9a227%22 stroke-width=%224%22/%3E%3C/svg%3E","sizes":"192x192","type":"image/svg+xml","purpose":"any maskable"}]}'>
+<title>עורך מפתחות</title>
 <style>
   :root {
     --navy: #1a2942; --navy-light: #2a3f5f; --gold: #c9a227; --gold-light: #e8c547;
     --cream: #f7f3e9; --paper: #fffef9; --text: #1a1a1a; --muted: #6b6560;
-    --line: #e3dccd; --danger: #b33a3a; --success: #2d6a4f;
+    --line: #e3dccd; --danger: #b33a3a; --success: #2d6a4f; --warn: #a86b00;
     --safe-bottom: env(safe-area-inset-bottom, 0px);
   }
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
   html, body { height: 100%; font-family: system-ui, -apple-system, 'Segoe UI', 'Heebo', sans-serif; background: var(--cream); color: var(--text); line-height: 1.5; }
-  body { display: flex; flex-direction: column; max-width: 640px; margin: 0 auto; }
-  header { background: var(--navy); color: var(--cream); padding: 12px 16px; padding-top: max(12px, env(safe-area-inset-top)); position: sticky; top: 0; z-index: 50; box-shadow: 0 2px 12px rgba(0,0,0,.2); }
-  header h1 { font-size: 1.15rem; font-weight: 600; text-align: center; }
-  header .sub { font-size: .75rem; opacity: .75; text-align: center; margin-top: 2px; }
-  .tabs { display: flex; background: var(--navy-light); border-bottom: 1px solid rgba(255,255,255,.08); }
-  .tab { flex: 1; border: none; background: transparent; color: rgba(255,255,255,.65); font-size: .9rem; padding: 11px 4px; cursor: pointer; font-family: inherit; position: relative; }
+  body { display: flex; flex-direction: column; max-width: 680px; margin: 0 auto; }
+  header { background: var(--navy); color: var(--cream); padding: 10px 14px; padding-top: max(10px, env(safe-area-inset-top)); position: sticky; top: 0; z-index: 50; box-shadow: 0 2px 12px rgba(0,0,0,.2); }
+  .hdr-row { display: flex; align-items: center; gap: 8px; }
+  header h1 { font-size: 1.05rem; font-weight: 600; white-space: nowrap; }
+  #idx-select { flex: 1; min-width: 0; background: var(--navy-light); color: var(--cream); border: 1px solid rgba(255,255,255,.18); border-radius: 8px; padding: 6px 8px; font-family: inherit; font-size: .92rem; }
+  .badge { font-size: .7rem; padding: 3px 9px; border-radius: 999px; white-space: nowrap; border: 1px solid; cursor: pointer; background: transparent; font-family: inherit; }
+  .badge.off { background: rgba(179,58,58,.25); color: #ffb7b7; border-color: #ffb7b7; }
+  .badge.ok { background: rgba(45,106,79,.25); color: #74c69d; border-color: #74c69d; }
+  .badge.dirty { background: rgba(201,162,39,.25); color: var(--gold-light); border-color: var(--gold-light); font-weight: 600; }
+  .tabs { display: flex; background: var(--navy-light); border-bottom: 1px solid rgba(255,255,255,.08); position: sticky; top: 0; }
+  .tab { flex: 1; border: none; background: transparent; color: rgba(255,255,255,.65); font-size: .88rem; padding: 11px 2px; cursor: pointer; font-family: inherit; position: relative; }
   .tab.on { color: var(--gold); font-weight: 600; }
   .tab.on::after { content: ''; position: absolute; bottom: 0; left: 20%; right: 20%; height: 2.5px; background: var(--gold); border-radius: 2px 2px 0 0; }
-  main { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 14px 14px calc(20px + var(--safe-bottom)); }
+  main { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 14px 14px calc(24px + var(--safe-bottom)); }
   .panel { display: none; } .panel.on { display: block; }
-  .filters-row { display: flex; gap: 8px; margin-bottom: 12px; overflow-x: auto; padding-bottom: 4px; -webkit-overflow-scrolling: touch; }
+  .filters-row { display: flex; gap: 8px; margin-bottom: 12px; overflow-x: auto; padding-bottom: 4px; }
   .filter-btn { padding: 7px 14px; border: 1.5px solid var(--line); border-radius: 999px; background: var(--paper); color: var(--muted); font-size: .88rem; cursor: pointer; white-space: nowrap; font-family: inherit; }
   .filter-btn.active { background: var(--navy); color: var(--cream); border-color: var(--navy); font-weight: 600; }
   .search-box { position: relative; margin-bottom: 10px; }
-  .search-box input { width: 100%; padding: 12px 44px 12px 14px; font-size: 1.05rem; border: 1.5px solid var(--line); border-radius: 10px; background: var(--paper); color: var(--text); font-family: inherit; }
+  .search-box input { width: 100%; padding: 12px 14px 12px 40px; font-size: 1.05rem; border: 1.5px solid var(--line); border-radius: 10px; background: var(--paper); color: var(--text); font-family: inherit; }
   .search-box input:focus { outline: none; border-color: var(--gold); }
-  .search-box .clear-btn { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); border: none; background: transparent; font-size: 1.3rem; color: var(--muted); cursor: pointer; display: none; padding: 4px 8px; }
-  .controls-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; min-height: 1.4em; }
+  .search-box .clear-btn { position: absolute; left: 6px; top: 50%; transform: translateY(-50%); border: none; background: transparent; font-size: 1.3rem; color: var(--muted); cursor: pointer; display: none; padding: 4px 8px; }
+  .controls-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; min-height: 1.4em; gap: 8px; }
   .count { color: var(--muted); font-size: .82rem; }
   .toggle-quotes-btn { font-size: .8rem; color: var(--navy); background: var(--paper); border: 1.5px solid var(--navy); border-radius: 6px; padding: 5px 10px; cursor: pointer; font-family: inherit; }
   .toggle-quotes-btn.on { background: var(--navy); color: var(--cream); }
-  .q-show {
-    background: transparent; border: none; color: var(--gold); cursor: pointer;
-    font-size: .88rem; padding: 4px 0; font-family: inherit; margin-top: 6px; display: block;
-  }
-  .q-show:hover { text-decoration: underline; }
+  .q-show { background: transparent; border: none; color: var(--gold); cursor: pointer; font-size: .88rem; padding: 4px 0; font-family: inherit; margin-top: 6px; display: block; }
   .card { background: var(--paper); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; margin-bottom: 10px; }
-  .card .topic { font-size: 1.12rem; font-weight: 600; color: var(--navy); display: flex; align-items: baseline; gap: 6px; flex-wrap: wrap; }
+  .card .topic { font-size: 1.1rem; font-weight: 600; color: var(--navy); display: flex; align-items: baseline; gap: 6px; flex-wrap: wrap; }
   .card .clar { color: var(--muted); font-size: .88rem; font-weight: 400; }
   .card .tag { font-size: .68rem; background: #efe9db; color: #8a7a52; border-radius: 999px; padding: 1px 8px; font-weight: 500; }
+  .card .edit-mini { margin-inline-start: auto; border: none; background: transparent; color: var(--muted); font-size: .8rem; cursor: pointer; font-family: inherit; padding: 2px 4px; }
   .card .desc { color: var(--muted); font-size: .9rem; margin-top: 4px; }
-  .card .excerpt { margin-top: 8px; font-size: .92rem; line-height: 1.7; border-inline-start: 3px solid var(--gold-light); padding-inline-start: 10px; color: var(--text); }
+  .card .see { margin-top: 4px; font-size: .92rem; }
+  .see-link { color: var(--navy); font-weight: 600; text-decoration: underline; cursor: pointer; background: none; border: none; font-family: inherit; font-size: inherit; }
+  .card .excerpt { margin-top: 8px; font-size: .92rem; line-height: 1.7; border-inline-start: 3px solid var(--gold-light); padding-inline-start: 10px; }
   .card .meta { margin-top: 8px; font-size: .78rem; color: var(--muted); display: flex; flex-wrap: wrap; gap: 6px 12px; align-items: center; }
-  .card .link-btn { display: inline-block; margin-top: 10px; padding: 8px 14px; border-radius: 8px; border: 1.5px solid var(--navy); background: var(--cream); color: var(--navy); font-size: .88rem; text-decoration: none; font-family: inherit; font-weight: 500; }
-  .card .link-btn:active { background: var(--navy); color: var(--cream); }
+  .card .srcs { margin-top: 6px; font-size: .82rem; }
+  .card .srcs a, .card .srcs span { display: block; color: var(--navy); padding: 2px 0; }
+  .card .link-btn { display: inline-block; margin-top: 10px; padding: 7px 13px; border-radius: 8px; border: 1.5px solid var(--navy); background: var(--cream); color: var(--navy); font-size: .86rem; text-decoration: none; font-weight: 500; }
   .az-letter { font-size: 1.2rem; color: var(--gold); border-bottom: 1px solid var(--line); padding-bottom: 3px; margin: 16px 0 8px; font-weight: 600; }
   .az-letter:first-child { margin-top: 0; }
-  .editor-list-container { margin-bottom: 16px; border: 1px solid var(--line); border-radius: 10px; background: var(--paper); max-height: 200px; overflow-y: auto; }
-  .editor-list-item { padding: 10px 12px; border-bottom: 1px solid var(--line); cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+  .editor-list-container { margin-bottom: 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--paper); max-height: 200px; overflow-y: auto; }
+  .editor-list-item { padding: 9px 12px; border-bottom: 1px solid var(--line); cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 8px; }
   .editor-list-item:last-child { border-bottom: none; }
-  .editor-list-item:active, .editor-list-item.selected { background: #e8f0fe; }
-  .editor-list-item .item-title { font-weight: 500; font-size: .95rem; }
+  .editor-list-item.selected { background: #e8f0fe; }
+  .editor-list-item .item-title { font-weight: 500; font-size: .93rem; }
   .editor-list-item .item-type { font-size: .72rem; color: var(--muted); flex-shrink: 0; }
-  .form-group { margin-bottom: 14px; }
-  .form-group label { display: block; font-size: .82rem; color: var(--muted); margin-bottom: 4px; font-weight: 500; }
-  .form-group input, .form-group textarea { width: 100%; padding: 11px 12px; font-size: 1rem; border: 1.5px solid var(--line); border-radius: 9px; background: var(--paper); color: var(--text); font-family: inherit; resize: vertical; }
+  .form-group { margin-bottom: 13px; }
+  .form-group > label, .lbl-row { display: flex; justify-content: space-between; align-items: center; font-size: .82rem; color: var(--muted); margin-bottom: 4px; font-weight: 500; gap: 8px; }
+  input[type=text], input[type=number], input[type=url], input[type=password], input[type=search], textarea, select { font-family: inherit; }
+  .form-group input:not([type=checkbox]):not([type=radio]), .form-group textarea, .form-group select { width: 100%; padding: 10px 12px; font-size: 1rem; border: 1.5px solid var(--line); border-radius: 9px; background: var(--paper); color: var(--text); resize: vertical; }
   .form-group input:focus, .form-group textarea:focus { outline: none; border-color: var(--gold); }
   .form-group textarea.quote { min-height: 140px; line-height: 1.6; }
+  .row2 { display: flex; gap: 10px; } .row2 > * { flex: 1; min-width: 0; }
   .checkbox-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 8px; }
-  .checkbox-grid label { display: flex; align-items: center; gap: 6px; padding: 9px 10px; border: 1.5px solid var(--line); border-radius: 9px; background: var(--paper); cursor: pointer; font-size: .9rem; color: var(--text); font-weight: normal; margin-bottom: 0; }
+  .checkbox-grid label { display: flex; align-items: center; gap: 6px; padding: 9px 10px; border: 1.5px solid var(--line); border-radius: 9px; background: var(--paper); cursor: pointer; font-size: .88rem; color: var(--text); }
   .checkbox-grid label:has(input:checked) { background: var(--navy); color: var(--cream); border-color: var(--navy); font-weight: 500; }
-  .checkbox-grid input[type="checkbox"] { width: 16px; height: 16px; accent-color: var(--gold); }
+  .checkbox-grid input { width: 16px; height: 16px; accent-color: var(--gold); }
   .topic-wrap { position: relative; }
   .suggestions { position: absolute; left: 0; right: 0; top: 100%; background: var(--paper); border: 1.5px solid var(--gold); border-radius: 0 0 10px 10px; max-height: 220px; overflow-y: auto; z-index: 40; display: none; box-shadow: 0 8px 20px rgba(0,0,0,.12); }
   .suggestions.show { display: block; }
   .sug-item { padding: 10px 14px; cursor: pointer; border-bottom: 1px solid var(--line); font-size: .95rem; }
-  .sug-item:last-child { border-bottom: none; }
-  .sug-item:active { background: #f5f0e4; }
   .sug-item .sug-type { font-size: .72rem; color: var(--muted); margin-inline-start: 6px; }
-  .btn-row { display: flex; gap: 10px; margin-top: 18px; margin-bottom: 8px; }
-  .btn { flex: 1; padding: 13px; border: none; border-radius: 10px; font-size: 1rem; font-weight: 600; cursor: pointer; font-family: inherit; }
+  .dup-note { font-size: .8rem; color: var(--warn); margin-top: 4px; display: none; }
+  .dup-note.show { display: block; }
+  .dup-note button { color: var(--navy); text-decoration: underline; background: none; border: none; font: inherit; cursor: pointer; }
+  .ocr-btn { border: 1.5px solid var(--gold); background: #fbf4dc; color: #6e5810; border-radius: 8px; padding: 4px 10px; font-size: .8rem; font-weight: 600; cursor: pointer; font-family: inherit; white-space: nowrap; }
+  details.more { border: 1px solid var(--line); border-radius: 10px; padding: 8px 12px; margin-bottom: 12px; background: var(--paper); }
+  details.more summary { cursor: pointer; font-size: .88rem; color: var(--navy); font-weight: 600; }
+  details.more[open] summary { margin-bottom: 10px; }
+  .src-row { border: 1px dashed var(--line); border-radius: 9px; padding: 8px; margin-bottom: 8px; position: relative; }
+  .src-row .form-group { margin-bottom: 6px; }
+  .src-row .rm { position: absolute; left: 6px; top: 4px; border: none; background: none; color: var(--danger); cursor: pointer; font-size: 1.1rem; }
+  .btn-row { display: flex; gap: 10px; margin-top: 16px; margin-bottom: 8px; }
+  .btn { flex: 1; padding: 12px; border: none; border-radius: 10px; font-size: 1rem; font-weight: 600; cursor: pointer; font-family: inherit; }
   .btn-primary { background: var(--navy); color: var(--cream); }
-  .btn-primary:active { background: var(--navy-light); }
   .btn-secondary { background: var(--cream); color: var(--navy); border: 1.5px solid var(--navy); }
   .btn-danger { background: var(--danger); color: #fff; }
-  .btn-sm { padding: 8px 14px; font-size: .85rem; border-radius: 8px; }
-  .toast { position: fixed; bottom: calc(24px + var(--safe-bottom)); left: 50%; transform: translateX(-50%) translateY(80px); background: var(--navy); color: var(--cream); padding: 10px 22px; border-radius: 999px; font-size: .9rem; z-index: 100; opacity: 0; transition: transform .25s, opacity .25s; pointer-events: none; white-space: nowrap; max-width: 90%; }
+  .btn-gold { background: var(--gold); color: var(--navy); }
+  .btn-sm { padding: 8px 12px; font-size: .85rem; border-radius: 8px; }
+  .btn:disabled { opacity: .5; cursor: default; }
+  .toast { position: fixed; bottom: calc(24px + var(--safe-bottom)); left: 50%; transform: translateX(-50%) translateY(80px); background: var(--navy); color: var(--cream); padding: 10px 22px; border-radius: 999px; font-size: .9rem; z-index: 300; opacity: 0; transition: transform .25s, opacity .25s; pointer-events: none; max-width: 90%; text-align: center; }
   .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
   .toast.ok { background: var(--success); } .toast.err { background: var(--danger); }
-  .empty { text-align: center; color: var(--muted); padding: 40px 20px; font-size: .95rem; }
+  .empty { text-align: center; color: var(--muted); padding: 36px 20px; font-size: .95rem; }
   .tools-section { background: var(--paper); border: 1px solid var(--line); border-radius: 10px; padding: 14px; margin-bottom: 12px; }
   .tools-section h3 { font-size: .95rem; margin-bottom: 10px; color: var(--navy); }
-  .tools-section p { font-size: .82rem; color: var(--muted); margin-bottom: 10px; line-height: 1.5; }
+  .tools-section p { font-size: .82rem; color: var(--muted); margin-bottom: 10px; }
+  .tools-section .form-group input, .tools-section .form-group select { font-size: .92rem; padding: 8px 10px; }
   .stats { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
-  .stat { flex: 1 1 70px; background: var(--paper); border: 1px solid var(--line); border-radius: 10px; padding: 12px 6px; text-align: center; }
-  .stat .num { font-size: 1.3rem; font-weight: 700; color: var(--navy); }
-  .stat .lbl { font-size: .72rem; color: var(--muted); margin-top: 2px; }
-  .overlay { position: fixed; inset: 0; background: rgba(0,0,0,.45); z-index: 80; display: none; align-items: center; justify-content: center; padding: 20px; }
+  .stat { flex: 1 1 70px; background: var(--paper); border: 1px solid var(--line); border-radius: 10px; padding: 10px 6px; text-align: center; }
+  .stat .num { font-size: 1.25rem; font-weight: 700; color: var(--navy); }
+  .stat .lbl { font-size: .72rem; color: var(--muted); }
+  .overlay { position: fixed; inset: 0; background: rgba(0,0,0,.45); z-index: 200; display: none; align-items: center; justify-content: center; padding: 16px; }
   .overlay.show { display: flex; }
-  .dialog { background: var(--paper); border-radius: 14px; padding: 22px 18px; max-width: 360px; width: 100%; text-align: center; }
-  .dialog h3 { margin-bottom: 8px; font-size: 1.1rem; }
-  .dialog p { color: var(--muted); font-size: .9rem; margin-bottom: 12px; }
-  .dialog .btn-row { margin-top: 0; }
-  #install-bar { display: none; position: fixed; bottom: calc(16px + var(--safe-bottom)); left: 12px; right: 12px; max-width: 480px; margin: 0 auto; background: var(--navy); color: var(--cream); border-radius: 14px; padding: 12px 14px; z-index: 90; box-shadow: 0 8px 28px rgba(0,0,0,.35); align-items: center; gap: 10px; }
+  .dialog { background: var(--paper); border-radius: 14px; padding: 20px 16px; max-width: 400px; width: 100%; max-height: 90vh; overflow-y: auto; }
+  .dialog h3 { margin-bottom: 8px; font-size: 1.08rem; text-align: center; }
+  .dialog p.msg { color: var(--muted); font-size: .9rem; margin-bottom: 12px; text-align: center; white-space: pre-line; }
+  .dialog .btn-row { margin-top: 8px; flex-wrap: wrap; }
+  .dialog .btn-row .btn { flex: 1 1 40%; }
+  /* OCR */
+  #ocr { position: fixed; inset: 0; background: #10182a; z-index: 150; display: none; flex-direction: column; color: var(--cream); }
+  #ocr.show { display: flex; }
+  .ocr-top { display: flex; align-items: center; gap: 8px; padding: 10px 12px; padding-top: max(10px, env(safe-area-inset-top)); background: var(--navy); flex-wrap: wrap; }
+  .ocr-top h3 { font-size: 1rem; flex: 1; }
+  .ocr-top button, .ocr-tools button { border: 1px solid rgba(255,255,255,.3); background: transparent; color: var(--cream); border-radius: 8px; padding: 6px 10px; font-family: inherit; font-size: .85rem; cursor: pointer; }
+  .ocr-stage { flex: 1; min-height: 0; overflow: auto; display: flex; align-items: flex-start; justify-content: center; padding: 10px; }
+  .ocr-stage .ph { margin: auto; text-align: center; opacity: .8; }
+  #ocr-canvas { max-width: 100%; touch-action: none; cursor: crosshair; background: #fff; }
+  .ocr-tools { display: flex; gap: 6px; padding: 8px 12px; background: #172238; flex-wrap: wrap; align-items: center; }
+  .ocr-tools select { background: var(--navy-light); color: var(--cream); border: 1px solid rgba(255,255,255,.3); border-radius: 8px; padding: 6px; font-family: inherit; font-size: .85rem; }
+  .ocr-tools .hint { font-size: .75rem; opacity: .7; flex-basis: 100%; }
+  .ocr-tools label { font-size: .8rem; display: flex; align-items: center; gap: 4px; }
+  .ocr-bottom { background: var(--paper); color: var(--text); padding: 10px 12px calc(10px + var(--safe-bottom)); max-height: 46vh; display: flex; flex-direction: column; gap: 8px; }
+  .ocr-bottom textarea { width: 100%; min-height: 90px; flex: 1; font-size: 1rem; line-height: 1.6; border: 1.5px solid var(--line); border-radius: 9px; padding: 8px 10px; resize: vertical; }
+  .ocr-progress { height: 5px; background: var(--line); border-radius: 3px; overflow: hidden; display: none; }
+  .ocr-progress.show { display: block; }
+  .ocr-progress div { height: 100%; width: 0; background: var(--gold); transition: width .2s; }
+  .ocr-status { font-size: .8rem; color: var(--muted); min-height: 1.2em; }
+  .ocr-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+  .ocr-actions .btn { flex: 1 1 30%; padding: 10px 6px; font-size: .9rem; }
+  #install-bar { display: none; position: fixed; bottom: calc(16px + var(--safe-bottom)); left: 12px; right: 12px; max-width: 480px; margin: 0 auto; background: var(--navy); color: var(--cream); border-radius: 14px; padding: 12px 14px; z-index: 90; align-items: center; gap: 10px; }
   #install-bar.show { display: flex; }
-  #install-bar p { flex: 1; font-size: .88rem; line-height: 1.35; margin: 0; }
-  #install-bar button { border: none; border-radius: 8px; padding: 8px 14px; font-family: inherit; font-size: .88rem; font-weight: 600; cursor: pointer; }
+  #install-bar p { flex: 1; font-size: .88rem; }
+  #install-bar button { border: none; border-radius: 8px; padding: 8px 14px; font-family: inherit; font-weight: 600; cursor: pointer; }
   #install-btn { background: var(--gold); color: var(--navy); }
-  #install-dismiss { background: transparent; color: rgba(255,255,255,.7); padding: 8px; }
+  #install-dismiss { background: transparent; color: rgba(255,255,255,.7); }
   .hidden { display: none !important; }
+  code { font-size: .85em; background: #f1ecdf; padding: 0 4px; border-radius: 4px; direction: ltr; unicode-bidi: embed; }
+  .ltr { direction: ltr; text-align: left; }
 </style>
 </head>
 <body>
 <header>
-  <div style="display:flex;justify-content:space-between;align-items:center;gap:8px">
-    <div style="width:72px"></div>
-    <h1 style="flex:1">עורך מפתחות</h1>
-    <div id="auth-badge" style="font-size:.68rem;padding:3px 8px;border-radius:999px;white-space:nowrap;background:rgba(179,58,58,.25);color:#ffb7b7;border:1px solid #ffb7b7">מנותק</div>
+  <div class="hdr-row">
+    <h1>עורך מפתחות</h1>
+    <select id="idx-select" aria-label="בחירת מפתח"></select>
+    <button id="sync-badge" class="badge off" type="button">מנותק</button>
   </div>
-  <div class="sub">ענינים · שמות · מקומות</div>
 </header>
 <div class="tabs">
   <button class="tab on" data-tab="browse" type="button">עיון</button>
   <button class="tab" data-tab="add" type="button">עריכה</button>
   <button class="tab" data-tab="az" type="button">א״ב</button>
+  <button class="tab" data-tab="export" type="button">ייצוא</button>
   <button class="tab" data-tab="tools" type="button">כלים</button>
 </div>
 <main>
+  <!-- עיון -->
   <div class="panel on" id="panel-browse">
     <div class="filters-row" id="type-filters"></div>
     <div class="search-box">
-      <input type="search" id="q" placeholder="חיפוש נושא, שם או מקום…" autocomplete="off" enterkeyhint="search">
+      <input type="search" id="q" placeholder="חיפוש נושא, שם, מקום או ציטוט…" autocomplete="off" enterkeyhint="search">
       <button class="clear-btn" id="q-clear" type="button" aria-label="נקה">×</button>
     </div>
-    <div class="controls-row" id="browse-controls">
+    <div class="controls-row">
       <div class="count" id="count"></div>
       <button class="toggle-quotes-btn" id="quote-toggle" type="button">הצג ציטוטים</button>
     </div>
     <div id="results"><div class="empty">הקלד בשורת החיפוש כדי לראות תוצאות.</div></div>
   </div>
 
+  <!-- עריכה -->
   <div class="panel" id="panel-add">
     <div class="form-group">
       <label>בחר ערך לעריכה (או מלא טופס חדש למטה)</label>
@@ -149,92 +192,217 @@
       </div>
       <div class="editor-list-container" id="editor-list"></div>
     </div>
-    <hr style="border:0;border-top:1px solid var(--line);margin:16px 0">
+    <hr style="border:0;border-top:1px solid var(--line);margin:14px 0">
     <form id="entry-form" autocomplete="off">
-      <input type="hidden" id="edit-id" value="">
       <div class="form-group">
-        <label style="display:flex;justify-content:space-between;align-items:center">
+        <div class="lbl-row">
           <span>קטגוריות (אחת או יותר)</span>
           <button type="button" class="btn btn-secondary btn-sm" id="btn-manage-cats" style="padding:3px 10px;font-size:.75rem;flex:none">ניהול קטגוריות</button>
-        </label>
+        </div>
         <div class="checkbox-grid" id="type-checkboxes"></div>
       </div>
       <div class="form-group topic-wrap">
         <label>ערך (נושא / שם / מקום)</label>
         <input type="text" id="f-topic" required placeholder="לדוגמה: אהבת ישראל">
         <div class="suggestions" id="topic-sug"></div>
+        <div class="dup-note" id="dup-note"></div>
       </div>
       <div class="form-group"><label>הבהרה (אופציונלי)</label><input type="text" id="f-clar" placeholder='לדוגמה: אדמו"ר הזקן'></div>
-      <div class="form-group"><label>תמצית</label><input type="text" id="f-desc" placeholder="תיאור קצר"></div>
-      <div class="form-group"><label>ציטוט מלא</label><textarea id="f-excerpt" class="quote" placeholder="העתק את הציטוט המלא…"></textarea></div>
-      <div class="form-group"><label>שם השיחה / מקור</label><input type="text" id="f-sichah" placeholder='ליל ז׳ תשרי תש"ז'></div>
-      <div class="form-group"><label>עמוד בספר</label><input type="number" id="f-page" min="1" placeholder="3"></div>
-      <div class="form-group"><label>עמוד ב־PDF (אופציונלי)</label><input type="number" id="f-pdfpage" min="1" placeholder="1"></div>
-      <div class="form-group"><label>קישור לשיחה</label><input type="url" id="f-url" placeholder="https://sichotmeturgamot.github.io/read.html?..."></div>
+      <div class="form-group"><label>ע״ע — הפניה לערך אחר (במקום מקור)</label>
+        <div class="topic-wrap"><input type="text" id="f-see" placeholder="לדוגמה: ארבעת המינים"><div class="suggestions" id="see-sug"></div></div>
+      </div>
+      <div id="src-fields">
+        <div class="form-group">
+          <div class="lbl-row"><span>תמצית</span><button type="button" class="ocr-btn" data-ocr="f-desc">📷 מתמונה</button></div>
+          <input type="text" id="f-desc" placeholder="תיאור קצר">
+        </div>
+        <div class="form-group">
+          <div class="lbl-row"><span>ציטוט מלא</span><button type="button" class="ocr-btn" data-ocr="f-excerpt">📷 טקסט מתמונה</button></div>
+          <textarea id="f-excerpt" class="quote" placeholder="הקלד, הדבק — או צלם את עמוד הספר בכפתור למעלה"></textarea>
+        </div>
+        <div class="form-group"><label id="lbl-source">מקור</label><input type="text" id="f-sichah" list="source-list" placeholder='לדוגמה: ליל ז׳ תשרי תש"ז'><datalist id="source-list"></datalist></div>
+        <div class="row2">
+          <div class="form-group"><label>עמוד בספר</label><input type="number" id="f-page" min="1" inputmode="numeric"></div>
+          <div class="form-group"><label>עמוד בקובץ (PDF)</label><input type="number" id="f-pdfpage" min="1" inputmode="numeric"></div>
+        </div>
+        <div class="form-group"><label>קישור (אופציונלי)</label><input type="url" id="f-url" class="ltr" placeholder="https://…"></div>
+        <details class="more" id="more-box">
+          <summary>מקורות נוספים ועוגן</summary>
+          <div id="sources-list"></div>
+          <button type="button" class="btn btn-secondary btn-sm" id="btn-add-src" style="width:100%;margin-bottom:10px">+ הוסף מקור</button>
+          <div class="form-group" style="margin-bottom:0">
+            <div class="lbl-row"><span>עוגן (ציטוט קצר מדויק לאיתור המקום)</span><button type="button" class="ocr-btn" data-ocr="f-anchor">📷</button></div>
+            <input type="text" id="f-anchor">
+          </div>
+        </details>
+      </div>
       <div class="btn-row">
-        <button type="submit" class="btn btn-primary" id="save-btn">שמור / הוסף</button>
+        <button type="submit" class="btn btn-primary" id="save-btn">הוסף ערך</button>
         <button type="button" class="btn btn-secondary" id="cancel-btn">נקה</button>
       </div>
-      <button type="button" class="btn btn-danger hidden" id="delete-btn" style="width:100%;margin-top:4px">מחק ערך זה</button>
+      <button type="button" class="btn btn-secondary btn-sm hidden" id="dup-btn" style="width:100%;margin-bottom:6px">שכפל כערך חדש (אותו נושא, מקור אחר)</button>
+      <button type="button" class="btn btn-danger hidden" id="delete-btn" style="width:100%">מחק ערך זה</button>
     </form>
   </div>
 
+  <!-- א״ב -->
   <div class="panel" id="panel-az">
-    <div class="controls-row" style="margin-top:4px">
+    <div class="filters-row" id="az-filters"></div>
+    <div class="controls-row">
       <div class="count" id="az-count"></div>
       <button class="toggle-quotes-btn" id="quote-toggle-az" type="button">הצג ציטוטים</button>
     </div>
     <div id="az-list"></div>
   </div>
 
+  <!-- ייצוא -->
+  <div class="panel" id="panel-export">
+    <div class="tools-section">
+      <h3>מפתח מודפס</h3>
+      <p>רשימה לפי א״ב עם מספרי עמודים, מוכנה להדפסה, ל־PDF או לוורד.</p>
+      <div class="form-group"><label>כותרת</label><input type="text" id="ex-title"></div>
+      <div class="form-group"><label>קטגוריות (כל אחת כמפתח נפרד)</label><div class="checkbox-grid" id="ex-cats"></div></div>
+      <div class="form-group"><label>סגנון</label>
+        <select id="ex-style">
+          <option value="compact">ערך ועמודים בלבד — "אהבת ישראל: 12, 30"</option>
+          <option value="desc">ערך, ומתחתיו כל תמצית עם עמודה</option>
+        </select>
+      </div>
+      <div class="form-group"><label>כשאין מספר עמוד</label>
+        <select id="ex-nopage">
+          <option value="source">הצג את שם המקור</option>
+          <option value="skip">השמט</option>
+        </select>
+      </div>
+      <label style="display:flex;gap:6px;align-items:center;font-size:.85rem;margin-bottom:12px"><input type="checkbox" id="ex-see" checked> כלול הפניות ע״ע</label>
+      <label style="display:flex;gap:6px;align-items:center;font-size:.85rem;margin-bottom:12px"><input type="checkbox" id="ex-cols" checked> שני טורים</label>
+      <div class="btn-row" style="flex-wrap:wrap">
+        <button class="btn btn-primary btn-sm" id="ex-print" type="button">הדפסה / שמירה כ־PDF</button>
+        <button class="btn btn-secondary btn-sm" id="ex-doc" type="button">הורד לוורד</button>
+        <button class="btn btn-secondary btn-sm" id="ex-copy" type="button">העתק כטקסט</button>
+      </div>
+    </div>
+    <div class="tools-section">
+      <h3>קבצי נתונים</h3>
+      <button class="btn btn-secondary btn-sm" id="btn-export-js" style="width:100%">הורד את קובץ המפתח (.js)</button>
+      <button class="btn btn-secondary btn-sm" id="btn-export-json" style="width:100%;margin-top:8px">הורד JSON</button>
+      <input type="file" id="import-file" accept=".json,.js,text/javascript,application/json" style="font-size:.85rem;margin:10px 0 8px;width:100%">
+      <div class="btn-row" style="margin-top:0">
+        <button class="btn btn-primary btn-sm" id="btn-import-merge" type="button">ייבא והוסף</button>
+        <button class="btn btn-secondary btn-sm" id="btn-import-replace" type="button">ייבא והחלף</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- כלים -->
   <div class="panel" id="panel-tools">
     <div class="stats" id="stats"></div>
 
     <div class="tools-section">
-      <h3>חיבור GitHub</h3>
-      <p id="gh-status-text" style="font-weight:600;margin-bottom:8px">סטטוס: מנותק</p>
-      <p>הזן טוקן — והעריכות יישמרו ישירות ל־<code>mafteach.js</code> בריפו.</p>
-      <div class="form-group">
-        <label>טוקן גישה (Personal Access Token)</label>
-        <input type="password" id="gh-token" class="en" placeholder="github_pat_... / ghp_..." style="direction:ltr;text-align:left">
+      <h3>המפתח הנוכחי</h3>
+      <div class="form-group"><label>שם המפתח</label><input type="text" id="meta-name"></div>
+      <div class="form-group"><label>כינוי לשדה "מקור" (למשל: שיחה, מאמר, אגרת, פרק)</label><input type="text" id="meta-srclabel" placeholder="מקור"></div>
+      <p style="margin:0">קובץ בריפו: <code id="meta-file"></code></p>
+      <div class="btn-row">
+        <button class="btn btn-secondary btn-sm" id="btn-new-index" type="button">+ מפתח חדש</button>
+        <button class="btn btn-secondary btn-sm" id="btn-rename-index" type="button">שמור שם וכינוי</button>
       </div>
-      <label style="display:flex;align-items:center;gap:6px;margin-bottom:10px;font-size:.85rem;color:var(--muted)">
-        <input type="checkbox" id="gh-remember" checked style="width:auto"> זכור במכשיר זה (לא במחשב ציבורי)
-      </label>
+    </div>
+
+    <div class="tools-section">
+      <h3>שמירה ב־GitHub</h3>
+      <p id="gh-status-text" style="font-weight:600;color:var(--text)">סטטוס: מנותק</p>
+      <p>העריכות נשמרות מיד במכשיר. ל־GitHub הן עולות רק כשלוחצים "שמור ל־GitHub" (או על התג הצהוב למעלה). אם הקובץ שונה בינתיים ממקום אחר — השינויים שלך ממוזגים לגרסה החדשה במקום לדרוס אותה.</p>
+      <div class="row2">
+        <div class="form-group"><label>בעלים</label><input type="text" id="gh-owner" class="ltr"></div>
+        <div class="form-group"><label>ריפו</label><input type="text" id="gh-repo" class="ltr"></div>
+        <div class="form-group" style="flex:.6"><label>ענף</label><input type="text" id="gh-branch" class="ltr"></div>
+      </div>
+      <div class="form-group"><label>טוקן גישה (Personal Access Token)</label><input type="password" id="gh-token" class="ltr" placeholder="github_pat_…"></div>
+      <label style="display:flex;align-items:center;gap:6px;margin-bottom:10px;font-size:.85rem;color:var(--muted)"><input type="checkbox" id="gh-remember" checked> זכור במכשיר זה</label>
       <div class="btn-row" style="margin-top:0">
         <button class="btn btn-primary btn-sm" id="btn-gh-connect" type="button">התחבר וטען</button>
         <button class="btn btn-secondary btn-sm" id="btn-gh-disconnect" type="button">נתק</button>
       </div>
-      <button class="btn btn-secondary btn-sm" id="btn-gh-pull" type="button" style="width:100%;margin-top:8px">↻ משוך מחדש</button>
-      <button class="btn btn-primary btn-sm" id="btn-gh-push" type="button" style="width:100%;margin-top:8px">↑ דחוף עכשיו</button>
-      <p style="font-size:.78rem;color:var(--muted);margin-top:10px;margin-bottom:0;line-height:1.5">
-        <b>יצירת טוקן:</b> GitHub → Settings → Developer settings → Fine-grained tokens →
-        גישה רק לריפו של האתר, הרשאת <code>Contents: Read and write</code>.
-      </p>
+      <div class="btn-row" style="margin-top:0">
+        <button class="btn btn-secondary btn-sm" id="btn-gh-pull" type="button">↻ משוך מחדש</button>
+        <button class="btn btn-gold btn-sm" id="btn-gh-push" type="button">↑ שמור ל־GitHub</button>
+      </div>
+      <p style="font-size:.78rem;margin:8px 0 0"><b>יצירת טוקן:</b> GitHub → Settings → Developer settings → Fine-grained tokens → גישה לריפו של המפתחות בלבד, הרשאת <code>Contents: Read and write</code>.</p>
+    </div>
+
+    <div class="tools-section">
+      <h3>זיהוי טקסט מתמונה</h3>
+      <p><b>Tesseract</b> — חינמי ופועל במכשיר עצמו, בלי מפתח. טוב לדפוס נקי; בעמודים צפופים או מצולמים בזווית יהיו יותר טעויות.<br>
+      <b>Claude</b> או <b>Gemini</b> — מדויקים בהרבה (גם ניקוד, ראשי תיבות ואותיות דומות), אבל דורשים מפתח API. התמונה נשלחת לשרת של החברה לצורך הזיהוי.</p>
+      <div class="form-group"><label>מנוע ברירת מחדל</label>
+        <select id="ocr-engine-default">
+          <option value="tesseract">Tesseract (חינמי, במכשיר)</option>
+          <option value="claude">Claude (מפתח API)</option>
+          <option value="gemini">Gemini (מפתח API)</option>
+        </select>
+      </div>
+      <div class="form-group"><label>מפתח Claude API</label><input type="password" id="key-claude" class="ltr" placeholder="sk-ant-…"></div>
+      <div class="form-group"><label>מודל Claude</label><input type="text" id="model-claude" class="ltr"></div>
+      <div class="form-group"><label>מפתח Gemini API</label><input type="password" id="key-gemini" class="ltr" placeholder="AIza…"></div>
+      <div class="form-group"><label>מודל Gemini</label><input type="text" id="model-gemini" class="ltr"></div>
+      <button class="btn btn-secondary btn-sm" id="btn-save-ocr" type="button" style="width:100%">שמור הגדרות זיהוי</button>
     </div>
 
     <div class="tools-section">
       <h3>התקנה כאפליקציה</h3>
-      <p>באנדרואיד (Chrome): תפריט ⋮ ← «התקן אפליקציה» / «הוסף למסך הבית».<br>האייקון ייקרא <b>מפתחות-עורך</b> — שונה מאפליקציות אחרות.</p>
+      <p style="margin:0">באנדרואיד (Chrome): תפריט ⋮ ← «התקן אפליקציה». באייפון (Safari): שיתוף ← «הוסף למסך הבית».</p>
     </div>
     <div class="tools-section">
-      <h3>ייצוא / ייבוא מקומי</h3>
-      <p>גיבוי ידני למכשיר (בנוסף לסנכרון הענן).</p>
-      <button class="btn btn-secondary btn-sm" id="btn-export-js" style="width:100%">הורד mafteach.js</button>
-      <button class="btn btn-secondary btn-sm" id="btn-export-json" style="width:100%;margin-top:8px">הורד JSON</button>
-      <input type="file" id="import-file" accept=".json,.js,text/javascript,application/json" style="font-size:.85rem;margin:10px 0 8px;width:100%">
-      <div class="btn-row" style="margin-top:0">
-        <button class="btn btn-primary btn-sm" id="btn-import-merge" type="button">מזג</button>
-        <button class="btn btn-secondary btn-sm" id="btn-import-replace" type="button">החלף</button>
-      </div>
+      <h3>עדכונים מהאתר (או ממקור חיצוני אחר)</h3>
+      <p>מושך את קובץ המפתח של האתר ומשווה אותו לפעם הקודמת שמשכת: ערכים חדשים באתר נוספים, ערכים שתוקנו באתר מתעדכנים, וערכים שנמחקו מהאתר נמחקים. ערכים שהוספת או ערכת כאן בעצמך <b>לא נוגעים בהם</b>. לפני כל שינוי מוצג סיכום לאישור.</p>
+      <div class="form-group"><label>כתובת הקובץ</label><input type="url" id="sync-url" class="ltr"></div>
+      <p id="sync-last" style="margin-bottom:8px"></p>
+      <button class="btn btn-primary btn-sm" id="btn-sync-site" type="button" style="width:100%">↓ משוך עדכונים למפתח הזה</button>
     </div>
     <div class="tools-section">
       <h3>ניקוי מקומי</h3>
-      <p>מחיקת הערכים מהמכשיר בלבד (לא מוחק מ־GitHub).</p>
-      <button class="btn btn-danger btn-sm" id="btn-clear-all" style="width:100%">מחק הכל מהמכשיר</button>
+      <p>מוחק את העותק שבמכשיר בלבד (כולל שינויים שלא נשמרו ל־GitHub). לא מוחק מ־GitHub.</p>
+      <button class="btn btn-danger btn-sm" id="btn-clear-all" style="width:100%">מחק עותק מקומי של המפתח הזה</button>
     </div>
   </div>
 </main>
+
+<!-- מסך זיהוי טקסט -->
+<div id="ocr" role="dialog" aria-label="זיהוי טקסט מתמונה">
+  <div class="ocr-top">
+    <h3>טקסט מתמונה</h3>
+    <button type="button" id="ocr-pick">📷 צלם / בחר תמונה</button>
+    <button type="button" id="ocr-close">✕ סגור</button>
+    <input type="file" id="ocr-file" accept="image/*" class="hidden">
+  </div>
+  <div class="ocr-stage" id="ocr-stage">
+    <div class="ph" id="ocr-ph">צלם את עמוד הספר או בחר תמונה מהגלריה.<br>אחר כך גרור על התמונה כדי לסמן את הקטע.</div>
+    <canvas id="ocr-canvas" class="hidden"></canvas>
+  </div>
+  <div class="ocr-tools">
+    <button type="button" id="ocr-rotate">↻ סובב</button>
+    <button type="button" id="ocr-all">כל התמונה</button>
+    <select id="ocr-engine" aria-label="מנוע זיהוי">
+      <option value="tesseract">Tesseract</option>
+      <option value="claude">Claude</option>
+      <option value="gemini">Gemini</option>
+    </select>
+    <label><input type="checkbox" id="ocr-join" checked> חבר שורות</label>
+    <label><input type="checkbox" id="ocr-notes" checked> הסר מספרי הערות</label>
+    <div class="hint">גרור על התמונה לסימון הקטע. אפשר לזהות קטע, לסמן קטע נוסף (למשל המשך בטור הבא) ולהוסיף אותו לסוף.</div>
+  </div>
+  <div class="ocr-bottom">
+    <div class="ocr-progress" id="ocr-progress"><div></div></div>
+    <div class="ocr-status" id="ocr-status"></div>
+    <textarea id="ocr-text" placeholder="הטקסט המזוהה יופיע כאן — אפשר לתקן אותו לפני ההכנסה."></textarea>
+    <div class="ocr-actions">
+      <button type="button" class="btn btn-gold" id="ocr-run">זהה טקסט</button>
+      <button type="button" class="btn btn-secondary" id="ocr-run-append">זהה והוסף לסוף</button>
+      <button type="button" class="btn btn-primary" id="ocr-insert">הכנס לשדה</button>
+    </div>
+  </div>
+</div>
 
 <div id="install-bar" role="dialog">
   <p>התקן «מפתחות-עורך» במסך הבית</p>
@@ -244,769 +412,1356 @@
 <div class="toast" id="toast"></div>
 <div class="overlay" id="overlay">
   <div class="dialog">
-    <h3 id="dlg-title">אישור</h3>
-    <p id="dlg-msg"></p>
+    <h3 id="dlg-title"></h3>
+    <p class="msg" id="dlg-msg"></p>
     <div id="dlg-body"></div>
-    <div class="btn-row">
-      <button class="btn btn-danger" id="dlg-yes" type="button">כן</button>
-      <button class="btn btn-secondary" id="dlg-no" type="button">ביטול</button>
-    </div>
+    <div class="btn-row" id="dlg-btns"></div>
   </div>
 </div>
 
 <script>
 (function () {
-  const STORAGE_KEY = 'mafteach-editor-private-v1';
-  const CATS_KEY = 'mafteach-cats-private-v1';
-  const QUOTES_KEY = 'mafteach-show-quotes-v1';
-  const GH_KEY = 'mafteach-gh-cfg-v1';
-  const GH_OWNER = 'sichotmeturgamot';
-  const GH_REPO = 'mafteach';
-  const GH_BRANCH = 'main';
-  const GH_PATH = 'mafteach.js';
+  'use strict';
+  // ================= קבועים ומצב =================
+  const P = 'mafteach-ed2:';
+  const K_GH = P + 'gh', K_IDXREG = P + 'indexes', K_CUR = P + 'current', K_QUOTES = P + 'quotes', K_OCR = P + 'ocr';
+  const K_CACHE = id => P + 'idx:' + id;
+  const OLD_DATA = 'mafteach-editor-private-v1', OLD_CATS = 'mafteach-cats-private-v1', OLD_GH = 'mafteach-gh-cfg-v1';
   const API = 'https://api.github.com';
-  let ghCfg = null; // {owner, repo, branch, token, path}
-  let ghFileSha = null;
+  const REG_FILE = 'indexes.json';
+  const DEFAULT_GH = { owner: 'sichotmeturgamot', repo: 'mafteach', branch: 'main', token: '' };
+  const DEFAULT_CATS = [{ id: 'i', name: 'ענינים' }, { id: 'n', name: 'שמות' }, { id: 'm', name: 'מקומות' }];
+  const KNOWN_CAT_NAMES = { i: 'ענינים', n: 'שמות', m: 'מקומות', o: 'מוסדות וארגונים' };
+  const TESS_URL = 'https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js';
+
+  let gh = Object.assign({}, DEFAULT_GH);
+  let registry = { indexes: [{ id: 'mafteach', name: 'מפתח ראשי', file: 'mafteach.js' }], sha: null, dirty: false };
+  let cur = null; // {id, name, file, meta, entries, sha, ops, loaded}
+  let editId = null; // _id של הערך הנערך
+  let currentFilter = 'all', azFilter = 'all';
+  let showQuotes = lsGet(K_QUOTES) === '1';
   let ghBusy = false;
 
-  let CATEGORIES = [
-    { id: 'i', name: 'ענינים', isSystem: true },
-    { id: 'n', name: 'שמות', isSystem: true },
-    { id: 'm', name: 'מקומות', isSystem: true }
-  ];
-  let DATA = [];
-  let editIndex = null;
-  let currentFilter = 'all';
-  let showQuotes = false;
-  try { showQuotes = localStorage.getItem(QUOTES_KEY) === '1'; } catch (_) {}
-
+  // ================= עזרים =================
+  function lsGet(k) { try { return localStorage.getItem(k); } catch (_) { return null; } }
+  function lsSet(k, v) { try { localStorage.setItem(k, v); return true; } catch (_) { return false; } }
+  function lsDel(k) { try { localStorage.removeItem(k); } catch (_) {} }
+  function lsJSON(k, def) { try { const r = lsGet(k); return r ? JSON.parse(r) : def; } catch (_) { return def; } }
+  const $ = id => document.getElementById(id);
   function normalize(s) {
-    return String(s || '').replace(/[֑-ׇ]/g, '').replace(/[׳״'"‘’“”]/g, '')
+    return String(s || '').replace(/[֑-ׇ]/g, '').replace(/[׳״'"‘’“”`]/g, '')
       .replace(/[‎‏]/g, '').replace(/[־–—-]/g, '').replace(/[.,:;!?()\[\]\/]/g, '')
       .replace(/ך/g, 'כ').replace(/ם/g, 'מ').replace(/ן/g, 'נ').replace(/ף/g, 'פ').replace(/ץ/g, 'צ')
       .replace(/\s+/g, ' ').trim();
   }
-  function esc(s) {
-    return String(s || '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-  }
+  function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); }
   function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 7); }
-  function toast(msg, type) {
-    const el = document.getElementById('toast');
-    el.textContent = msg;
-    el.className = 'toast show' + (type ? ' ' + type : '');
-    clearTimeout(toast._t);
-    toast._t = setTimeout(() => { el.className = 'toast'; }, 2400);
+  function heCmp(a, b) { return normalize(a).localeCompare(normalize(b), 'he'); }
+  function toast(msg, type, ms) {
+    const el = $('toast'); el.textContent = msg; el.className = 'toast show' + (type ? ' ' + type : '');
+    clearTimeout(toast._t); toast._t = setTimeout(() => { el.className = 'toast'; }, ms || 2600);
   }
-  function confirmDlg(title, msg, bodyHtml) {
+  // דיאלוג כללי: buttons = [{label, value, cls}]
+  function dialog(title, msg, buttons, bodyHtml, onOpen) {
     return new Promise(resolve => {
-      const ov = document.getElementById('overlay');
-      document.getElementById('dlg-title').textContent = title;
-      document.getElementById('dlg-msg').textContent = msg || '';
-      document.getElementById('dlg-body').innerHTML = bodyHtml || '';
-      document.getElementById('dlg-yes').textContent = 'כן';
-      document.getElementById('dlg-no').style.display = '';
-      ov.classList.add('show');
-      const yes = document.getElementById('dlg-yes');
-      const no = document.getElementById('dlg-no');
-      function done(v) { ov.classList.remove('show'); yes.onclick = no.onclick = null; resolve(v); }
-      yes.onclick = () => done(true);
-      no.onclick = () => done(false);
+      $('dlg-title').textContent = title || '';
+      $('dlg-msg').textContent = msg || '';
+      $('dlg-msg').style.display = msg ? '' : 'none';
+      $('dlg-body').innerHTML = bodyHtml || '';
+      const row = $('dlg-btns');
+      row.innerHTML = '';
+      (buttons || [{ label: 'אישור', value: true, cls: 'btn-primary' }]).forEach(b => {
+        const btn = document.createElement('button');
+        btn.type = 'button'; btn.className = 'btn ' + (b.cls || 'btn-secondary'); btn.textContent = b.label;
+        btn.onclick = () => { $('overlay').classList.remove('show'); resolve(b.value); };
+        row.appendChild(btn);
+      });
+      $('overlay').classList.add('show');
+      if (onOpen) onOpen($('dlg-body'));
     });
   }
+  const confirmDlg = (title, msg, yes, danger) => dialog(title, msg, [
+    { label: yes || 'כן', value: true, cls: danger ? 'btn-danger' : 'btn-primary' },
+    { label: 'ביטול', value: false }]);
+  function promptDlg(title, fields) {
+    const html = fields.map(f => `<div class="form-group"><label>${esc(f.label)}</label><input type="text" data-k="${esc(f.key)}" value="${esc(f.value || '')}" placeholder="${esc(f.ph || '')}"${f.ltr ? ' class="ltr"' : ''}></div>`).join('');
+    let vals = null;
+    return dialog(title, '', [{ label: 'אישור', value: true, cls: 'btn-primary' }, { label: 'ביטול', value: false }], html, body => {
+      const inp = body.querySelector('input'); if (inp) setTimeout(() => inp.focus(), 50);
+      body.querySelectorAll('input').forEach(i => i.addEventListener('input', () => { vals = collect(); }));
+      function collect() { const o = {}; body.querySelectorAll('input').forEach(i => { o[i.dataset.k] = i.value.trim(); }); return o; }
+      vals = collect();
+    }).then(ok => ok ? vals : null);
+  }
+
+  // השוואת ערכים לפי תוכן (בלי _id), למיזוג
+  function canon(e) {
+    const o = {};
+    Object.keys(e).filter(k => k !== '_id').sort().forEach(k => { o[k] = e[k]; });
+    return JSON.stringify(o);
+  }
+  function stripId(e) { const o = Object.assign({}, e); delete o._id; return o; }
   function entryTypes(e) {
-    if (e.types && e.types.length) return e.types;
+    if (Array.isArray(e.types) && e.types.length) return e.types;
     if (e.t) return [e.t];
     return ['i'];
   }
-  function catName(id) {
-    const c = CATEGORIES.find(x => x.id === id);
-    return c ? c.name : id;
+  function cats() { return (cur && cur.meta && cur.meta.categories) || DEFAULT_CATS; }
+  function catName(id) { const c = cats().find(x => x.id === id); return c ? c.name : (KNOWN_CAT_NAMES[id] || id); }
+  function srcLabel() { return (cur && cur.meta && cur.meta.sourceLabel) || 'מקור'; }
+  function entrySources(e) {
+    // כל המקורות של ערך: הראשי + sources
+    const list = [];
+    if (e.sichah || e.page || e.url || e.pdfpage) list.push({ s: e.sichah || '', dp: e.page || null, pg: e.pdfpage || null, u: e.url || '' });
+    if (Array.isArray(e.sources)) e.sources.forEach(s => list.push({ s: s.s || '', dp: s.dp || null, pg: s.pg || null, u: s.u || '' }));
+    return list;
   }
-  function getCatNames(e) { return entryTypes(e).map(catName); }
+  function buildLink(u, dp, pg) {
+    if (!u) return '';
+    let href = u;
+    if (/read\.html/.test(href)) {
+      const sep = () => (href.indexOf('?') >= 0 ? '&' : '?');
+      if (pg && !/[?&]page=/.test(href)) href += sep() + 'disp=page&page=' + pg;
+    } else if (/\.pdf($|[?#])/i.test(href) && pg && href.indexOf('#') < 0) {
+      href += '#page=' + pg;
+    }
+    return href;
+  }
 
-  function loadCategories() {
-    try {
-      const raw = localStorage.getItem(CATS_KEY);
-      if (raw) {
-        const parsed = JSON.parse(raw);
-        if (Array.isArray(parsed) && parsed.length) CATEGORIES = parsed;
+  // ================= קבצים: פענוח ובנייה =================
+  function parseIndexFile(text) {
+    text = String(text || '').replace(/^﻿/, '');
+    let meta = null, arr = null;
+    const t = text.trim();
+    if (t.startsWith('[')) arr = JSON.parse(t);
+    else if (t.startsWith('{')) { const o = JSON.parse(t); arr = o.entries || []; meta = o.meta || null; }
+    else {
+      const mm = text.match(/const\s+MAFTEACH_META\s*=\s*/);
+      if (mm) {
+        const from = mm.index + mm[0].length;
+        const endLine = text.indexOf('\n', from);
+        let chunk = text.slice(from, endLine < 0 ? undefined : endLine).trim().replace(/;\s*$/, '');
+        try { meta = JSON.parse(chunk); } catch (_) { meta = null; }
       }
-    } catch (_) {}
-    const sys = [
-      { id: 'i', name: 'ענינים', isSystem: true },
-      { id: 'n', name: 'שמות', isSystem: true },
-      { id: 'm', name: 'מקומות', isSystem: true }
-    ];
-    sys.forEach(s => {
-      if (!CATEGORIES.some(c => c.id === s.id)) CATEGORIES.unshift(s);
-    });
-  }
-  function saveCategories() {
-    try { localStorage.setItem(CATS_KEY, JSON.stringify(CATEGORIES)); } catch (_) {}
-  }
-  function load() {
-    loadCategories();
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      DATA = raw ? JSON.parse(raw) : [];
-      DATA.forEach(e => {
-        if (!e._id) e._id = uid();
-        if (!e.types) e.types = e.t ? [e.t] : ['i'];
-      });
-    } catch (_) { DATA = []; }
-  }
-  function save() {
-    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(DATA)); }
-    catch (e) { toast('שגיאה בשמירה', 'err'); }
-    // סנכרון אוטומטי לענן אם מחובר
-    if (ghCfg && ghCfg.token) {
-      pushToGitHub(false).catch(() => {});
+      const m = text.match(/const\s+MAFTEACH\s*=\s*/);
+      if (!m) throw new Error('לא נמצא מערך MAFTEACH בקובץ');
+      const start = text.indexOf('[', m.index + m[0].length - 1);
+      const end = text.lastIndexOf(']');
+      if (start < 0 || end < start) throw new Error('מערך MAFTEACH פגום');
+      arr = JSON.parse(text.slice(start, end + 1));
     }
+    if (!Array.isArray(arr)) throw new Error('הקובץ אינו מערך ערכים');
+    return { meta, entries: arr };
+  }
+  function prepEntries(arr) { arr.forEach(e => { if (!e._id) e._id = uid(); }); return arr; }
+  function ensureMeta(meta, entries, fallbackName) {
+    meta = Object.assign({}, meta || {});
+    if (!meta.name) meta.name = fallbackName || 'מפתח';
+    if (!Array.isArray(meta.categories) || !meta.categories.length) meta.categories = DEFAULT_CATS.map(c => Object.assign({}, c));
+    // קטגוריות שמופיעות בנתונים ואינן מוגדרות
+    const known = new Set(meta.categories.map(c => c.id));
+    (entries || []).forEach(e => entryTypes(e).forEach(t => {
+      if (!known.has(t)) { known.add(t); meta.categories.push({ id: t, name: KNOWN_CAT_NAMES[t] || t }); }
+    }));
+    return meta;
+  }
+  function buildIndexFile(meta, entries) {
+    const lines = entries.map(e => JSON.stringify(stripId(e)));
+    return '// מפתח: ' + (meta.name || '') + ' — נערך בעורך המפתחות\n' +
+      'const MAFTEACH_META = ' + JSON.stringify(meta) + ';\n' +
+      'const MAFTEACH = [\n' + lines.join(',\n') + '\n];\n';
   }
 
-  document.querySelectorAll('.tab').forEach(btn => {
-    btn.addEventListener('click', () => {
-      document.querySelectorAll('.tab').forEach(t => t.classList.remove('on'));
-      document.querySelectorAll('.panel').forEach(p => p.classList.remove('on'));
-      btn.classList.add('on');
-      const tab = btn.dataset.tab;
-      document.getElementById('panel-' + tab).classList.add('on');
-      if (tab === 'browse') { renderBrowseFilters(); renderBrowse(); }
-      if (tab === 'add') { renderCategoryCheckboxes(); renderEditorList(); }
-      if (tab === 'az') renderAZ();
-      if (tab === 'tools') renderStats();
-    });
-  });
-
-  const qEl = document.getElementById('q');
-  const qClear = document.getElementById('q-clear');
-  const resultsEl = document.getElementById('results');
-  const countEl = document.getElementById('count');
-  const quoteToggle = document.getElementById('quote-toggle');
-
-  function applyQuoteLabel() {
-    const label = showQuotes ? 'הסתר ציטוטים' : 'הצג ציטוטים';
-    quoteToggle.textContent = label;
-    quoteToggle.classList.toggle('on', showQuotes);
-    const azBtn = document.getElementById('quote-toggle-az');
-    if (azBtn) {
-      azBtn.textContent = label;
-      azBtn.classList.toggle('on', showQuotes);
-    }
+  // ================= מטמון מקומי =================
+  function saveCache() {
+    if (!cur) return;
+    const ok = lsSet(K_CACHE(cur.id), JSON.stringify({ meta: cur.meta, entries: cur.entries, sha: cur.sha, ops: cur.ops, name: cur.name, file: cur.file }));
+    if (!ok) toast('שמירה במכשיר נכשלה (אין מקום?)', 'err');
+    updateSyncUI();
   }
-  function toggleQuotes() {
-    showQuotes = !showQuotes;
-    try { localStorage.setItem(QUOTES_KEY, showQuotes ? '1' : '0'); } catch (_) {}
-    applyQuoteLabel();
-    renderBrowse();
-    if (document.getElementById('panel-az').classList.contains('on')) renderAZ();
-  }
-  applyQuoteLabel();
-  quoteToggle.addEventListener('click', toggleQuotes);
-  const quoteToggleAz = document.getElementById('quote-toggle-az');
-  if (quoteToggleAz) quoteToggleAz.addEventListener('click', toggleQuotes);
-
-  // הצגה/הסתרה פרטנית של ציטוט (כמו ב-search.html)
-  document.addEventListener('click', e => {
-    const btn = e.target.closest('.q-show');
-    if (!btn) return;
-    const ex = btn.nextElementSibling;
-    if (!ex || !ex.classList.contains('excerpt')) return;
-    const hidden = ex.style.display === 'none' || !ex.style.display;
-    ex.style.display = hidden ? 'block' : 'none';
-    btn.textContent = hidden ? 'הסתר ציטוט ▴' : 'הצג ציטוט ▾';
-  });
-
-  function renderBrowseFilters() {
-    const el = document.getElementById('type-filters');
-    const items = [{ id: 'all', name: 'הכל' }].concat(CATEGORIES);
-    el.innerHTML = items.map(c =>
-      `<button type="button" class="filter-btn${currentFilter === c.id ? ' active' : ''}" data-f="${esc(c.id)}">${esc(c.name)}</button>`
-    ).join('');
-    el.querySelectorAll('.filter-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        currentFilter = btn.dataset.f;
-        renderBrowseFilters();
-        renderBrowse();
-      });
-    });
-  }
-
-  function scoreEntry(e, nq) {
-    if (!nq) return 0;
-    const t = normalize(e.topic);
-    const c = normalize(e.clar || '');
-    const d = normalize(e.desc || '');
-    const x = normalize(e.excerpt || '');
-    if (t.indexOf(nq) === 0) return 6;
-    if (t.indexOf(nq) > 0) return 5;
-    if (c.indexOf(nq) >= 0) return 3;
-    if (d.indexOf(nq) >= 0) return 2;
-    if (x.indexOf(nq) >= 0) return 1;
-    if (e.sichah && normalize(e.sichah).indexOf(nq) >= 0) return 1.5;
-    return 0;
-  }
-
-  function cardHTML(e) {
-    const tags = getCatNames(e).map(n => `<span class="tag">${esc(n)}</span>`).join('');
-    const clar = e.clar ? ` <span class="clar">(${esc(e.clar)})</span>` : '';
-    let body = '';
-    if (e.desc) body += `<div class="desc">${esc(e.desc)}</div>`;
-    if (e.excerpt) {
-      if (showQuotes) {
-        body += `<div class="excerpt">${esc(e.excerpt)}</div>`;
-      } else {
-        body += `<button type="button" class="q-show">הצג ציטוט ▾</button>`;
-        body += `<div class="excerpt" style="display:none">${esc(e.excerpt)}</div>`;
-      }
-    }
-    body += `<div class="meta">`;
-    if (e.page) body += `<span>עמ׳ ${e.page}</span>`;
-    if (e.sichah) body += `<span>${esc(e.sichah)}</span>`;
-    body += `</div>`;
-    let link = e.url || '';
-    if (!link && e.sources && e.sources[0] && e.sources[0].u) link = e.sources[0].u;
-    if (link) {
-      let href = link;
-      if (e.page && href.indexOf('disp=') < 0) href += (href.indexOf('?') >= 0 ? '&' : '?') + 'disp=' + e.page;
-      if (e.pdfpage && href.indexOf('page=') < 0) href += (href.indexOf('?') >= 0 ? '&' : '?') + 'page=' + e.pdfpage;
-      body += `<a class="link-btn" href="${esc(href)}" target="_blank" rel="noopener">פתיחת השיחה ←</a>`;
-    }
-    return `<div class="card"><div class="topic">${esc(e.topic)}${clar}${tags}</div>${body}</div>`;
-  }
-
-  function renderBrowse() {
-    const raw = qEl.value.trim();
-    qClear.style.display = raw ? 'block' : 'none';
-    if (!raw) {
-      countEl.textContent = '';
-      resultsEl.innerHTML = '<div class="empty">הקלד בשורת החיפוש כדי לראות תוצאות.</div>';
-      return;
-    }
-    const nq = normalize(raw);
-    let scored = [];
-    for (const e of DATA) {
-      if (currentFilter !== 'all' && !entryTypes(e).includes(currentFilter)) continue;
-      const sc = scoreEntry(e, nq);
-      if (sc > 0) scored.push({ e, sc });
-    }
-    scored.sort((a, b) => b.sc - a.sc || normalize(a.e.topic).localeCompare(normalize(b.e.topic), 'he'));
-    const rows = scored.map(x => x.e);
-    countEl.textContent = rows.length ? (rows.length === 1 ? 'תוצאה אחת' : rows.length + ' תוצאות') : 'לא נמצאו תוצאות';
-    resultsEl.innerHTML = rows.length ? rows.map(cardHTML).join('') : '<div class="empty">לא נמצאו תוצאות</div>';
-  }
-  qEl.addEventListener('input', renderBrowse);
-  qClear.addEventListener('click', () => { qEl.value = ''; qEl.focus(); renderBrowse(); });
-
-  function heFirst(s) {
-    const c = normalize(s).charAt(0);
-    return /[א-ת]/.test(c) ? c : '#';
-  }
-  function renderAZ() {
-    const el = document.getElementById('az-list');
-    const azCount = document.getElementById('az-count');
-    if (!DATA.length) {
-      el.innerHTML = '<div class="empty">אין ערכים</div>';
-      if (azCount) azCount.textContent = '';
-      return;
-    }
-    const byLetter = {};
-    const sorted = DATA.slice().sort((a, b) => normalize(a.topic).localeCompare(normalize(b.topic), 'he'));
-    for (const e of sorted) {
-      const L = heFirst(e.topic);
-      (byLetter[L] = byLetter[L] || []).push(e);
-    }
-    const letters = Object.keys(byLetter).sort((a, b) => a === '#' ? 1 : b === '#' ? -1 : a.localeCompare(b, 'he'));
-    if (azCount) azCount.textContent = sorted.length === 1 ? 'ערך אחד' : sorted.length + ' ערכים';
-    el.innerHTML = letters.map(L =>
-      `<div class="az-letter">${esc(L)}</div>` + byLetter[L].map(cardHTML).join('')
-    ).join('');
-  }
-
-  const form = document.getElementById('entry-form');
-  const fTopic = document.getElementById('f-topic');
-  const fClar = document.getElementById('f-clar');
-  const fDesc = document.getElementById('f-desc');
-  const fExcerpt = document.getElementById('f-excerpt');
-  const fSichah = document.getElementById('f-sichah');
-  const fPage = document.getElementById('f-page');
-  const fPdfpage = document.getElementById('f-pdfpage');
-  const fUrl = document.getElementById('f-url');
-  const editIdEl = document.getElementById('edit-id');
-  const saveBtn = document.getElementById('save-btn');
-  const deleteBtn = document.getElementById('delete-btn');
-  const topicSug = document.getElementById('topic-sug');
-  const editListQ = document.getElementById('edit-list-q');
-
-  function getSelectedTypes() {
-    const checked = form.querySelectorAll('input[name="types"]:checked');
-    const arr = Array.from(checked).map(cb => cb.value);
-    return arr.length ? arr : ['i'];
-  }
-  function renderCategoryCheckboxes(preselect) {
-    const container = document.getElementById('type-checkboxes');
-    const selected = preselect || getSelectedTypes();
-    container.innerHTML = CATEGORIES.map(cat =>
-      `<label><input type="checkbox" name="types" value="${esc(cat.id)}" ${selected.includes(cat.id) ? 'checked' : ''}><span>${esc(cat.name)}</span></label>`
-    ).join('');
-  }
-  function renderEditorList() {
-    const container = document.getElementById('editor-list');
-    const q = normalize(editListQ.value);
-    let list = DATA.slice().sort((a, b) => normalize(a.topic).localeCompare(normalize(b.topic), 'he'));
-    if (q) list = list.filter(e => normalize(e.topic).indexOf(q) >= 0 || normalize(e.clar || '').indexOf(q) >= 0);
-    if (!list.length) { container.innerHTML = '<div class="empty" style="padding:16px">אין ערכים</div>'; return; }
-    container.innerHTML = list.map(e =>
-      `<div class="editor-list-item${editIdEl.value === e._id ? ' selected' : ''}" data-id="${esc(e._id)}">
-        <span class="item-title">${esc(e.topic)}${e.clar ? ' (' + esc(e.clar) + ')' : ''}</span>
-        <span class="item-type">${esc(getCatNames(e).join(', '))}</span>
-      </div>`
-    ).join('');
-    container.querySelectorAll('.editor-list-item').forEach(item => {
-      item.addEventListener('click', () => startEdit(item.dataset.id));
-    });
-  }
-  editListQ.addEventListener('input', renderEditorList);
-
-  document.getElementById('btn-manage-cats').addEventListener('click', () => {
-    let html = '<div style="max-height:220px;overflow-y:auto;text-align:right;margin-bottom:12px">';
-    CATEGORIES.forEach(c => {
-      html += `<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--line)">
-        <span><b>${esc(c.name)}</b> <span style="color:var(--muted);font-size:.75rem">(${esc(c.id)})</span></span>
-        ${!c.isSystem ? `<button type="button" class="btn btn-danger btn-sm" data-del="${esc(c.id)}" style="flex:none;padding:4px 10px">מחק</button>` : '<span style="font-size:.72rem;color:var(--muted)">מערכת</span>'}
-      </div>`;
-    });
-    html += `</div><div style="text-align:right;border-top:1px solid var(--line);padding-top:10px">
-      <label style="font-size:.8rem;color:var(--muted)">קטגוריה חדשה</label>
-      <input type="text" id="new-cat-name" placeholder="לדוגמה: אדמו״ר" style="width:100%;padding:8px;margin-top:4px;border:1.5px solid var(--line);border-radius:6px;font-family:inherit">
-    </div>`;
-    const ov = document.getElementById('overlay');
-    document.getElementById('dlg-title').textContent = 'ניהול קטגוריות';
-    document.getElementById('dlg-msg').textContent = '';
-    document.getElementById('dlg-body').innerHTML = html;
-    document.getElementById('dlg-yes').textContent = 'הוסף / סגור';
-    document.getElementById('dlg-no').style.display = '';
-    ov.classList.add('show');
-    document.getElementById('dlg-body').querySelectorAll('[data-del]').forEach(btn => {
-      btn.addEventListener('click', () => {
-        CATEGORIES = CATEGORIES.filter(x => x.id !== btn.dataset.del);
-        saveCategories();
-        ov.classList.remove('show');
-        renderCategoryCheckboxes();
-        renderBrowseFilters();
-        toast('קטגוריה נמחקה', 'ok');
-      });
-    });
-    document.getElementById('dlg-yes').onclick = () => {
-      const input = document.getElementById('new-cat-name');
-      const name = input ? input.value.trim() : '';
-      if (name) {
-        CATEGORIES.push({ id: 'c_' + Date.now().toString(36), name, isSystem: false });
-        saveCategories();
-        renderCategoryCheckboxes();
-        renderBrowseFilters();
-        toast('קטגוריה נוספה', 'ok');
-      }
-      ov.classList.remove('show');
+  function loadCache(info) {
+    const c = lsJSON(K_CACHE(info.id), null);
+    const entries = c && Array.isArray(c.entries) ? prepEntries(c.entries) : [];
+    return {
+      id: info.id, name: info.name, file: info.file,
+      meta: ensureMeta(c && c.meta, entries, info.name),
+      entries, sha: c ? c.sha || null : null, ops: c && Array.isArray(c.ops) ? c.ops : [],
+      loaded: !!c
     };
-    document.getElementById('dlg-no').onclick = () => { ov.classList.remove('show'); };
-  });
-
-  fTopic.addEventListener('input', () => {
-    const q = normalize(fTopic.value);
-    if (q.length < 1) { topicSug.classList.remove('show'); return; }
-    const seen = new Set(); const matches = [];
-    for (const e of DATA) {
-      const nt = normalize(e.topic);
-      const key = nt + '|' + normalize(e.clar || '');
-      if (nt.indexOf(q) >= 0 && !seen.has(key)) { seen.add(key); matches.push(e); if (matches.length >= 12) break; }
-    }
-    if (!matches.length) { topicSug.classList.remove('show'); return; }
-    topicSug.innerHTML = matches.map(e =>
-      `<div class="sug-item" data-id="${esc(e._id)}">${esc(e.topic)}${e.clar ? ' <span class="clar">(' + esc(e.clar) + ')</span>' : ''}<span class="sug-type">${esc(getCatNames(e).join(', '))}</span></div>`
-    ).join('');
-    topicSug.classList.add('show');
-    topicSug.querySelectorAll('.sug-item').forEach(item => {
-      item.addEventListener('click', () => { startEdit(item.dataset.id); topicSug.classList.remove('show'); });
-    });
-  });
-  document.addEventListener('click', e => { if (!e.target.closest('.topic-wrap')) topicSug.classList.remove('show'); });
-
-  function clearForm() {
-    editIndex = null; editIdEl.value = '';
-    fTopic.value = ''; fClar.value = ''; fDesc.value = ''; fExcerpt.value = '';
-    fSichah.value = ''; fPage.value = ''; fPdfpage.value = ''; fUrl.value = '';
-    renderCategoryCheckboxes(['i']);
-    saveBtn.textContent = 'שמור / הוסף';
-    deleteBtn.classList.add('hidden');
-    renderEditorList();
   }
-  document.getElementById('cancel-btn').addEventListener('click', () => { clearForm(); toast('הטופס נוקה'); });
+  function saveRegistry() { lsSet(K_IDXREG, JSON.stringify(registry)); }
 
-  function startEdit(id) {
-    const idx = DATA.findIndex(e => e._id === id);
-    if (idx < 0) return;
-    const e = DATA[idx];
-    editIndex = idx; editIdEl.value = id;
-    renderCategoryCheckboxes(entryTypes(e));
-    fTopic.value = e.topic || '';
-    fClar.value = e.clar || '';
-    fDesc.value = e.desc || '';
-    fExcerpt.value = e.excerpt || '';
-    fSichah.value = e.sichah || (e.sources && e.sources[0] ? e.sources[0].s : '') || '';
-    fPage.value = e.page || (e.sources && e.sources[0] ? e.sources[0].dp : '') || '';
-    fPdfpage.value = e.pdfpage || (e.sources && e.sources[0] ? e.sources[0].pg : '') || '';
-    fUrl.value = e.url || (e.sources && e.sources[0] ? e.sources[0].u : '') || '';
-    saveBtn.textContent = 'עדכן ערך';
-    deleteBtn.classList.remove('hidden');
-    renderEditorList();
-    form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  // שינוי בנתונים: רושם פעולה (למיזוג) ושומר מקומית
+  function recordOp(op) {
+    cur.ops.push(op);
+    saveCache();
   }
 
-  async function deleteById(id) {
-    const e = DATA.find(x => x._id === id);
-    if (!e) return;
-    const ok = await confirmDlg('מחיקה', `למחוק את «${e.topic}»?`);
-    if (!ok) return;
-    DATA = DATA.filter(x => x._id !== id);
-    save(); toast('נמחק', 'ok');
-    if (editIdEl.value === id) clearForm(); else renderEditorList();
-    renderStats();
-  }
-  deleteBtn.addEventListener('click', () => { if (editIdEl.value) deleteById(editIdEl.value); });
-
-  form.addEventListener('submit', ev => {
-    ev.preventDefault();
-    const types = getSelectedTypes();
-    const topic = fTopic.value.trim();
-    if (!topic) { toast('חסר ערך', 'err'); return; }
-    const entry = {
-      types, t: types[0], topic,
-      clar: fClar.value.trim() || undefined,
-      desc: fDesc.value.trim() || undefined,
-      page: fPage.value ? parseInt(fPage.value, 10) : undefined,
-      sichah: fSichah.value.trim() || undefined,
-      excerpt: fExcerpt.value.trim() || undefined,
-      url: fUrl.value.trim() || undefined,
-      pdfpage: fPdfpage.value ? parseInt(fPdfpage.value, 10) : undefined,
-      _id: editIdEl.value || uid()
-    };
-    Object.keys(entry).forEach(k => { if (entry[k] === undefined || entry[k] === '') delete entry[k]; });
-    entry.types = types; entry.t = types[0]; entry.topic = topic; entry._id = editIdEl.value || uid();
-    if (editIndex !== null && DATA[editIndex] && DATA[editIndex]._id === entry._id) {
-      DATA[editIndex] = entry; toast('עודכן', 'ok');
-    } else {
-      DATA.push(entry); toast('נשמר', 'ok');
-    }
-    save(); clearForm(); renderStats();
-  });
-
-  function renderStats() {
-    const parts = [`<div class="stat"><div class="num">${DATA.length}</div><div class="lbl">סה״כ</div></div>`];
-    CATEGORIES.forEach(cat => {
-      const n = DATA.filter(e => entryTypes(e).includes(cat.id)).length;
-      parts.push(`<div class="stat"><div class="num">${n}</div><div class="lbl">${esc(cat.name)}</div></div>`);
-    });
-    document.getElementById('stats').innerHTML = parts.join('');
-  }
-  function stripIds(arr) { return arr.map(e => { const o = { ...e }; delete o._id; return o; }); }
-  function download(filename, text, mime) {
-    const blob = new Blob([text], { type: mime || 'text/plain;charset=utf-8' });
-    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = filename; a.click();
-    setTimeout(() => URL.revokeObjectURL(a.href), 2000);
-  }
-  document.getElementById('btn-export-js').addEventListener('click', () => {
-    download('mafteach.js', `// נתוני המפתחות\nconst MAFTEACH = ${JSON.stringify(stripIds(DATA))};\n`, 'text/javascript');
-    toast('הורד', 'ok');
-  });
-  document.getElementById('btn-export-json').addEventListener('click', () => {
-    download('mafteach-data.json', JSON.stringify(stripIds(DATA)), 'application/json');
-    toast('הורד', 'ok');
-  });
-  function parseImport(text) {
-    text = text.trim();
-    if (text.startsWith('[')) return JSON.parse(text);
-    const m = text.match(/const\s+MAFTEACH\s*=\s*(\[[\s\S]*\])/);
-    if (m) return JSON.parse(m[1]);
-    const start = text.indexOf('['), end = text.lastIndexOf(']');
-    if (start >= 0 && end > start) return JSON.parse(text.slice(start, end + 1));
-    throw new Error('פורמט לא מזוהה');
-  }
-  async function doImport(mode) {
-    const file = document.getElementById('import-file').files[0];
-    if (!file) { toast('בחר קובץ', 'err'); return; }
-    try {
-      const arr = parseImport(await file.text());
-      if (!Array.isArray(arr)) throw new Error('לא מערך');
-      arr.forEach(e => { if (!e._id) e._id = uid(); if (!e.types) e.types = e.t ? [e.t] : ['i']; });
-      if (mode === 'replace') {
-        const ok = await confirmDlg('החלפה', `להחליף ${DATA.length} ערכים ב־${arr.length}?`);
-        if (!ok) return;
-        DATA = arr;
-      } else {
-        const byKey = new Map();
-        DATA.forEach(e => byKey.set(normalize(e.topic) + '|' + normalize(e.clar || ''), e));
-        let added = 0, merged = 0;
-        for (const e of arr) {
-          const k = normalize(e.topic) + '|' + normalize(e.clar || '');
-          if (byKey.has(k)) {
-            const ex = byKey.get(k); const et = entryTypes(ex);
-            entryTypes(e).forEach(t => { if (!et.includes(t)) et.push(t); });
-            ex.types = et; merged++;
-          } else { DATA.push(e); byKey.set(k, e); added++; }
-        }
-        toast(`נוספו ${added}, מוזגו ${merged}`, 'ok'); save(); renderStats(); return;
-      }
-      save(); toast(`נטענו ${DATA.length}`, 'ok'); renderStats();
-    } catch (err) { toast('שגיאה: ' + err.message, 'err'); }
-  }
-  document.getElementById('btn-import-merge').addEventListener('click', () => doImport('merge'));
-  document.getElementById('btn-import-replace').addEventListener('click', () => doImport('replace'));
-  document.getElementById('btn-clear-all').addEventListener('click', async () => {
-    const ok = await confirmDlg('מחיקת הכל', 'למחוק את כל הערכים מהמכשיר?');
-    if (!ok) return;
-    DATA = []; save(); clearForm(); renderStats(); toast('הכל נמחק', 'ok');
-  });
-
-  let deferredPrompt = null;
-  const installBar = document.getElementById('install-bar');
-  window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); deferredPrompt = e; installBar.classList.add('show'); });
-  document.getElementById('install-btn').addEventListener('click', async () => {
-    if (!deferredPrompt) return;
-    deferredPrompt.prompt(); await deferredPrompt.userChoice; deferredPrompt = null; installBar.classList.remove('show');
-  });
-  document.getElementById('install-dismiss').addEventListener('click', () => installBar.classList.remove('show'));
-
-
-  // ---------- GitHub (כמו admin.html) ----------
-  function loadGhCfg() {
-    try {
-      const raw = localStorage.getItem(GH_KEY);
-      if (raw) ghCfg = JSON.parse(raw);
-    } catch (_) { ghCfg = null; }
-    if (ghCfg) {
-      ghCfg.owner = GH_OWNER;
-      ghCfg.repo = GH_REPO;
-      ghCfg.branch = GH_BRANCH;
-      ghCfg.path = GH_PATH;
-      const t = document.getElementById('gh-token');
-      if (t && ghCfg.token) t.value = ghCfg.token;
-    }
-    updateGhUI();
-  }
-
-  function updateGhUI() {
-    const badge = document.getElementById('auth-badge');
-    const st = document.getElementById('gh-status-text');
-    const ok = !!(ghCfg && ghCfg.owner && ghCfg.repo && ghCfg.token);
-    if (badge) {
-      if (ok) {
-        badge.textContent = 'מחובר';
-        badge.style.background = 'rgba(45,106,79,.25)';
-        badge.style.color = '#74c69d';
-        badge.style.borderColor = '#74c69d';
-      } else {
-        badge.textContent = 'מנותק';
-        badge.style.background = 'rgba(179,58,58,.25)';
-        badge.style.color = '#ffb7b7';
-        badge.style.borderColor = '#ffb7b7';
-      }
-    }
-    if (st) {
-      st.textContent = ok ? 'סטטוס: מחובר' : 'סטטוס: מנותק';
-    }
-  }
-
+  // ================= GitHub =================
+  function ghReady() { return !!(gh.token && gh.owner && gh.repo); }
   function utf8ToB64(str) {
-    const bytes = new TextEncoder().encode(str);
-    let bin = '';
-    bytes.forEach(c => { bin += String.fromCharCode(c); });
+    const bytes = new TextEncoder().encode(str); let bin = '';
+    for (let i = 0; i < bytes.length; i += 0x8000) bin += String.fromCharCode.apply(null, bytes.subarray(i, i + 0x8000));
     return btoa(bin);
   }
   function b64ToUtf8(b64) {
-    const bin = atob(String(b64).replace(/\n/g, ''));
-    const bytes = new Uint8Array(bin.length);
+    const bin = atob(String(b64).replace(/\n/g, '')); const bytes = new Uint8Array(bin.length);
     for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
     return new TextDecoder().decode(bytes);
   }
-
   async function ghFetch(path, opts) {
     opts = opts || {};
     const res = await fetch(API + path, {
-      method: opts.method || 'GET',
-      headers: {
-        'Authorization': 'Bearer ' + ghCfg.token,
-        'Accept': 'application/vnd.github+json',
-        ...(opts.body ? { 'Content-Type': 'application/json' } : {})
-      },
+      method: opts.method || 'GET', cache: 'no-store',
+      headers: Object.assign({ 'Authorization': 'Bearer ' + gh.token, 'Accept': 'application/vnd.github+json' },
+        opts.body ? { 'Content-Type': 'application/json' } : {}),
       body: opts.body ? JSON.stringify(opts.body) : undefined
     });
+    if (res.status === 404 && opts.allow404) return null;
     if (!res.ok) {
       const t = await res.json().catch(() => ({}));
-      throw new Error(res.status + ' — ' + (t.message || 'שגיאה מ-GitHub'));
+      const err = new Error(res.status + ' — ' + (t.message || 'שגיאה מ־GitHub'));
+      err.status = res.status; throw err;
     }
-    if (res.status === 204) return null;
-    return res.json();
+    return res.status === 204 ? null : res.json();
+  }
+  const repoPath = f => '/repos/' + encodeURIComponent(gh.owner) + '/' + encodeURIComponent(gh.repo) + '/contents/' + f.split('/').map(encodeURIComponent).join('/');
+  async function ghGetFile(file) {
+    // קבצים גדולים מ־1MB לא מחזירים content — אז מורידים דרך download_url / raw
+    const f = await ghFetch(repoPath(file) + '?ref=' + encodeURIComponent(gh.branch), { allow404: true });
+    if (!f) return null;
+    let text;
+    if (f.content && f.encoding === 'base64') text = b64ToUtf8(f.content);
+    else {
+      const res = await fetch(API + repoPath(file) + '?ref=' + encodeURIComponent(gh.branch), {
+        cache: 'no-store', headers: { 'Authorization': 'Bearer ' + gh.token, 'Accept': 'application/vnd.github.raw' } });
+      if (!res.ok) throw new Error('הורדת הקובץ נכשלה (' + res.status + ')');
+      text = await res.text();
+    }
+    return { sha: f.sha, text };
+  }
+  async function ghPutFile(file, text, sha, message) {
+    const body = { message, content: utf8ToB64(text), branch: gh.branch };
+    if (sha) body.sha = sha;
+    const res = await ghFetch(repoPath(file), { method: 'PUT', body });
+    return res && res.content ? res.content.sha : null;
   }
 
-  function buildMafteachJs() {
-    const clean = DATA.map(e => {
-      const o = { ...e };
-      delete o._id;
-      return o;
-    });
-    return '// נתוני המפתחות — נערך בעורך המפתחות\nconst MAFTEACH = ' +
-      JSON.stringify(clean) + ';\n';
+  async function loadRegistryFromGH() {
+    const f = await ghGetFile(REG_FILE);
+    if (f) {
+      const o = JSON.parse(f.text);
+      const list = Array.isArray(o) ? o : (o.indexes || []);
+      if (list.length) {
+        // שומר מפתחות מקומיים חדשים שעוד לא נדחפו
+        const local = registry.dirty ? registry.indexes.filter(x => !list.some(y => y.id === x.id)) : [];
+        registry.indexes = list.concat(local);
+      }
+      registry.sha = f.sha;
+      registry.dirty = registry.dirty && registry.indexes.length !== list.length;
+    } else {
+      registry.sha = null; // אין עדיין קובץ רשימה — נוצר בשמירה הראשונה של מפתח חדש
+    }
+    saveRegistry(); renderIndexSelect();
   }
 
-  function parseMafteachFile(text) {
-    text = text.trim();
-    if (text.startsWith('[')) return JSON.parse(text);
-    const m = text.match(/const\s+MAFTEACH\s*=\s*(\[[\s\S]*\])/);
-    if (m) return JSON.parse(m[1]);
-    const start = text.indexOf('[');
-    const end = text.lastIndexOf(']');
-    if (start >= 0 && end > start) return JSON.parse(text.slice(start, end + 1));
-    throw new Error('לא נמצא מערך MAFTEACH בקובץ');
+  // מיזוג: מחיל את הפעולות המקומיות על גרסה טרייה
+  function rebase(remoteEntries, ops) {
+    const out = remoteEntries.map(e => Object.assign({}, e));
+    let applied = 0; const issues = [];
+    const findIdx = before => { const c = canon(before); return out.findIndex(e => canon(e) === c); };
+    for (const op of ops) {
+      if (op.op === 'add') {
+        if (findIdx(op.after) < 0) out.push(Object.assign({}, op.after));
+        applied++;
+      } else if (op.op === 'update') {
+        const i = findIdx(op.before);
+        if (i >= 0) { out[i] = Object.assign({}, op.after); applied++; }
+        else if (findIdx(op.after) >= 0) { applied++; }
+        else { out.push(Object.assign({}, op.after)); issues.push('«' + op.after.topic + '» שונה גם במקום אחר — נשמר כערך נוסף, כדאי לבדוק'); }
+      } else if (op.op === 'delete') {
+        const i = findIdx(op.before);
+        if (i >= 0) { out.splice(i, 1); applied++; }
+        else issues.push('«' + op.before.topic + '» כבר שונה או נמחק במקום אחר — לא נמחק');
+      } else if (op.op === 'replace') {
+        out.length = 0; op.entries.forEach(e => out.push(Object.assign({}, e))); applied++;
+      }
+    }
+    return { entries: out, applied, issues };
+  }
+  function opsSummary(ops) {
+    const c = { add: 0, update: 0, delete: 0 };
+    ops.forEach(o => { if (c[o.op] != null) c[o.op]++; });
+    return c;
   }
 
-  async function pullFromGitHub() {
-    if (!ghCfg || !ghCfg.token) throw new Error('לא מחובר');
-    const path = 'mafteach.js';
-    const ref = 'main';
-    const f = await ghFetch('/repos/' + ghCfg.owner + '/' + ghCfg.repo + '/contents/' + path + '?ref=' + encodeURIComponent(ref));
-    ghFileSha = f.sha;
-    const text = b64ToUtf8(f.content);
-    const arr = parseMafteachFile(text);
-    if (!Array.isArray(arr)) throw new Error('הקובץ אינו מערך');
-    arr.forEach(e => {
-      if (!e._id) e._id = uid();
-      if (!e.types) e.types = e.t ? [e.t] : ['i'];
-    });
-    DATA = arr;
-    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(DATA)); } catch (_) {}
-    return arr.length;
+  async function pullCurrent(silent) {
+    if (!ghReady()) { toast('לא מחובר ל־GitHub', 'err'); return false; }
+    const f = await ghGetFile(cur.file);
+    if (!f) {
+      if (!silent) toast('הקובץ ' + cur.file + ' עוד לא קיים בריפו — ייווצר בשמירה הראשונה');
+      cur.loaded = true; saveCache(); return true;
+    }
+    const parsed = parseIndexFile(f.text);
+    let entries = parsed.entries;
+    let issues = [];
+    if (cur.ops.length) {
+      const r = rebase(entries, cur.ops.map(o => o));
+      entries = r.entries; issues = r.issues;
+      // הפעולות נשארות ממתינות — יוחלו שוב על הגרסה הטרייה בעת השמירה
+    }
+    cur.entries = prepEntries(entries);
+    cur.meta = ensureMeta(cur.ops.some(o => o.op === 'meta') ? cur.meta : (parsed.meta || cur.meta), cur.entries, cur.name);
+    cur.sha = f.sha; cur.loaded = true;
+    saveCache(); renderAll();
+    if (issues.length) await dialog('שים לב', issues.join('\n'));
+    return true;
   }
 
-  async function pushToGitHub(showToast) {
-    if (!ghCfg || !ghCfg.token) {
-      if (showToast) toast('לא מחובר ל-GitHub', 'err');
+  async function pushCurrent() {
+    if (!ghReady()) { toast('לא מחובר ל־GitHub — הגדר טוקן בלשונית כלים', 'err'); switchTab('tools'); return; }
+    if (ghBusy) return;
+    if (!cur.ops.length && cur.sha && !registry.dirty) { toast('אין שינויים לשמור'); return; }
+    ghBusy = true; updateSyncUI('שומר…');
+    try {
+      const remote = await ghGetFile(cur.file);
+      let finalEntries = cur.entries.map(stripId);
+      let issues = [];
+      let sha = remote ? remote.sha : null;
+      if (remote && remote.sha !== cur.sha) {
+        // הקובץ השתנה מאז שנטען — ממזגים את השינויים שלנו על הגרסה החדשה
+        const parsed = parseIndexFile(remote.text);
+        const r = rebase(parsed.entries.map(stripId), cur.ops.map(o => o));
+        finalEntries = r.entries; issues = r.issues;
+        if (!cur.ops.some(o => o.op === 'meta') && parsed.meta) cur.meta = ensureMeta(parsed.meta, finalEntries, cur.name);
+      }
+      const s = opsSummary(cur.ops);
+      const msg = 'מפתח ' + cur.meta.name + ': ' + [s.add && ('+' + s.add + ' נוספו'), s.update && (s.update + ' עודכנו'), s.delete && (s.delete + ' נמחקו')].filter(Boolean).join(', ') || ('מפתח ' + cur.meta.name + ': עדכון');
+      const meta = ensureMeta(cur.meta, finalEntries, cur.name);
+      const newSha = await ghPutFile(cur.file, buildIndexFile(meta, finalEntries), sha, msg);
+      cur.entries = prepEntries(finalEntries.map(e => Object.assign({}, e)));
+      cur.meta = meta; cur.sha = newSha; cur.ops = [];
+      saveCache();
+      if (registry.dirty) await pushRegistry();
+      renderAll();
+      if (issues.length) await dialog('נשמר, עם הערות', 'הקובץ שונה בינתיים ממקום אחר, והשינויים שלך מוזגו לגרסה החדשה.\n\n' + issues.join('\n'));
+      else toast(remote && remote.sha !== (cur.sha) ? 'מוזג ונשמר ב־GitHub ✓' : 'נשמר ב־GitHub ✓', 'ok');
+    } catch (e) {
+      if (e.status === 409 || e.status === 422) toast('הקובץ השתנה ברגע השמירה — נסה שוב', 'err', 4000);
+      else toast('שגיאת GitHub: ' + e.message, 'err', 4500);
+    } finally { ghBusy = false; updateSyncUI(); }
+  }
+  async function pushRegistry() {
+    const remote = await ghGetFile(REG_FILE);
+    let list = registry.indexes.map(x => ({ id: x.id, name: x.name, file: x.file }));
+    if (remote) {
+      try {
+        const o = JSON.parse(remote.text); const rl = Array.isArray(o) ? o : (o.indexes || []);
+        rl.forEach(x => { if (!list.some(y => y.id === x.id)) list.push(x); });
+      } catch (_) {}
+    }
+    registry.sha = await ghPutFile(REG_FILE, JSON.stringify({ indexes: list }, null, 2) + '\n', remote ? remote.sha : null, 'רשימת מפתחות: עדכון');
+    registry.indexes = list; registry.dirty = false; saveRegistry(); renderIndexSelect();
+  }
+
+  // ================= החלפת מפתח =================
+  async function openIndex(id, opts) {
+    const info = registry.indexes.find(x => x.id === id) || registry.indexes[0];
+    cur = loadCache(info);
+    lsSet(K_CUR, cur.id);
+    editId = null;
+    renderIndexSelect(); renderAll(); clearForm(true);
+    if (ghReady() && (!cur.loaded || (opts && opts.pull))) {
+      try { toast('טוען מ־GitHub…'); await pullCurrent(true); toast('נטענו ' + cur.entries.length + ' ערכים', 'ok'); }
+      catch (e) { toast('טעינה נכשלה: ' + e.message, 'err', 4000); }
+    }
+  }
+  function renderIndexSelect() {
+    const sel = $('idx-select');
+    sel.innerHTML = registry.indexes.map(x => `<option value="${esc(x.id)}"${cur && cur.id === x.id ? ' selected' : ''}>${esc(x.name)}</option>`).join('') +
+      '<option value="__new">+ מפתח חדש…</option>';
+  }
+  $('idx-select').addEventListener('change', async e => {
+    const v = e.target.value;
+    if (v === '__new') { renderIndexSelect(); newIndex(); return; }
+    if (cur && cur.ops.length) {
+      // השינויים שמורים במכשיר, אז אפשר לעבור — רק מזכירים
+      toast('השינויים במפתח «' + cur.meta.name + '» שמורים במכשיר ועוד לא עלו ל־GitHub', '', 3500);
+    }
+    openIndex(v);
+  });
+  function slugify(s) {
+    const map = { 'א':'a','ב':'b','ג':'g','ד':'d','ה':'h','ו':'v','ז':'z','ח':'ch','ט':'t','י':'y','כ':'k','ך':'k','ל':'l','מ':'m','ם':'m','נ':'n','ן':'n','ס':'s','ע':'a','פ':'p','ף':'f','צ':'tz','ץ':'tz','ק':'k','ר':'r','ש':'sh','ת':'t' };
+    let out = String(s).toLowerCase().split('').map(c => map[c] != null ? map[c] : c).join('')
+      .replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+    return out || ('idx-' + Date.now().toString(36));
+  }
+  async function newIndex() {
+    const v = await promptDlg('מפתח חדש', [
+      { key: 'name', label: 'שם המפתח', ph: 'לדוגמה: לקוטי שיחות חלק א' },
+      { key: 'src', label: 'כינוי לשדה "מקור"', ph: 'שיחה / מאמר / אגרת / פרק', value: 'מקור' }
+    ]);
+    if (!v || !v.name) return;
+    let id = slugify(v.name), n = 2;
+    while (registry.indexes.some(x => x.id === id)) id = slugify(v.name) + '-' + (n++);
+    const info = { id, name: v.name, file: 'indexes/' + id + '.js' };
+    registry.indexes.push(info); registry.dirty = true; saveRegistry();
+    lsSet(K_CACHE(id), JSON.stringify({ meta: { name: v.name, sourceLabel: v.src || 'מקור', categories: DEFAULT_CATS }, entries: [], sha: null, ops: [{ op: 'meta' }] }));
+    await openIndex(id);
+    toast('נוצר מפתח «' + v.name + '» — הוא יעלה ל־GitHub בשמירה הראשונה', 'ok', 3500);
+  }
+
+  // ================= לשוניות =================
+  function switchTab(tab) {
+    document.querySelectorAll('.tab').forEach(t => t.classList.toggle('on', t.dataset.tab === tab));
+    document.querySelectorAll('.panel').forEach(p => p.classList.toggle('on', p.id === 'panel-' + tab));
+    if (tab === 'browse') { renderFilters(); renderBrowse(); }
+    if (tab === 'add') { renderCategoryCheckboxes(); renderEditorList(); }
+    if (tab === 'az') { renderFilters(); renderAZ(); }
+    if (tab === 'export') renderExport();
+    if (tab === 'tools') renderTools();
+    $('panel-' + tab).scrollIntoView ? document.querySelector('main').scrollTop = 0 : null;
+  }
+  document.querySelectorAll('.tab').forEach(btn => btn.addEventListener('click', () => switchTab(btn.dataset.tab)));
+
+  function renderAll() {
+    renderFilters(); renderBrowse(); renderCategoryCheckboxes(); renderEditorList();
+    if ($('panel-az').classList.contains('on')) renderAZ();
+    renderTools(); updateSyncUI(); updateSourceDatalist();
+    $('lbl-source').textContent = srcLabel();
+  }
+
+  // ================= סטטוס סנכרון =================
+  function updateSyncUI(busyText) {
+    const b = $('sync-badge');
+    const n = cur ? cur.ops.length : 0;
+    if (busyText) { b.textContent = busyText; b.className = 'badge dirty'; return; }
+    if (n || registry.dirty) { b.textContent = '↑ ' + (n || 1) + ' לשמירה'; b.className = 'badge dirty'; b.title = 'לחץ לשמירה ב־GitHub'; }
+    else if (ghReady()) { b.textContent = 'שמור ✓'; b.className = 'badge ok'; b.title = 'הכל שמור ב־GitHub'; }
+    else { b.textContent = 'מנותק'; b.className = 'badge off'; b.title = 'הגדר חיבור ל־GitHub'; }
+    const st = $('gh-status-text');
+    if (st) st.textContent = ghReady()
+      ? ('סטטוס: מחובר ל־' + gh.owner + '/' + gh.repo + (n ? ' · ' + n + ' שינויים ממתינים לשמירה' : ' · הכל שמור'))
+      : 'סטטוס: מנותק' + (n ? ' · ' + n + ' שינויים שמורים במכשיר בלבד' : '');
+  }
+  $('sync-badge').addEventListener('click', () => {
+    if (!ghReady()) { switchTab('tools'); return; }
+    if (cur.ops.length || registry.dirty) pushCurrent(); else toast('הכל שמור ב־GitHub');
+  });
+  window.addEventListener('beforeunload', e => { if (cur && cur.ops.length && ghReady()) { e.preventDefault(); e.returnValue = ''; } });
+
+  // ================= עיון =================
+  const qEl = $('q');
+  function applyQuoteLabel() {
+    const label = showQuotes ? 'הסתר ציטוטים' : 'הצג ציטוטים';
+    ['quote-toggle', 'quote-toggle-az'].forEach(id => { const b = $(id); b.textContent = label; b.classList.toggle('on', showQuotes); });
+  }
+  function toggleQuotes() {
+    showQuotes = !showQuotes; lsSet(K_QUOTES, showQuotes ? '1' : '0'); applyQuoteLabel();
+    renderBrowse(); if ($('panel-az').classList.contains('on')) renderAZ();
+  }
+  $('quote-toggle').addEventListener('click', toggleQuotes);
+  $('quote-toggle-az').addEventListener('click', toggleQuotes);
+  document.addEventListener('click', e => {
+    const qs = e.target.closest('.q-show');
+    if (qs) {
+      const ex = qs.nextElementSibling; if (!ex) return;
+      const hidden = ex.style.display === 'none'; ex.style.display = hidden ? 'block' : 'none';
+      qs.textContent = hidden ? 'הסתר ציטוט ▴' : 'הצג ציטוט ▾'; return;
+    }
+    const see = e.target.closest('.see-link');
+    if (see) { qEl.value = see.dataset.see; currentFilter = 'all'; switchTab('browse'); return; }
+    const ed = e.target.closest('.edit-mini');
+    if (ed) { switchTab('add'); startEdit(ed.dataset.id); }
+  });
+
+  function renderFilters() {
+    const items = [{ id: 'all', name: 'הכל' }].concat(cats());
+    const mk = (elId, active, setter) => {
+      const el = $(elId);
+      el.innerHTML = items.map(c => `<button type="button" class="filter-btn${active === c.id ? ' active' : ''}" data-f="${esc(c.id)}">${esc(c.name)}</button>`).join('');
+      el.querySelectorAll('.filter-btn').forEach(btn => btn.addEventListener('click', () => setter(btn.dataset.f)));
+    };
+    mk('type-filters', currentFilter, f => { currentFilter = f; renderFilters(); renderBrowse(); });
+    mk('az-filters', azFilter, f => { azFilter = f; renderFilters(); renderAZ(); });
+  }
+  function scoreEntry(e, nq) {
+    const t = normalize(e.topic);
+    if (t.indexOf(nq) === 0) return 6;
+    if (t.indexOf(nq) > 0) return 5;
+    if (normalize(e.clar).indexOf(nq) >= 0) return 3;
+    if (e.see && normalize(e.see).indexOf(nq) >= 0) return 2.5;
+    if (normalize(e.desc).indexOf(nq) >= 0) return 2;
+    if (entrySources(e).some(s => normalize(s.s).indexOf(nq) >= 0)) return 1.5;
+    if (normalize(e.excerpt).indexOf(nq) >= 0) return 1;
+    return 0;
+  }
+  function cardHTML(e) {
+    const tags = entryTypes(e).map(id => `<span class="tag">${esc(catName(id))}</span>`).join('');
+    const clar = e.clar ? ` <span class="clar">(${esc(e.clar)})</span>` : '';
+    let body = '';
+    if (e.see) body += `<div class="see">ע״ע <button type="button" class="see-link" data-see="${esc(e.see)}">${esc(e.see)}</button></div>`;
+    if (e.desc) body += `<div class="desc">${esc(e.desc)}</div>`;
+    if (e.excerpt) {
+      if (showQuotes) body += `<div class="excerpt">${esc(e.excerpt)}</div>`;
+      else body += `<button type="button" class="q-show">הצג ציטוט ▾</button><div class="excerpt" style="display:none">${esc(e.excerpt)}</div>`;
+    }
+    const srcs = entrySources(e);
+    if (srcs.length === 1 && !(e.sources && e.sources.length)) {
+      const s = srcs[0];
+      body += `<div class="meta">${s.dp ? `<span>עמ׳ ${esc(s.dp)}</span>` : ''}${s.s ? `<span>${esc(s.s)}</span>` : ''}</div>`;
+      const href = buildLink(s.u, s.dp, s.pg);
+      if (href) body += `<a class="link-btn" href="${esc(href)}" target="_blank" rel="noopener">פתיחת המקור ←</a>`;
+    } else if (srcs.length) {
+      body += '<div class="srcs">' + srcs.map(s => {
+        const label = esc(s.s || '—') + (s.dp ? ' · עמ׳ ' + esc(s.dp) : '');
+        const href = buildLink(s.u, s.dp, s.pg);
+        return href ? `<a href="${esc(href)}" target="_blank" rel="noopener">${label} ←</a>` : `<span>${label}</span>`;
+      }).join('') + '</div>';
+    }
+    return `<div class="card"><div class="topic">${esc(e.topic)}${clar}${tags}<button type="button" class="edit-mini" data-id="${esc(e._id)}">✎ ערוך</button></div>${body}</div>`;
+  }
+  function renderBrowse() {
+    const raw = qEl.value.trim();
+    $('q-clear').style.display = raw ? 'block' : 'none';
+    const resultsEl = $('results'), countEl = $('count');
+    if (!cur) return;
+    if (!raw) {
+      countEl.textContent = cur.entries.length ? cur.entries.length + ' ערכים במפתח' : '';
+      resultsEl.innerHTML = cur.entries.length ? '<div class="empty">הקלד בשורת החיפוש כדי לראות תוצאות.</div>'
+        : '<div class="empty">המפתח ריק. ' + (ghReady() ? 'הוסף ערך בלשונית עריכה.' : 'התחבר ל־GitHub בלשונית כלים כדי לטעון אותו, או הוסף ערך בלשונית עריכה.') + '</div>';
       return;
     }
-    if (ghBusy) return;
-    ghBusy = true;
-    try {
-      const path = 'mafteach.js';
-      const ref = 'main';
-      // רענון sha אם חסר
-      if (!ghFileSha) {
-        try {
-          const f = await ghFetch('/repos/' + ghCfg.owner + '/' + ghCfg.repo + '/contents/' + path + '?ref=' + encodeURIComponent(ref));
-          ghFileSha = f.sha;
-        } catch (_) {
-          ghFileSha = null; // קובץ חדש
-        }
-      }
-      const content = utf8ToB64(buildMafteachJs());
-      const body = {
-        message: 'עדכון מפתחות מהעורך (' + DATA.length + ' ערכים)',
-        content: content,
-        branch: ref
-      };
-      if (ghFileSha) body.sha = ghFileSha;
-      const res = await ghFetch('/repos/' + ghCfg.owner + '/' + ghCfg.repo + '/contents/' + path, {
-        method: 'PUT',
-        body: body
-      });
-      if (res && res.content && res.content.sha) ghFileSha = res.content.sha;
-      if (showToast !== false) toast('נשמר ב-GitHub ✓', 'ok');
-    } catch (e) {
-      // אם sha לא תואם — נסה שוב פעם אחת
-      if (String(e.message).indexOf('409') >= 0 || String(e.message).indexOf('sha') >= 0) {
-        try {
-          const path = ghCfg.path || 'mafteach.js';
-          const ref = ghCfg.branch || 'main';
-          const f = await ghFetch('/repos/' + ghCfg.owner + '/' + ghCfg.repo + '/contents/' + path + '?ref=' + encodeURIComponent(ref));
-          ghFileSha = f.sha;
-          const content = utf8ToB64(buildMafteachJs());
-          const res = await ghFetch('/repos/' + ghCfg.owner + '/' + ghCfg.repo + '/contents/' + path, {
-            method: 'PUT',
-            body: { message: 'עדכון מפתחות מהעורך', content: content, branch: ref, sha: ghFileSha }
-          });
-          if (res && res.content && res.content.sha) ghFileSha = res.content.sha;
-          if (showToast !== false) toast('נשמר ב-GitHub ✓', 'ok');
-          ghBusy = false;
-          return;
-        } catch (e2) {
-          toast('שגיאת GitHub: ' + e2.message, 'err');
-          ghBusy = false;
-          throw e2;
-        }
-      }
-      toast('שגיאת GitHub: ' + e.message, 'err');
-      throw e;
-    } finally {
-      ghBusy = false;
+    const nq = normalize(raw);
+    const scored = [];
+    for (const e of cur.entries) {
+      if (currentFilter !== 'all' && !entryTypes(e).includes(currentFilter)) continue;
+      const sc = scoreEntry(e, nq); if (sc > 0) scored.push({ e, sc });
     }
+    scored.sort((a, b) => b.sc - a.sc || heCmp(a.e.topic, b.e.topic));
+    const rows = scored.slice(0, 300).map(x => x.e);
+    countEl.textContent = scored.length ? (scored.length === 1 ? 'תוצאה אחת' : scored.length + ' תוצאות') : 'לא נמצאו תוצאות';
+    resultsEl.innerHTML = rows.length ? rows.map(cardHTML).join('') : '<div class="empty">לא נמצאו תוצאות</div>';
+  }
+  qEl.addEventListener('input', renderBrowse);
+  $('q-clear').addEventListener('click', () => { qEl.value = ''; qEl.focus(); renderBrowse(); });
+
+  function heFirst(s) { const c = normalize(s).charAt(0); return /[א-ת]/.test(c) ? c : '#'; }
+  function renderAZ() {
+    const el = $('az-list');
+    const list = cur.entries.filter(e => azFilter === 'all' || entryTypes(e).includes(azFilter)).sort((a, b) => heCmp(a.topic, b.topic));
+    $('az-count').textContent = list.length === 1 ? 'ערך אחד' : list.length + ' ערכים';
+    if (!list.length) { el.innerHTML = '<div class="empty">אין ערכים</div>'; return; }
+    const byLetter = {};
+    list.forEach(e => { const L = heFirst(e.topic); (byLetter[L] = byLetter[L] || []).push(e); });
+    const letters = Object.keys(byLetter).sort((a, b) => a === '#' ? 1 : b === '#' ? -1 : a.localeCompare(b, 'he'));
+    el.innerHTML = letters.map(L => `<div class="az-letter">${esc(L)}</div>` + byLetter[L].map(cardHTML).join('')).join('');
   }
 
-  document.getElementById('btn-gh-connect').addEventListener('click', async () => {
-    const token = document.getElementById('gh-token').value.trim();
-    if (!token) { toast('נא להזין טוקן', 'err'); return; }
-    ghCfg = { owner: GH_OWNER, repo: GH_REPO, branch: GH_BRANCH, path: GH_PATH, token };
-    if (document.getElementById('gh-remember').checked) {
-      try { localStorage.setItem(GH_KEY, JSON.stringify(ghCfg)); } catch (_) {}
+  // ================= עריכה =================
+  const form = $('entry-form');
+  const F = { topic: $('f-topic'), clar: $('f-clar'), see: $('f-see'), desc: $('f-desc'), excerpt: $('f-excerpt'),
+    sichah: $('f-sichah'), page: $('f-page'), pdfpage: $('f-pdfpage'), url: $('f-url'), a: $('f-anchor') };
+  let formSources = []; // מקורות נוספים בטופס
+
+  function getSelectedTypes() {
+    const arr = Array.from(form.querySelectorAll('input[name="types"]:checked')).map(cb => cb.value);
+    return arr.length ? arr : [cats()[0] ? cats()[0].id : 'i'];
+  }
+  function renderCategoryCheckboxes(preselect) {
+    const container = $('type-checkboxes');
+    const selected = preselect || (container.children.length ? getSelectedTypes() : [cats()[0].id]);
+    container.innerHTML = cats().map(c =>
+      `<label><input type="checkbox" name="types" value="${esc(c.id)}" ${selected.includes(c.id) ? 'checked' : ''}><span>${esc(c.name)}</span></label>`).join('');
+  }
+  function renderEditorList() {
+    if (!cur) return;
+    const container = $('editor-list');
+    const q = normalize($('edit-list-q').value);
+    let list = cur.entries.slice().sort((a, b) => heCmp(a.topic, b.topic));
+    if (q) list = list.filter(e => normalize(e.topic).indexOf(q) >= 0 || normalize(e.clar).indexOf(q) >= 0 || normalize(e.desc).indexOf(q) >= 0);
+    if (!list.length) { container.innerHTML = '<div class="empty" style="padding:16px">אין ערכים</div>'; return; }
+    const shown = list.slice(0, 400);
+    container.innerHTML = shown.map(e => {
+      const sub = e.see ? 'ע״ע ' + e.see : (e.desc || e.sichah || '');
+      return `<div class="editor-list-item${editId === e._id ? ' selected' : ''}" data-id="${esc(e._id)}">
+        <span class="item-title">${esc(e.topic)}${e.clar ? ' (' + esc(e.clar) + ')' : ''}${sub ? ' <span style="color:var(--muted);font-weight:400;font-size:.8rem">— ' + esc(sub.slice(0, 50)) + '</span>' : ''}</span>
+        <span class="item-type">${esc(entryTypes(e).map(catName).join(', '))}</span></div>`;
+    }).join('') + (list.length > shown.length ? `<div class="empty" style="padding:10px">ועוד ${list.length - shown.length}… סנן כדי לצמצם</div>` : '');
+    container.querySelectorAll('.editor-list-item').forEach(item => item.addEventListener('click', () => startEdit(item.dataset.id)));
+  }
+  $('edit-list-q').addEventListener('input', renderEditorList);
+
+  function updateSourceDatalist() {
+    if (!cur) return;
+    const set = new Set();
+    cur.entries.forEach(e => entrySources(e).forEach(s => { if (s.s) set.add(s.s); }));
+    $('source-list').innerHTML = Array.from(set).sort(heCmp).map(s => `<option value="${esc(s)}">`).join('');
+  }
+
+  // הצעות (נושא / ע"ע)
+  function attachSuggest(input, box, onPick) {
+    input.addEventListener('input', () => {
+      const q = normalize(input.value);
+      if (!q) { box.classList.remove('show'); return; }
+      const seen = new Set(), matches = [];
+      const pool = cur.entries.slice().sort((a, b) => {
+        const ap = normalize(a.topic).indexOf(q) === 0 ? 0 : 1, bp = normalize(b.topic).indexOf(q) === 0 ? 0 : 1;
+        return ap - bp || heCmp(a.topic, b.topic);
+      });
+      for (const e of pool) {
+        const nt = normalize(e.topic), key = nt + '|' + normalize(e.clar);
+        if (nt.indexOf(q) >= 0 && !seen.has(key)) { seen.add(key); matches.push(e); if (matches.length >= 12) break; }
+      }
+      if (!matches.length) { box.classList.remove('show'); return; }
+      box.innerHTML = matches.map(e => `<div class="sug-item" data-id="${esc(e._id)}">${esc(e.topic)}${e.clar ? ' <span class="clar">(' + esc(e.clar) + ')</span>' : ''}<span class="sug-type">${esc(entryTypes(e).map(catName).join(', '))}</span></div>`).join('');
+      box.classList.add('show');
+      box.querySelectorAll('.sug-item').forEach(item => item.addEventListener('mousedown', ev => {
+        ev.preventDefault(); const e = cur.entries.find(x => x._id === item.dataset.id); box.classList.remove('show'); if (e) onPick(e);
+      }));
+    });
+    input.addEventListener('blur', () => setTimeout(() => box.classList.remove('show'), 150));
+  }
+  // בחירת נושא קיים: ממלא נושא, הבהרה וקטגוריות — לא פותח עריכה (כדי להוסיף מקור חדש לאותו נושא)
+  attachSuggest(F.topic, $('topic-sug'), e => {
+    F.topic.value = e.topic; F.clar.value = e.clar || '';
+    if (!editId) renderCategoryCheckboxes(entryTypes(e));
+    updateDupNote();
+  });
+  attachSuggest(F.see, $('see-sug'), e => { F.see.value = e.topic; updateSeeMode(); });
+
+  function updateDupNote() {
+    const note = $('dup-note');
+    const nt = normalize(F.topic.value), nc = normalize(F.clar.value);
+    if (!nt) { note.classList.remove('show'); return; }
+    const same = cur.entries.filter(e => e._id !== editId && normalize(e.topic) === nt && normalize(e.clar) === nc);
+    if (!same.length) { note.classList.remove('show'); return; }
+    note.innerHTML = `ערך זה כבר קיים ב־${same.length === 1 ? 'רשומה אחת' : same.length + ' רשומות'} — אפשר להוסיף מקור חדש, או <button type="button" id="dup-show">להציג אותן</button>`;
+    note.classList.add('show');
+    $('dup-show').onclick = () => { $('edit-list-q').value = F.topic.value; renderEditorList(); $('editor-list').scrollIntoView({ behavior: 'smooth' }); };
+  }
+  F.topic.addEventListener('input', updateDupNote);
+  F.clar.addEventListener('input', updateDupNote);
+
+  function updateSeeMode() {
+    // בערך ע"ע אין צורך בשדות המקור
+    $('src-fields').style.opacity = F.see.value.trim() ? '.45' : '';
+  }
+  F.see.addEventListener('input', updateSeeMode);
+
+  function renderSourcesForm() {
+    const box = $('sources-list');
+    box.innerHTML = formSources.map((s, i) => `<div class="src-row" data-i="${i}">
+      <button type="button" class="rm" data-rm="${i}" aria-label="הסר מקור">✕</button>
+      <div class="form-group"><label>${esc(srcLabel())} נוסף</label><input type="text" data-k="s" list="source-list" value="${esc(s.s || '')}"></div>
+      <div class="row2"><div class="form-group"><label>עמוד בספר</label><input type="number" data-k="dp" value="${esc(s.dp || '')}"></div>
+      <div class="form-group"><label>עמוד בקובץ</label><input type="number" data-k="pg" value="${esc(s.pg || '')}"></div></div>
+      <div class="form-group"><label>קישור</label><input type="url" class="ltr" data-k="u" value="${esc(s.u || '')}"></div></div>`).join('');
+    box.querySelectorAll('.src-row input').forEach(inp => inp.addEventListener('input', () => {
+      const i = +inp.closest('.src-row').dataset.i; formSources[i][inp.dataset.k] = inp.value;
+    }));
+    box.querySelectorAll('[data-rm]').forEach(b => b.addEventListener('click', () => { formSources.splice(+b.dataset.rm, 1); renderSourcesForm(); }));
+  }
+  $('btn-add-src').addEventListener('click', () => { formSources.push({ s: '', dp: '', pg: '', u: '' }); renderSourcesForm(); });
+
+  function clearForm(keepScroll) {
+    editId = null;
+    Object.values(F).forEach(el => { el.value = ''; });
+    formSources = []; renderSourcesForm();
+    $('more-box').open = false;
+    renderCategoryCheckboxes([cats()[0] ? cats()[0].id : 'i']);
+    $('save-btn').textContent = 'הוסף ערך';
+    $('delete-btn').classList.add('hidden'); $('dup-btn').classList.add('hidden');
+    updateDupNote(); updateSeeMode(); renderEditorList();
+  }
+  $('cancel-btn').addEventListener('click', () => { clearForm(); toast('הטופס נוקה'); });
+
+  function startEdit(id) {
+    const e = cur.entries.find(x => x._id === id);
+    if (!e) return;
+    editId = id;
+    renderCategoryCheckboxes(entryTypes(e));
+    F.topic.value = e.topic || ''; F.clar.value = e.clar || ''; F.see.value = e.see || '';
+    F.desc.value = e.desc || ''; F.excerpt.value = e.excerpt || '';
+    F.sichah.value = e.sichah || ''; F.page.value = e.page || ''; F.pdfpage.value = e.pdfpage || ''; F.url.value = e.url || '';
+    F.a.value = e.a || '';
+    formSources = Array.isArray(e.sources) ? e.sources.map(s => Object.assign({}, s)) : [];
+    renderSourcesForm();
+    $('more-box').open = !!(formSources.length || e.a);
+    $('save-btn').textContent = 'עדכן ערך';
+    $('delete-btn').classList.remove('hidden'); $('dup-btn').classList.remove('hidden');
+    updateDupNote(); updateSeeMode(); renderEditorList();
+    form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  // בונה ערך מהטופס, תוך שמירה על כל שדה שהעורך לא מכיר
+  function entryFromForm(base) {
+    const e = Object.assign({}, base || {});
+    const types = getSelectedTypes();
+    e.t = types[0];
+    if (types.length > 1 || (base && Array.isArray(base.types))) e.types = types; else delete e.types;
+    const setStr = (k, v) => { v = (v || '').trim(); if (v) e[k] = v; else delete e[k]; };
+    const setNum = (k, v) => { const n = parseInt(v, 10); if (n > 0) e[k] = n; else delete e[k]; };
+    setStr('topic', F.topic.value); setStr('clar', F.clar.value); setStr('see', F.see.value);
+    setStr('desc', F.desc.value); setStr('excerpt', F.excerpt.value); setStr('sichah', F.sichah.value);
+    setNum('page', F.page.value); setNum('pdfpage', F.pdfpage.value); setStr('url', F.url.value); setStr('a', F.a.value);
+    const srcs = formSources.map(s => {
+      const o = Object.assign({}, s);
+      ['s', 'u'].forEach(k => { o[k] = (o[k] || '').trim(); if (!o[k]) delete o[k]; });
+      ['dp', 'pg'].forEach(k => { const n = parseInt(o[k], 10); if (n > 0) o[k] = n; else delete o[k]; });
+      return o;
+    }).filter(o => o.s || o.u || o.dp || o.pg);
+    if (srcs.length) e.sources = srcs; else delete e.sources;
+    // שדות ריקים/null שהגיעו מהקובץ המקורי ונשארו — משאירים כמו שהם, חוץ מאלה שהטופס מנהל
+    return e;
+  }
+
+  form.addEventListener('submit', async ev => {
+    ev.preventDefault();
+    if (!F.topic.value.trim()) { toast('חסר שם הערך', 'err'); return; }
+    if (editId) {
+      const idx = cur.entries.findIndex(x => x._id === editId);
+      if (idx < 0) { toast('הערך לא נמצא', 'err'); return; }
+      const before = cur.entries[idx];
+      const after = entryFromForm(before);
+      if (canon(before) === canon(after)) { toast('לא שונה דבר'); return; }
+      cur.entries[idx] = after;
+      recordOp({ op: 'update', before: stripId(before), after: stripId(after) });
+      toast('עודכן (במכשיר)', 'ok');
+    } else {
+      const e = entryFromForm(null);
+      e._id = uid();
+      const dup = cur.entries.find(x => canon(x) === canon(e));
+      if (dup && !(await confirmDlg('ערך כפול', 'ערך זהה בדיוק כבר קיים. להוסיף בכל זאת?', 'הוסף'))) return;
+      cur.entries.push(e);
+      recordOp({ op: 'add', after: stripId(e) });
+      toast('נוסף (במכשיר)', 'ok');
     }
-    updateGhUI();
+    clearForm(); renderStats(); updateSourceDatalist();
+  });
+  $('dup-btn').addEventListener('click', () => {
+    // משאיר נושא/הבהרה/קטגוריות ומנקה את המקור — לערך חדש
+    editId = null;
+    ['see', 'desc', 'excerpt', 'page', 'pdfpage', 'a'].forEach(k => { F[k].value = ''; });
+    formSources = []; renderSourcesForm();
+    $('save-btn').textContent = 'הוסף ערך';
+    $('delete-btn').classList.add('hidden'); $('dup-btn').classList.add('hidden');
+    renderEditorList(); updateDupNote(); F.desc.focus();
+    toast('ממלאים מקור חדש לאותו ערך');
+  });
+  $('delete-btn').addEventListener('click', async () => {
+    const e = cur.entries.find(x => x._id === editId); if (!e) return;
+    if (!(await confirmDlg('מחיקה', 'למחוק את «' + e.topic + '»' + (e.desc ? ' — ' + e.desc : '') + '?', 'מחק', true))) return;
+    cur.entries = cur.entries.filter(x => x._id !== editId);
+    recordOp({ op: 'delete', before: stripId(e) });
+    clearForm(); renderStats(); toast('נמחק (במכשיר)', 'ok');
+  });
+
+  // ניהול קטגוריות — נשמר בתוך קובץ המפתח
+  $('btn-manage-cats').addEventListener('click', () => manageCats());
+  async function manageCats() {
+    const used = id => cur.entries.filter(e => entryTypes(e).includes(id)).length;
+    const html = '<div style="max-height:240px;overflow-y:auto;margin-bottom:12px">' + cats().map(c => `
+      <div style="display:flex;gap:6px;align-items:center;padding:6px 0;border-bottom:1px solid var(--line)">
+        <input type="text" data-rename="${esc(c.id)}" value="${esc(c.name)}" style="flex:1;padding:6px 8px;border:1.5px solid var(--line);border-radius:6px;font-family:inherit">
+        <span style="color:var(--muted);font-size:.72rem;white-space:nowrap">${used(c.id)} ערכים</span>
+        ${used(c.id) ? '' : `<button type="button" class="btn btn-danger btn-sm" data-del="${esc(c.id)}" style="flex:none;padding:4px 8px">מחק</button>`}
+      </div>`).join('') + `</div>
+      <div class="form-group" style="margin:0"><label>קטגוריה חדשה</label><input type="text" id="new-cat-name" placeholder="לדוגמה: מוסדות וארגונים"></div>`;
+    const toDelete = new Set();
+    const ok = await dialog('ניהול קטגוריות', '', [{ label: 'שמור', value: true, cls: 'btn-primary' }, { label: 'ביטול', value: false }], html, body => {
+      body.querySelectorAll('[data-del]').forEach(b => b.addEventListener('click', () => { toDelete.add(b.dataset.del); b.closest('div').style.display = 'none'; }));
+    });
+    if (!ok) return;
+    const body = $('dlg-body');
+    const newCats = cats().filter(c => !toDelete.has(c.id)).map(c => {
+      const inp = body.querySelector(`[data-rename="${CSS.escape(c.id)}"]`);
+      return { id: c.id, name: (inp && inp.value.trim()) || c.name };
+    });
+    const nn = body.querySelector('#new-cat-name').value.trim();
+    if (nn) newCats.push({ id: 'c' + Date.now().toString(36).slice(-5), name: nn });
+    cur.meta.categories = newCats;
+    recordOp({ op: 'meta' });
+    renderAll(); toast('הקטגוריות עודכנו', 'ok');
+  }
+
+  // ================= זיהוי טקסט מתמונה =================
+  const ocr = { target: null, img: null, rot: 0, sel: null, canvas: $('ocr-canvas'), worker: null, workerLoading: null, busy: false };
+  const ocrCfg = Object.assign({ engine: 'tesseract', claudeKey: '', claudeModel: 'claude-sonnet-5-5', geminiKey: '', geminiModel: 'gemini-2.5-flash', join: true, notes: true }, lsJSON(K_OCR, {}));
+  function saveOcrCfg() { lsSet(K_OCR, JSON.stringify(ocrCfg)); }
+
+  document.querySelectorAll('[data-ocr]').forEach(b => b.addEventListener('click', () => openOcr(b.dataset.ocr)));
+  function openOcr(targetId) {
+    ocr.target = targetId;
+    $('ocr').classList.add('show');
+    $('ocr-engine').value = ocrCfg.engine; $('ocr-join').checked = ocrCfg.join; $('ocr-notes').checked = ocrCfg.notes;
+    $('ocr-text').value = ''; setOcrStatus('');
+    const name = { 'f-excerpt': 'הציטוט', 'f-desc': 'התמצית', 'f-anchor': 'העוגן' }[targetId] || 'השדה';
+    $('ocr-insert').textContent = 'הכנס ל' + name;
+    if (!ocr.img) $('ocr-file').click();
+  }
+  $('ocr-close').addEventListener('click', () => $('ocr').classList.remove('show'));
+  $('ocr-pick').addEventListener('click', () => $('ocr-file').click());
+  $('ocr-file').addEventListener('change', async ev => {
+    const file = ev.target.files[0]; ev.target.value = '';
+    if (!file) return;
     try {
-      toast('טוען מ-GitHub…');
-      const n = await pullFromGitHub();
-      renderBrowseFilters();
-      renderBrowse();
-      renderEditorList();
-      renderStats();
-      toast('חובר · נטענו ' + n + ' ערכים', 'ok');
-    } catch (e) {
-      toast('התחברות נכשלה: ' + e.message, 'err');
+      const img = await loadImage(file);
+      ocr.img = img; ocr.rot = 0; ocr.sel = null;
+      drawOcr();
+      setOcrStatus('גרור על התמונה כדי לסמן את הקטע (או לחץ "זהה טקסט" לכל התמונה).');
+    } catch (e) { toast('לא ניתן לפתוח את התמונה', 'err'); }
+  });
+  function loadImage(file) {
+    return new Promise((resolve, reject) => {
+      const url = URL.createObjectURL(file); const img = new Image();
+      img.onload = () => resolve(img); img.onerror = reject; img.src = url;
+    });
+  }
+  // הקנבס מציג את התמונה (אחרי סיבוב) בגודל מוקטן; הבחירה נשמרת ביחס 0..1
+  function rotatedSize() {
+    const w = ocr.img.naturalWidth, h = ocr.img.naturalHeight;
+    return ocr.rot % 180 ? { w: h, h: w } : { w, h };
+  }
+  function renderRotated(maxDim) {
+    const { w, h } = rotatedSize();
+    const scale = Math.min(1, maxDim / Math.max(w, h));
+    const c = document.createElement('canvas');
+    c.width = Math.round(w * scale); c.height = Math.round(h * scale);
+    const ctx = c.getContext('2d');
+    ctx.translate(c.width / 2, c.height / 2); ctx.rotate(ocr.rot * Math.PI / 180);
+    const dw = ocr.img.naturalWidth * scale, dh = ocr.img.naturalHeight * scale;
+    ctx.drawImage(ocr.img, -dw / 2, -dh / 2, dw, dh);
+    return c;
+  }
+  function drawOcr() {
+    const cv = ocr.canvas;
+    $('ocr-ph').classList.add('hidden'); cv.classList.remove('hidden');
+    if (!ocr.base) ocr.base = null;
+    ocr.base = renderRotated(1600);
+    cv.width = ocr.base.width; cv.height = ocr.base.height;
+    paintSel();
+  }
+  function paintSel() {
+    const cv = ocr.canvas, ctx = cv.getContext('2d');
+    ctx.drawImage(ocr.base, 0, 0);
+    const s = ocr.sel;
+    if (s && s.w > 0.005 && s.h > 0.005) {
+      const x = s.x * cv.width, y = s.y * cv.height, w = s.w * cv.width, h = s.h * cv.height;
+      ctx.fillStyle = 'rgba(16,24,42,.55)';
+      ctx.fillRect(0, 0, cv.width, y); ctx.fillRect(0, y + h, cv.width, cv.height - y - h);
+      ctx.fillRect(0, y, x, h); ctx.fillRect(x + w, y, cv.width - x - w, h);
+      ctx.strokeStyle = '#e8c547'; ctx.lineWidth = Math.max(2, cv.width / 400); ctx.strokeRect(x, y, w, h);
     }
+  }
+  (function setupSelection() {
+    const cv = ocr.canvas; let start = null;
+    const pt = ev => { const r = cv.getBoundingClientRect(); return { x: Math.min(1, Math.max(0, (ev.clientX - r.left) / r.width)), y: Math.min(1, Math.max(0, (ev.clientY - r.top) / r.height)) }; };
+    cv.addEventListener('pointerdown', ev => { if (!ocr.img) return; cv.setPointerCapture(ev.pointerId); start = pt(ev); ocr.sel = { x: start.x, y: start.y, w: 0, h: 0 }; paintSel(); });
+    cv.addEventListener('pointermove', ev => {
+      if (!start) return; const p = pt(ev);
+      ocr.sel = { x: Math.min(start.x, p.x), y: Math.min(start.y, p.y), w: Math.abs(p.x - start.x), h: Math.abs(p.y - start.y) }; paintSel();
+    });
+    const end = () => { if (!start) return; start = null; if (ocr.sel && (ocr.sel.w < 0.01 || ocr.sel.h < 0.01)) ocr.sel = null; paintSel();
+      setOcrStatus(ocr.sel ? 'הקטע סומן. לחץ "זהה טקסט".' : 'אין סימון — יזוהה כל העמוד.'); };
+    cv.addEventListener('pointerup', end); cv.addEventListener('pointercancel', end);
+  })();
+  $('ocr-rotate').addEventListener('click', () => { if (!ocr.img) return; ocr.rot = (ocr.rot + 90) % 360; ocr.sel = null; drawOcr(); });
+  $('ocr-all').addEventListener('click', () => { if (!ocr.img) return; ocr.sel = null; paintSel(); setOcrStatus('יזוהה כל העמוד.'); });
+  $('ocr-engine').addEventListener('change', e => { ocrCfg.engine = e.target.value; saveOcrCfg(); });
+  $('ocr-join').addEventListener('change', e => { ocrCfg.join = e.target.checked; saveOcrCfg(); });
+  $('ocr-notes').addEventListener('change', e => { ocrCfg.notes = e.target.checked; saveOcrCfg(); });
+
+  function setOcrStatus(msg, progress) {
+    $('ocr-status').textContent = msg || '';
+    const bar = $('ocr-progress');
+    if (progress == null) bar.classList.remove('show');
+    else { bar.classList.add('show'); bar.firstElementChild.style.width = Math.round(progress * 100) + '%'; }
+  }
+  // חיתוך הקטע ברזולוציה מלאה + הכנה לזיהוי
+  function cropForOcr(forTesseract) {
+    const full = renderRotated(forTesseract ? 4000 : 2400);
+    const s = ocr.sel || { x: 0, y: 0, w: 1, h: 1 };
+    const sx = Math.round(s.x * full.width), sy = Math.round(s.y * full.height);
+    const sw = Math.max(1, Math.round(s.w * full.width)), sh = Math.max(1, Math.round(s.h * full.height));
+    // הגדלה של קטעים קטנים — Tesseract עובד טוב יותר כשהאותיות גבוהות ~30px ומעלה
+    let scale = 1;
+    if (forTesseract && sw < 1400) scale = Math.min(3, 1400 / sw);
+    if (!forTesseract && Math.max(sw, sh) > 1800) scale = 1800 / Math.max(sw, sh);
+    const c = document.createElement('canvas');
+    c.width = Math.round(sw * scale); c.height = Math.round(sh * scale);
+    const ctx = c.getContext('2d');
+    ctx.imageSmoothingQuality = 'high';
+    ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, c.width, c.height);
+    ctx.drawImage(full, sx, sy, sw, sh, 0, 0, c.width, c.height);
+    if (forTesseract) {
+      // גווני אפור + מתיחת ניגודיות
+      const d = ctx.getImageData(0, 0, c.width, c.height), px = d.data;
+      let lo = 255, hi = 0; const g = new Uint8ClampedArray(px.length / 4);
+      for (let i = 0, j = 0; i < px.length; i += 4, j++) { const v = 0.299 * px[i] + 0.587 * px[i + 1] + 0.114 * px[i + 2]; g[j] = v; }
+      const hist = new Uint32Array(256); g.forEach(v => hist[v]++);
+      let acc = 0, n = g.length; for (let v = 0; v < 256; v++) { acc += hist[v]; if (acc > n * 0.01) { lo = v; break; } }
+      acc = 0; for (let v = 255; v >= 0; v--) { acc += hist[v]; if (acc > n * 0.01) { hi = v; break; } }
+      const span = Math.max(1, hi - lo);
+      for (let i = 0, j = 0; i < px.length; i += 4, j++) { const v = Math.max(0, Math.min(255, (g[j] - lo) * 255 / span)); px[i] = px[i + 1] = px[i + 2] = v; }
+      ctx.putImageData(d, 0, 0);
+    }
+    return c;
+  }
+  function loadScript(src) {
+    return new Promise((resolve, reject) => { const s = document.createElement('script'); s.src = src; s.onload = resolve; s.onerror = () => reject(new Error('טעינת ' + src + ' נכשלה')); document.head.appendChild(s); });
+  }
+  async function getTessWorker() {
+    if (ocr.worker) return ocr.worker;
+    if (!ocr.workerLoading) ocr.workerLoading = (async () => {
+      if (!window.Tesseract) { setOcrStatus('טוען את מנוע הזיהוי (פעם ראשונה בלבד)…', 0.05); await loadScript(TESS_URL); }
+      const w = await Tesseract.createWorker('heb', 1, {
+        logger: m => {
+          if (m.status === 'recognizing text') setOcrStatus('מזהה טקסט…', 0.2 + m.progress * 0.8);
+          else if (/loading|initializ/.test(m.status)) setOcrStatus('טוען נתוני עברית (פעם ראשונה בלבד, כ־2MB)…', 0.05 + (m.progress || 0) * 0.15);
+        }
+      });
+      ocr.worker = w; return w;
+    })().catch(e => { ocr.workerLoading = null; throw e; });
+    return ocr.workerLoading;
+  }
+  async function ocrTesseract(canvas) {
+    const w = await getTessWorker();
+    await w.setParameters({ tessedit_pageseg_mode: ocr.sel ? '6' : '3' });
+    const { data } = await w.recognize(canvas);
+    return data.text || '';
+  }
+  const OCR_PROMPT = 'Transcribe all the text in this image exactly as printed. The text is Hebrew (it may include Yiddish, Aramaic, abbreviations with gershayim, and niqqud). Output only the transcribed text — no commentary, no translation, no markdown. Keep the original line breaks. Do not fix spelling. Omit page headers, page numbers and running titles.';
+  function canvasB64(canvas) { return canvas.toDataURL('image/jpeg', 0.9).split(',')[1]; }
+  async function ocrClaude(canvas) {
+    if (!ocrCfg.claudeKey) throw new Error('חסר מפתח Claude API — הגדר אותו בלשונית כלים');
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json', 'x-api-key': ocrCfg.claudeKey, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
+      body: JSON.stringify({ model: ocrCfg.claudeModel || 'claude-sonnet-5-5', max_tokens: 4000,
+        messages: [{ role: 'user', content: [{ type: 'image', source: { type: 'base64', media_type: 'image/jpeg', data: canvasB64(canvas) } }, { type: 'text', text: OCR_PROMPT }] }] })
+    });
+    const j = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error((j.error && j.error.message) || ('שגיאה ' + res.status));
+    return (j.content || []).filter(b => b.type === 'text').map(b => b.text).join('\n');
+  }
+  async function ocrGemini(canvas) {
+    if (!ocrCfg.geminiKey) throw new Error('חסר מפתח Gemini API — הגדר אותו בלשונית כלים');
+    const model = ocrCfg.geminiModel || 'gemini-2.5-flash';
+    const res = await fetch('https://generativelanguage.googleapis.com/v1beta/models/' + encodeURIComponent(model) + ':generateContent', {
+      method: 'POST', headers: { 'content-type': 'application/json', 'x-goog-api-key': ocrCfg.geminiKey },
+      body: JSON.stringify({ contents: [{ parts: [{ text: OCR_PROMPT }, { inline_data: { mime_type: 'image/jpeg', data: canvasB64(canvas) } }] }] })
+    });
+    const j = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error((j.error && j.error.message) || ('שגיאה ' + res.status));
+    const parts = (((j.candidates || [])[0] || {}).content || {}).parts || [];
+    return parts.map(p => p.text || '').join('\n');
+  }
+  // ניקוי הטקסט המזוהה
+  function cleanOcr(text, opts) {
+    let t = String(text || '').replace(/\r/g, '');
+    t = t.replace(/[״“”„]/g, '"').replace(/[׳‘’`]/g, "'");
+    t = t.replace(/[‎‏‪-‮]/g, '');
+    t = t.replace(/^```[a-z]*\n?|\n?```$/g, '');
+    if (opts.notes) {
+      // מספרי הערות שוליים / כוכביות שדבוקים לסוף מילה או לסימן פיסוק
+      t = t.replace(/([א-ת'".,:;!?)\]])(?:\d{1,3}\*?|\*{1,2}\d{0,3})(?=[\s.,:;!?)\]"'־—–-]|$)/gm, '$1');
+    }
+    // מקף רגיל בין אותיות עבריות → מקף עברי (־), כמו בשאר המפתח
+    t = t.replace(/([\u05D0-\u05EA'"])-(?=[\u05D0-\u05EA])/g, '$1־');
+    let lines = t.split('\n').map(l => l.replace(/[ \t]+/g, ' ').trim());
+    if (opts.join) {
+      // שורות ריקות = פסקה חדשה; שורה שמסתיימת במקף מתחברת בלי רווח
+      const paras = []; let curP = '';
+      lines.forEach(l => {
+        if (!l) { if (curP) { paras.push(curP); curP = ''; } return; }
+        if (!curP) curP = l;
+        else if (/[־-]$/.test(curP)) curP = curP + l;
+        else curP = curP + ' ' + l;
+      });
+      if (curP) paras.push(curP);
+      t = paras.join('\n\n');
+    } else t = lines.join('\n');
+    return t.replace(/ +([.,:;!?])/g, '$1').replace(/ {2,}/g, ' ').trim();
+  }
+  async function runOcr(append) {
+    if (!ocr.img) { $('ocr-file').click(); return; }
+    if (ocr.busy) return;
+    ocr.busy = true; ['ocr-run', 'ocr-run-append', 'ocr-insert'].forEach(id => $(id).disabled = true);
+    try {
+      const engine = $('ocr-engine').value;
+      setOcrStatus(engine === 'tesseract' ? 'מכין את התמונה…' : 'שולח ל־' + (engine === 'claude' ? 'Claude' : 'Gemini') + '…', engine === 'tesseract' ? 0.02 : 0.3);
+      const canvas = cropForOcr(engine === 'tesseract');
+      let raw = engine === 'claude' ? await ocrClaude(canvas) : engine === 'gemini' ? await ocrGemini(canvas) : await ocrTesseract(canvas);
+      const txt = cleanOcr(raw, { join: $('ocr-join').checked, notes: $('ocr-notes').checked });
+      const ta = $('ocr-text');
+      ta.value = append && ta.value.trim() ? ta.value.trim() + (ocrCfg.join ? ' ' : '\n') + txt : txt;
+      setOcrStatus(txt ? 'בדוק ותקן את הטקסט, ואז לחץ "הכנס". אפשר לסמן קטע נוסף ולהוסיף לסוף.' : 'לא זוהה טקסט — נסה לסמן קטע מדויק יותר או מנוע אחר.');
+    } catch (e) {
+      setOcrStatus('שגיאה: ' + e.message);
+    } finally {
+      ocr.busy = false; ['ocr-run', 'ocr-run-append', 'ocr-insert'].forEach(id => $(id).disabled = false);
+    }
+  }
+  $('ocr-run').addEventListener('click', () => runOcr(false));
+  $('ocr-run-append').addEventListener('click', () => runOcr(true));
+  $('ocr-insert').addEventListener('click', async () => {
+    const txt = $('ocr-text').value.trim();
+    if (!txt) { toast('אין טקסט להכניס', 'err'); return; }
+    const el = $(ocr.target);
+    let mode = 'replace';
+    if (el.value.trim()) {
+      mode = await dialog('השדה כבר מלא', 'להחליף את הטקסט הקיים או להוסיף בסופו?', [
+        { label: 'הוסף בסוף', value: 'append', cls: 'btn-primary' }, { label: 'החלף', value: 'replace' }, { label: 'ביטול', value: null }]);
+      if (!mode) return;
+    }
+    el.value = mode === 'append' ? el.value.trim() + ' ' + txt : txt;
+    if (ocr.target === 'f-anchor') $('more-box').open = true;
+    $('ocr').classList.remove('show');
+    el.focus(); toast('הטקסט הוכנס — בדוק אותו לפני השמירה', 'ok');
   });
 
-  document.getElementById('btn-gh-disconnect').addEventListener('click', () => {
-    ghCfg = null;
-    ghFileSha = null;
-    try { localStorage.removeItem(GH_KEY); } catch (_) {}
-    updateGhUI();
-    toast('נותק');
+  // ================= ייצוא מפתח מודפס =================
+  function renderExport() {
+    if (!$('ex-title').value) $('ex-title').value = 'מפתח — ' + cur.meta.name;
+    const prev = Array.from($('ex-cats').querySelectorAll('input:checked')).map(i => i.value);
+    $('ex-cats').innerHTML = cats().map(c => `<label><input type="checkbox" value="${esc(c.id)}" ${(!prev.length || prev.includes(c.id)) ? 'checked' : ''}><span>${esc(c.name)}</span></label>`).join('');
+  }
+  function buildPrintModel() {
+    const sel = Array.from($('ex-cats').querySelectorAll('input:checked')).map(i => i.value);
+    const style = $('ex-style').value, nopage = $('ex-nopage').value, withSee = $('ex-see').checked;
+    return sel.map(cid => {
+      const groups = new Map();
+      cur.entries.filter(e => entryTypes(e)[0] === cid || (entryTypes(e).includes(cid))).forEach(e => {
+        const key = normalize(e.topic) + '|' + normalize(e.clar);
+        if (!groups.has(key)) groups.set(key, { topic: e.topic, clar: e.clar || '', see: [], refs: [] });
+        const g = groups.get(key);
+        if (e.see) { if (withSee && !g.see.includes(e.see)) g.see.push(e.see); return; }
+        entrySources(e).forEach((s, i) => {
+          const label = s.dp ? String(s.dp) : (nopage === 'source' ? s.s : '');
+          if (!label) return;
+          g.refs.push({ p: s.dp || null, label, desc: i === 0 ? (e.desc || '') : '' });
+        });
+      });
+      const items = Array.from(groups.values()).filter(g => g.refs.length || g.see.length).sort((a, b) => heCmp(a.topic + ' ' + a.clar, b.topic + ' ' + b.clar));
+      items.forEach(g => {
+        g.refs.sort((a, b) => (a.p || 1e9) - (b.p || 1e9) || heCmp(a.label, b.label));
+        if (style === 'compact') {
+          const seen = new Set(); g.refs = g.refs.filter(r => !seen.has(r.label) && seen.add(r.label));
+        }
+      });
+      return { name: catName(cid), items, style };
+    }).filter(sec => sec.items.length);
+  }
+  function printHTML(forWord) {
+    const model = buildPrintModel();
+    const title = $('ex-title').value.trim();
+    const cols = $('ex-cols').checked;
+    const body = model.map(sec => {
+      let lastL = '';
+      const rows = sec.items.map(g => {
+        const L = heFirst(g.topic); let h = '';
+        if (L !== lastL) { lastL = L; h += `<p class="L">${esc(L)}</p>`; }
+        const head = esc(g.topic) + (g.clar ? ` <span class="c">(${esc(g.clar)})</span>` : '');
+        const see = g.see.length ? ` — ע"ע ${g.see.map(esc).join('; ')}` : '';
+        if (sec.style === 'compact' || !g.refs.some(r => r.desc)) {
+          h += `<p class="e"><b>${head}</b>${g.refs.length ? ': ' + g.refs.map(r => esc(r.label)).join(', ') : ''}${see}</p>`;
+        } else {
+          h += `<p class="e"><b>${head}</b>${see}</p>` + g.refs.map(r => `<p class="s">${r.desc ? esc(r.desc) + ' — ' : ''}${esc(r.label)}</p>`).join('');
+        }
+        return h;
+      }).join('');
+      return `<h2>${esc(model.length > 1 || sec.name ? 'מפתח ' + sec.name : '')}</h2><div class="${cols ? 'cols' : ''}">${rows}</div>`;
+    }).join('');
+    const css = `body{font-family:'Frank Ruhl Libre','FbFrankReal','David','Times New Roman',serif;direction:rtl;font-size:11pt;line-height:1.35;margin:1.6cm}
+      h1{text-align:center;font-size:18pt;margin:0 0 14pt} h2{text-align:center;font-size:14pt;margin:18pt 0 8pt;page-break-before:auto}
+      .cols{column-count:2;column-gap:1cm;column-rule:0.5pt solid #999}
+      p{margin:0 0 2pt} p.L{font-weight:bold;font-size:12.5pt;margin:8pt 0 3pt;break-after:avoid} p.e{padding-right:1em;text-indent:-1em}
+      p.s{padding-right:2em;text-indent:-1em;font-size:10pt} .c{font-weight:normal}
+      @page{size:A4;margin:1.5cm}`;
+    const head = forWord
+      ? `<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40"><head><meta charset="utf-8"><title>${esc(title)}</title><style>${css}</style></head>`
+      : `<!DOCTYPE html><html lang="he" dir="rtl"><head><meta charset="utf-8"><title>${esc(title)}</title><style>${css}</style></head>`;
+    return { html: head + `<body dir="rtl">${title ? `<h1>${esc(title)}</h1>` : ''}${body || '<p>אין ערכים לייצוא</p>'}</body></html>`, model };
+  }
+  $('ex-print').addEventListener('click', () => {
+    const { html } = printHTML(false);
+    const w = window.open('', '_blank');
+    if (!w) { toast('הדפדפן חסם חלון חדש — אפשר חלונות קופצים', 'err'); return; }
+    w.document.open(); w.document.write(html + '<script>setTimeout(function(){print()},400)<\/script>'); w.document.close();
+  });
+  $('ex-doc').addEventListener('click', () => {
+    const { html } = printHTML(true);
+    download(slugify($('ex-title').value || cur.meta.name) + '.doc', '﻿' + html, 'application/msword');
+    toast('הורד — פתח בוורד ושמור כ־docx', 'ok', 3500);
+  });
+  $('ex-copy').addEventListener('click', async () => {
+    const model = buildPrintModel();
+    const txt = model.map(sec => (model.length > 1 ? 'מפתח ' + sec.name + '\n\n' : '') + sec.items.map(g => {
+      const head = g.topic + (g.clar ? ' (' + g.clar + ')' : '');
+      const see = g.see.length ? ' — ע"ע ' + g.see.join('; ') : '';
+      if (sec.style === 'compact' || !g.refs.some(r => r.desc)) return head + (g.refs.length ? ': ' + g.refs.map(r => r.label).join(', ') : '') + see;
+      return head + see + '\n' + g.refs.map(r => '   ' + (r.desc ? r.desc + ' — ' : '') + r.label).join('\n');
+    }).join('\n')).join('\n\n');
+    try { await navigator.clipboard.writeText(txt); toast('הועתק', 'ok'); }
+    catch (_) { download('mafteach.txt', txt, 'text/plain;charset=utf-8'); }
   });
 
-  document.getElementById('btn-gh-pull').addEventListener('click', async () => {
-    if (!ghCfg) { toast('לא מחובר', 'err'); return; }
+  // ================= קבצי נתונים =================
+  function download(filename, text, mime) {
+    const blob = new Blob([text], { type: mime || 'text/plain;charset=utf-8' });
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = filename;
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 3000);
+  }
+  $('btn-export-js').addEventListener('click', () => { download(cur.file.split('/').pop(), buildIndexFile(cur.meta, cur.entries), 'text/javascript'); toast('הורד', 'ok'); });
+  $('btn-export-json').addEventListener('click', () => { download(cur.id + '.json', JSON.stringify({ meta: cur.meta, entries: cur.entries.map(stripId) }, null, 1), 'application/json'); toast('הורד', 'ok'); });
+  async function doImport(mode) {
+    const file = $('import-file').files[0];
+    if (!file) { toast('בחר קובץ', 'err'); return; }
+    try {
+      const parsed = parseIndexFile(await file.text());
+      const arr = prepEntries(parsed.entries);
+      if (mode === 'replace') {
+        if (!(await confirmDlg('החלפה', `להחליף את ${cur.entries.length} הערכים במפתח «${cur.meta.name}» ב־${arr.length} ערכים מהקובץ?`, 'החלף', true))) return;
+        cur.entries = arr;
+        if (parsed.meta) cur.meta = ensureMeta(Object.assign({}, cur.meta, parsed.meta, { name: cur.meta.name }), arr, cur.name);
+        else cur.meta = ensureMeta(cur.meta, arr, cur.name);
+        recordOp({ op: 'replace', entries: arr.map(stripId) });
+        toast('נטענו ' + arr.length + ' ערכים', 'ok');
+      } else {
+        const have = new Set(cur.entries.map(canon));
+        let added = 0, skipped = 0;
+        arr.forEach(e => { if (have.has(canon(e))) { skipped++; return; } have.add(canon(e)); cur.entries.push(e); cur.ops.push({ op: 'add', after: stripId(e) }); added++; });
+        cur.meta = ensureMeta(cur.meta, cur.entries, cur.name);
+        saveCache();
+        toast(`נוספו ${added}` + (skipped ? `, ${skipped} כבר קיימים` : ''), 'ok');
+      }
+      renderAll();
+    } catch (err) { toast('שגיאה: ' + err.message, 'err', 4000); }
+  }
+  $('btn-import-merge').addEventListener('click', () => doImport('merge'));
+  $('btn-import-replace').addEventListener('click', () => doImport('replace'));
+
+
+  // ================= עדכונים ממקור חיצוני (האתר) =================
+  const DEFAULT_SYNC_URL = 'https://raw.githubusercontent.com/sichotmeturgamot/sichotmeturgamot.github.io/main/mafteach.js';
+  function hashStr(str) {
+    // שני FNV-1a של 32 ביט = 16 תווים — מספיק כדי לזהות ערך לפי תוכנו
+    let h1 = 0x811c9dc5, h2 = 0x01000193 ^ 0x5bd1e995;
+    for (let i = 0; i < str.length; i++) { const c = str.charCodeAt(i); h1 = Math.imul(h1 ^ c, 0x01000193); h2 = Math.imul(h2 ^ c, 0x5bd1e995) ^ (h2 >>> 15); }
+    return (h1 >>> 0).toString(16).padStart(8, '0') + (h2 >>> 0).toString(16).padStart(8, '0');
+  }
+  const ehash = e => hashStr(canon(e));
+  function pairKey(e) {
+    const s0 = e.sichah || (e.sources && e.sources[0] && e.sources[0].s) || '';
+    return [normalize(e.topic), normalize(e.clar), normalize(s0), e.page || (e.sources && e.sources[0] && e.sources[0].dp) || '', e.see ? normalize(e.see) : ''].join('|');
+  }
+  // מחשב מה השתנה במקור מאז הפעם הקודמת, ואיך זה פוגש את הנתונים המקומיים
+  function planSiteSync(siteEntries, prevHashes) {
+    const first = !prevHashes;
+    const oldH = new Set(prevHashes || []);
+    const site = siteEntries.map(stripId);
+    const newH = new Set(site.map(ehash));
+    const local = cur.entries.map(e => ({ e, h: ehash(e), k: pairKey(e), used: false }));
+    const byHash = new Map(); local.forEach(x => { if (!byHash.has(x.h)) byHash.set(x.h, x); });
+    const plan = { add: [], update: [], del: [], conflict: [], same: 0, keptMine: 0 };
+    const pending = [];
+    site.forEach(e => {
+      const h = ehash(e);
+      const hit = byHash.get(h);
+      if (hit && !hit.used) { hit.used = true; plan.same++; return; }
+      if (oldH.has(h)) { plan.keptMine++; return; } // היה באתר ולא השתנה — אבל אצלך הוא שונה/נמחק: נשאר כמו אצלך
+      pending.push({ e, h, k: pairKey(e) });
+    });
+    // ערכים חדשים/מעודכנים באתר: מנסים להתאים לגרסה ישנה מקומית
+    pending.forEach(p => {
+      const cand = local.find(x => !x.used && x.k === p.k && !newH.has(x.h) && (oldH.has(x.h) || first));
+      if (cand && oldH.has(cand.h)) { cand.used = true; plan.update.push({ before: stripId(cand.e), after: p.e }); return; }
+      if (cand && first) { cand.used = true; plan.conflict.push({ before: stripId(cand.e), after: p.e }); return; }
+      // תוקן באתר — וגם אצלך נערך אותו ערך
+      const mine = !first && local.find(x => !x.used && x.k === p.k && !oldH.has(x.h) && !newH.has(x.h));
+      if (mine) { mine.used = true; plan.conflict.push({ before: stripId(mine.e), after: p.e }); return; }
+      plan.add.push(p.e);
+    });
+    // ערכים שנמחקו מהאתר ואצלך לא נערכו
+    local.forEach(x => { if (!x.used && oldH.has(x.h) && !newH.has(x.h)) { x.used = true; plan.del.push(stripId(x.e)); } });
+    plan.onlyMine = local.filter(x => !x.used && !oldH.has(x.h)).length;
+    plan.first = first;
+    plan.newHashes = Array.from(newH);
+    return plan;
+  }
+  async function syncFromSite() {
+    const url = $('sync-url').value.trim() || DEFAULT_SYNC_URL;
+    let text;
+    try {
+      toast('מוריד מהאתר…');
+      const res = await fetch(url + (url.indexOf('?') < 0 ? '?' : '&') + 't=' + Date.now(), { cache: 'no-store' });
+      if (!res.ok) throw new Error('שגיאה ' + res.status);
+      text = await res.text();
+    } catch (e) { toast('ההורדה נכשלה: ' + e.message, 'err', 4000); return; }
+    let parsed;
+    try { parsed = parseIndexFile(text); } catch (e) { toast('הקובץ לא נקרא: ' + e.message, 'err', 4000); return; }
+    const sync = cur.meta.siteSync || {};
+    const prev = sync.url === url || (!sync.url && url === DEFAULT_SYNC_URL) ? sync.hashes : null;
+    const plan = planSiteSync(parsed.entries, prev);
+    const total = plan.add.length + plan.update.length + plan.del.length + plan.conflict.length;
+    const lines = [
+      'באתר: ' + parsed.entries.length + ' ערכים.',
+      plan.add.length ? '• ' + plan.add.length + ' ערכים חדשים יתווספו' : '',
+      plan.update.length ? '• ' + plan.update.length + ' ערכים שתוקנו באתר יתעדכנו' : '',
+      plan.del.length ? '• ' + plan.del.length + ' ערכים שנמחקו מהאתר יימחקו' : '',
+      plan.conflict.length ? '• ' + plan.conflict.length + (plan.first ? ' ערכים קיימים אצלך בגרסה שונה מהאתר' : ' ערכים שערכת כאן ותוקנו גם באתר') : '',
+      plan.onlyMine ? '• ' + plan.onlyMine + ' ערכים שלך שאינם באתר — נשארים' : '',
+      plan.keptMine ? '• ' + plan.keptMine + ' ערכים שערכת או מחקת כאן — נשארים כמו אצלך' : '',
+      plan.same ? '• ' + plan.same + ' ערכים זהים — בלי שינוי' : ''
+    ].filter(Boolean).join('\n');
+    let conflictMode = plan.first ? 'site' : 'mine';
+    const sample = (arr, f) => arr.slice(0, 8).map(f).join('\n') + (arr.length > 8 ? '\n…ועוד ' + (arr.length - 8) : '');
+    let detail = '';
+    if (plan.update.length) detail += '<p style="font-size:.8rem;margin:6px 0 2px"><b>יתעדכנו:</b></p><p style="font-size:.78rem;color:var(--muted);white-space:pre-line">' + esc(sample(plan.update, u => u.after.topic + (u.after.desc ? ' — ' + u.after.desc.slice(0, 40) : ''))) + '</p>';
+    if (plan.del.length) detail += '<p style="font-size:.8rem;margin:6px 0 2px"><b>יימחקו:</b></p><p style="font-size:.78rem;color:var(--muted);white-space:pre-line">' + esc(sample(plan.del, d => d.topic + (d.desc ? ' — ' + d.desc.slice(0, 40) : ''))) + '</p>';
+    if (plan.conflict.length) detail += '<div class="form-group" style="margin-top:10px"><label>' + (plan.first ? 'מה לעשות עם הערכים שבגרסה שונה? (זו המשיכה הראשונה, אז אי אפשר לדעת מי שינה)' : 'מה לעשות עם הערכים שנערכו גם כאן וגם באתר?') + '</label><select id="sync-conflict">' +
+      (plan.first ? '<option value="site">לעדכן לגרסת האתר</option><option value="mine">להשאיר את הגרסה שלי</option>' : '<option value="mine">להשאיר את הגרסה שלי</option><option value="site">לעדכן לגרסת האתר</option>') +
+      '<option value="both">לשמור את שתיהן</option></select></div><p style="font-size:.78rem;color:var(--muted);white-space:pre-line">' + esc(sample(plan.conflict, c => c.before.topic + (c.before.desc ? ' — ' + c.before.desc.slice(0, 40) : ''))) + '</p>';
+    if (!total) {
+      cur.meta.siteSync = { url, hashes: plan.newHashes, at: new Date().toISOString().slice(0, 10) };
+      recordOp({ op: 'meta' }); renderTools();
+      await dialog('אין עדכונים', lines); return;
+    }
+    const ok = await dialog('עדכונים מהאתר', lines, [{ label: 'החל', value: true, cls: 'btn-primary' }, { label: 'ביטול', value: false }], detail,
+      body => { const s = body.querySelector('#sync-conflict'); if (s) s.addEventListener('change', () => { conflictMode = s.value; }); });
+    if (!ok) return;
+    const ops = [];
+    plan.add.forEach(e => ops.push({ op: 'add', after: e }));
+    plan.update.forEach(u => ops.push({ op: 'update', before: u.before, after: u.after }));
+    plan.del.forEach(d => ops.push({ op: 'delete', before: d }));
+    plan.conflict.forEach(c => {
+      if (conflictMode === 'site') ops.push({ op: 'update', before: c.before, after: c.after });
+      else if (conflictMode === 'both') ops.push({ op: 'add', after: c.after });
+    });
+    const r = rebase(cur.entries.map(stripId), ops);
+    cur.entries = prepEntries(r.entries);
+    ops.forEach(o => cur.ops.push(o));
+    cur.meta.siteSync = { url, hashes: plan.newHashes, at: new Date().toISOString().slice(0, 10) };
+    cur.meta = ensureMeta(cur.meta, cur.entries, cur.name);
+    recordOp({ op: 'meta' });
+    renderAll();
+    toast('עודכן במכשיר — לחץ על התג הצהוב כדי לשמור ל־GitHub', 'ok', 4000);
+  }
+  $('btn-sync-site').addEventListener('click', syncFromSite);
+  // ================= כלים =================
+  function renderStats() {
+    if (!cur) return;
+    const parts = [`<div class="stat"><div class="num">${cur.entries.length}</div><div class="lbl">סה״כ</div></div>`];
+    cats().forEach(c => parts.push(`<div class="stat"><div class="num">${cur.entries.filter(e => entryTypes(e).includes(c.id)).length}</div><div class="lbl">${esc(c.name)}</div></div>`));
+    $('stats').innerHTML = parts.join('');
+  }
+  function renderTools() {
+    if (!cur) return;
+    renderStats();
+    $('meta-name').value = cur.meta.name || ''; $('meta-srclabel').value = cur.meta.sourceLabel || '';
+    $('meta-file').textContent = cur.file;
+    const ss = cur.meta.siteSync;
+    $('sync-url').value = (ss && ss.url) || DEFAULT_SYNC_URL;
+    $('sync-last').textContent = ss && ss.at ? 'משיכה אחרונה: ' + ss.at.split('-').reverse().join('.') + ' (' + (ss.hashes || []).length + ' ערכים באתר)' : 'עוד לא נמשכו עדכונים למפתח הזה.';
+    $('gh-owner').value = gh.owner; $('gh-repo').value = gh.repo; $('gh-branch').value = gh.branch;
+    if (gh.token && !$('gh-token').value) $('gh-token').value = gh.token;
+    $('ocr-engine-default').value = ocrCfg.engine;
+    $('key-claude').value = ocrCfg.claudeKey; $('model-claude').value = ocrCfg.claudeModel;
+    $('key-gemini').value = ocrCfg.geminiKey; $('model-gemini').value = ocrCfg.geminiModel;
+    updateSyncUI();
+  }
+  $('btn-new-index').addEventListener('click', newIndex);
+  $('btn-rename-index').addEventListener('click', () => {
+    const name = $('meta-name').value.trim(); if (!name) { toast('חסר שם', 'err'); return; }
+    cur.meta.name = name; cur.meta.sourceLabel = $('meta-srclabel').value.trim() || 'מקור';
+    const info = registry.indexes.find(x => x.id === cur.id);
+    if (info && info.name !== name) { info.name = name; cur.name = name; registry.dirty = true; saveRegistry(); }
+    recordOp({ op: 'meta' }); renderIndexSelect(); renderAll(); toast('נשמר', 'ok');
+  });
+  $('btn-save-ocr').addEventListener('click', () => {
+    ocrCfg.engine = $('ocr-engine-default').value;
+    ocrCfg.claudeKey = $('key-claude').value.trim(); ocrCfg.claudeModel = $('model-claude').value.trim() || 'claude-sonnet-5-5';
+    ocrCfg.geminiKey = $('key-gemini').value.trim(); ocrCfg.geminiModel = $('model-gemini').value.trim() || 'gemini-2.5-flash';
+    saveOcrCfg(); toast('הגדרות הזיהוי נשמרו', 'ok');
+  });
+  $('btn-gh-connect').addEventListener('click', async () => {
+    const token = $('gh-token').value.trim();
+    if (!token) { toast('נא להזין טוקן', 'err'); return; }
+    const changedRepo = gh.owner !== ($('gh-owner').value.trim() || DEFAULT_GH.owner) || gh.repo !== ($('gh-repo').value.trim() || DEFAULT_GH.repo);
+    gh = { owner: $('gh-owner').value.trim() || DEFAULT_GH.owner, repo: $('gh-repo').value.trim() || DEFAULT_GH.repo, branch: $('gh-branch').value.trim() || 'main', token };
+    if ($('gh-remember').checked) lsSet(K_GH, JSON.stringify(gh)); else lsDel(K_GH);
+    try {
+      toast('מתחבר…');
+      await loadRegistryFromGH();
+      if (changedRepo && cur.ops.length === 0) cur.loaded = false;
+      await openIndex(cur && registry.indexes.some(x => x.id === cur.id) ? cur.id : registry.indexes[0].id, { pull: true });
+    } catch (e) { toast('התחברות נכשלה: ' + e.message, 'err', 4500); }
+    updateSyncUI();
+  });
+  $('btn-gh-disconnect').addEventListener('click', () => { gh = Object.assign({}, gh, { token: '' }); $('gh-token').value = ''; lsDel(K_GH); updateSyncUI(); toast('נותק'); });
+  $('btn-gh-pull').addEventListener('click', async () => {
+    if (!ghReady()) { toast('לא מחובר', 'err'); return; }
     try {
       toast('מושך…');
-      const n = await pullFromGitHub();
-      renderBrowseFilters();
-      renderBrowse();
-      renderEditorList();
-      renderStats();
-      toast('נטענו ' + n + ' ערכים', 'ok');
-    } catch (e) { toast('שגיאה: ' + e.message, 'err'); }
+      await loadRegistryFromGH();
+      await pullCurrent();
+      toast('נטענו ' + cur.entries.length + ' ערכים' + (cur.ops.length ? ' (השינויים שלך עדיין ממתינים לשמירה)' : ''), 'ok', 3500);
+    } catch (e) { toast('שגיאה: ' + e.message, 'err', 4000); }
+  });
+  $('btn-gh-push').addEventListener('click', pushCurrent);
+  $('btn-clear-all').addEventListener('click', async () => {
+    const extra = cur.ops.length ? `\n\nשים לב: ${cur.ops.length} שינויים שלא נשמרו ל־GitHub יאבדו.` : '';
+    if (!(await confirmDlg('מחיקת עותק מקומי', 'למחוק את העותק של «' + cur.meta.name + '» מהמכשיר?' + extra, 'מחק', true))) return;
+    lsDel(K_CACHE(cur.id));
+    await openIndex(cur.id, { pull: ghReady() });
+    toast('העותק המקומי נמחק', 'ok');
   });
 
-  document.getElementById('btn-gh-push').addEventListener('click', async () => {
-    if (!ghCfg) { toast('לא מחובר', 'err'); return; }
-    try {
-      toast('דוחף…');
-      await pushToGitHub(true);
-    } catch (_) {}
-  });
+  // ================= התקנה =================
+  let deferredPrompt = null;
+  window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); deferredPrompt = e; $('install-bar').classList.add('show'); });
+  $('install-btn').addEventListener('click', async () => { if (!deferredPrompt) return; deferredPrompt.prompt(); await deferredPrompt.userChoice; deferredPrompt = null; $('install-bar').classList.remove('show'); });
+  $('install-dismiss').addEventListener('click', () => $('install-bar').classList.remove('show'));
 
-  loadGhCfg();
-
-  load();
-  renderBrowseFilters();
-  renderBrowse();
-  renderCategoryCheckboxes(['i']);
-  renderStats();
+  // ================= אתחול =================
+  function migrateOld() {
+    // הגדרות מהגרסה הקודמת של העורך
+    if (!lsGet(K_GH)) {
+      const old = lsJSON(OLD_GH, null);
+      if (old && old.token) lsSet(K_GH, JSON.stringify({ owner: DEFAULT_GH.owner, repo: DEFAULT_GH.repo, branch: 'main', token: old.token }));
+    }
+    if (!lsGet(K_CACHE('mafteach'))) {
+      const data = lsJSON(OLD_DATA, null);
+      if (Array.isArray(data) && data.length) {
+        const oldCats = lsJSON(OLD_CATS, null);
+        const catsM = Array.isArray(oldCats) && oldCats.length ? oldCats.map(c => ({ id: c.id, name: c.name })) : DEFAULT_CATS;
+        lsSet(K_CACHE('mafteach'), JSON.stringify({ meta: { name: 'מפתח ראשי', categories: catsM }, entries: data.map(stripId), sha: null, ops: [] }));
+        // sha לא ידוע — ייטען מחדש מ־GitHub בחיבור הבא
+        const c = lsJSON(K_CACHE('mafteach'), null); if (c) { c.stale = true; lsSet(K_CACHE('mafteach'), JSON.stringify(c)); }
+      }
+    }
+  }
+  async function init() {
+    migrateOld();
+    gh = Object.assign({}, DEFAULT_GH, lsJSON(K_GH, {}));
+    const reg = lsJSON(K_IDXREG, null);
+    if (reg && Array.isArray(reg.indexes) && reg.indexes.length) registry = reg;
+    applyQuoteLabel();
+    const want = lsGet(K_CUR) || registry.indexes[0].id;
+    const c = lsJSON(K_CACHE(want), null);
+    await openIndex(want, { pull: !!(c && c.stale) });
+    if (ghReady()) {
+      // רענון רשימת המפתחות ברקע; את הנתונים עצמם לא מושכים אוטומטית כדי לא להפריע לעבודה
+      loadRegistryFromGH().catch(() => {});
+      if (cur.ops.length === 0 && cur.loaded) {
+        // אם אין שינויים מקומיים — מרעננים בשקט לגרסה האחרונה
+        pullCurrent(true).catch(() => {});
+      }
+    }
+  }
+  init();
 })();
 </script>
 </body>
